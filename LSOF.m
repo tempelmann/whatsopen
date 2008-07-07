@@ -14,7 +14,6 @@
 - (id)init
 {
 	data = [[[NSMutableArray alloc] init] retain];
-	[self getData:nil];
 	
 	return self;
 }
@@ -38,6 +37,26 @@
 	}
 }
 
+- (NSString *) fileSize:(const char *)f
+{
+	NSString *retVal = nil;
+	struct stat st;
+	char *units[4] = { "B", "KB", "MB", "GB" };
+	int i;
+	size_t sz = 0;
+	memset(&st, 0, sizeof(st));
+	
+	if( stat( f, &st ) == 0 )
+	{
+		sz = st.st_size;
+		for( i = 0; i < 4 && sz > 1024; i++ ) sz = sz / 1024;
+		retVal = [[[NSString alloc] initWithFormat:@"%d%s", sz, units[i]] autorelease];
+	}
+	else
+		NSLog(@"stat error %s: %s", f, strerror(errno));
+	return retVal;
+}
+
 - (void)getData:(NSString *)filter
 {
 	FILE *lsof;
@@ -46,6 +65,8 @@
 	char *p, *p2, *lim;
 	Boolean one = NO;
 	NSMutableArray *lineArray;
+	NSString *tst;
+	int i;
 	
 	if( filter && [filter length] )
 	{
@@ -69,9 +90,10 @@
 			{
 				/* passed first line */
 				lineArray = [[NSMutableArray alloc] init];
-				for( p = line, p2 = line, lim = &line[strlen(line)]; p < lim; p++ )
+				
+				for( p = line, p2 = line, lim = &line[strlen(line)], i = 0; p < lim; p++ )
 				{
-					if( *p <= ' ' )
+					if( *p <= ' ' && i < 8 )
 					{
 						while( (p < lim) && (*p <= ' ') ) 
 						{	
@@ -80,10 +102,30 @@
 						}
 						[lineArray addObject:[[NSString alloc] initWithFormat:@"%s", p2]];
 						p2 = p;
+						i++;
+					}
+					else if( (*p <= ' ') && (i >= 8) )
+					{
+						while( p < lim )
+						{
+							if( *p == '\n' )
+								*p = 0;
+							p++;
+						}
+						[lineArray addObject:[[NSString alloc] initWithFormat:@"%s", p2]];
+						i++;
 					}
 				}
 				if( [[lineArray objectAtIndex:4] isEqualToString:[NSString stringWithFormat:@"REG"]] )
+				{
+					tst = [[self fileSize:[[lineArray objectAtIndex:8] UTF8String]] retain];
+					if( tst )
+					{
+						[lineArray addObject:tst];
+						[tst release];
+					}
 					[data addObject:lineArray];
+				}
 				else
 					[lineArray release];
 			}
@@ -104,6 +146,15 @@
 	NSMutableArray *row = [data objectAtIndex:rowIx];
 	if( row )
 		retVal = [[row objectAtIndex:1] integerValue];
+	return retVal;
+}
+
+- (NSString *)getFileOfRow:(int)rowIx
+{
+	NSString * retVal = nil;
+	NSMutableArray *row = [data objectAtIndex:rowIx];
+	if( row )
+		retVal = [row objectAtIndex:8];
 	return retVal;
 }
 

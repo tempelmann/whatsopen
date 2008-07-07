@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import <sys/stat.h>
 
 @interface LSOF : NSObject {
 	NSMutableArray *data;
@@ -16,7 +16,9 @@
 - (void)getData:(NSString *)filter;
 - (NSInteger)dataCount;
 - (NSString *)getField:(int)field inRow:(int)row;
+- (NSString *)fileSize:(const char *)f;
 - (void)releaseData;
 - (pid_t)getPidOfRow:(int)rowIx;
+- (NSString *)getFileOfRow:(int)rowIx;
 
 @end

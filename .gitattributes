@@ -4,7 +4,7 @@
 English.lproj/InfoPlist.strings -text
 English.lproj/MainMenu.nib/designable.nib -text
 English.lproj/MainMenu.nib/keyedobjects.nib -text
-/Info.plist -text
+/Info.plist -text svneol=unset#unset
 /InterfaceController.h -text
 /InterfaceController.m -text
 /LSOF.h -text

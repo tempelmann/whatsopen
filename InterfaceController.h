@@ -18,8 +18,10 @@
 	IBOutlet NSTableView *outTable;
 	IBOutlet NSTableColumn *applicationColumn;
 	IBOutlet NSTableColumn *filePathColumn;
+	IBOutlet NSTableColumn *fileSizeColumn;
 	IBOutlet NSToolbar *toobar;
-	IBOutlet NSProgressIndicator *spinner;
+	IBOutlet NSProgressIndicator *probar;
+	IBOutlet NSWindow *progSheet;
 
 	Boolean listing;
 	LSOF *lsofData;
@@ -27,12 +29,13 @@
 
 - (IBAction) listFiles:(id)sender;
 - (IBAction) killApplication:(id)sender;
+- (IBAction) openInFinder:(id)sender;
 
 // table delegates
 - (int)numberOfRowsInTableView:(NSTableView *)table;
 - (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(int)rowIx;
 - (Boolean)tableView:(NSTableView *)table shouldEditTableColumn:(NSTableColumn *)col row:(int)row;
 - (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation;
-
+- (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 @end

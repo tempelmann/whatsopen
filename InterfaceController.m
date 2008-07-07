@@ -19,19 +19,34 @@
 	return self;
 }
 
+- (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo 
+{ 
+	[sheet orderOut:self]; 
+} 
+
+
 - (IBAction) listFiles:(id)sender
 {
 	NSString *filter = [filterField stringValue];
 	
-	[spinner startAnimation:self];
+	[probar setUsesThreadedAnimation:YES];
+	
+	[probar startAnimation:self];
+	
+	[NSApp beginSheet: progSheet
+	   modalForWindow: mainWindow
+		modalDelegate: self
+	   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
+		  contextInfo: nil];
 	
 	if( [filter length] )
 		[lsofData getData:filter];
 	else
 		[lsofData getData:nil];
 	
-	[spinner stopAnimation:self];
+	[probar stopAnimation:self];
 	
+	[NSApp endSheet:progSheet];
 	[outTable reloadData];
 	NSLog(@"listing files");
 }
@@ -70,6 +85,8 @@
 		retVal = [lsofData getField:0 inRow:rowIx];
 	else if( col == filePathColumn )
 		retVal = [lsofData getField:8 inRow:rowIx];
+	else if( col == fileSizeColumn )
+		retVal = [lsofData getField:9 inRow:rowIx];
 	
 	return retVal;
 }
@@ -86,6 +103,33 @@
 	return retVal;
 }
 
+- (IBAction) openInFinder:(id)sender
+{
+	int rowIx = [outTable selectedRow];
+	if( rowIx >= 0 )
+	{
+		NSString *path = [[lsofData getFileOfRow:rowIx] copy];
+		char *upath = malloc([path length]);
+		if( upath )
+		{
+			strcpy(upath, [path UTF8String]);
+			char *p;
+			for( p = &upath[strlen(upath)-1]; p >= upath && *p != '/'; p-- ) *p = 0;
+			if( strlen(upath) )
+			{
+				char cmd[512];
+				sprintf(cmd, "open %s", upath);
+				system(cmd);
+			}
 
+			free(upath);
+		}
+	}
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+	[NSApp terminate:mainWindow];
+}
 
 @end
