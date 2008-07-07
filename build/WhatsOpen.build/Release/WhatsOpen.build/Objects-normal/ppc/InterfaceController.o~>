@@ -1,4 +1,0 @@
-/Users/marmon/src/WhatsOpen/InterfaceController.m: In function '-[InterfaceController killApplication:]':
-/Users/marmon/src/WhatsOpen/InterfaceController.m:55: error: 'Alerts' undeclared (first use in this function)
-/Users/marmon/src/WhatsOpen/InterfaceController.m:55: error: (Each undeclared identifier is reported only once
-/Users/marmon/src/WhatsOpen/InterfaceController.m:55: error: for each function it appears in.)
