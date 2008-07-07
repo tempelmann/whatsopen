@@ -379,9 +379,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>B460A4C70E226184009924BC</string>
+				<string>B4A5F8090E22CDA00027675D</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>B460A4C80E226184009924BC</string>
+				<string>B4A5F80A0E22CDA00027675D</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -520,7 +520,7 @@
 		<string>1C78EAAD065D492600B07095</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>B406D9EF0E11FEF20098E862</string>
-		<string>/Users/marmon/src/WhatsOpen/WhatsOpen.xcodeproj</string>
+		<string>/Users/marmon/src/whatsopen/WhatsOpen.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>299 230 692 518 0 0 1440 878 </string>
@@ -600,7 +600,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>B406D9EF0E11FEF20098E862</string>
-				<string>B460A4D10E226833009924BC</string>
+				<string>B4A5F80B0E22CDA00027675D</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -642,8 +642,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {450, 286}}</string>
-											<string>{{450, 0}, {491, 286}}</string>
+											<string>{{0, 0}, {450, 294}}</string>
+											<string>{{450, 0}, {491, 294}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -658,8 +658,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {941, 286}}</string>
-											<string>{{0, 286}, {941, 279}}</string>
+											<string>{{0, 0}, {941, 294}}</string>
+											<string>{{0, 294}, {941, 271}}</string>
 										</array>
 									</dict>
 								</dict>
@@ -692,7 +692,7 @@
 										<real>261</real>
 									</array>
 									<key>Frame</key>
-									<string>{{450, 0}, {491, 286}}</string>
+									<string>{{450, 0}, {491, 294}}</string>
 									<key>RubberWindowFrame</key>
 									<string>264 210 941 606 0 0 1440 878 </string>
 								</dict>
@@ -720,13 +720,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>B460A4D20E226833009924BC</string>
+				<string>B4A5F80C0E22CDA00027675D</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>B460A4D30E226833009924BC</string>
-				<string>B460A4D40E226833009924BC</string>
-				<string>B460A4D50E226833009924BC</string>
-				<string>B460A4D60E226833009924BC</string>
-				<string>B460A4D70E226833009924BC</string>
+				<string>B4A5F80D0E22CDA00027675D</string>
+				<string>B4A5F80E0E22CDA00027675D</string>
+				<string>B4A5F80F0E22CDA00027675D</string>
+				<string>B4A5F8100E22CDA00027675D</string>
+				<string>B4A5F8110E22CDA00027675D</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -888,7 +888,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>B460A4D80E226833009924BC</string>
+				<string>B4A5F8120E22CDA00027675D</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>
