@@ -231,8 +231,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -270,6 +268,8 @@
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
 								<string>29B97317FDCFA39411CA2CEA</string>
+								<string>1C37FBAC04509CD000000102</string>
+								<string>B4A5F8340E22CE0B0027675D</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
@@ -298,7 +298,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>299 230 692 518 0 0 1440 878 </string>
+						<string>299 231 692 518 0 0 1440 878 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -335,7 +335,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {484, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>299 230 692 518 0 0 1440 878 </string>
+								<string>299 231 692 518 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -343,6 +343,8 @@
 							<string>0pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -355,7 +357,7 @@
 								<key>Frame</key>
 								<string>{{0, 5}, {484, 472}}</string>
 								<key>RubberWindowFrame</key>
-								<string>299 230 692 518 0 0 1440 878 </string>
+								<string>299 231 692 518 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -523,7 +525,7 @@
 		<string>/Users/marmon/src/whatsopen/WhatsOpen.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>299 230 692 518 0 0 1440 878 </string>
+	<string>299 231 692 518 0 0 1440 878 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
