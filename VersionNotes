@@ -2,6 +2,7 @@
 1.2
 	Added a volume sort option to limit visibile files to those
 	from a specific volume.
+	Added Sparkle interface for updates.
 
 1.1
 	Added copy/paste features.
@@ -10,6 +11,7 @@
 	
 1.0
 	Initial Release
+
 
 
 

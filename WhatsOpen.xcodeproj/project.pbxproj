@@ -12,10 +12,25 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		B406D9C20E11E4910098E862 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9C10E11E4910098E862 /* InterfaceController.m */; };
 		B406D9EA0E11E7C70098E862 /* LSOF.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9E90E11E7C70098E862 /* LSOF.m */; };
+		B42F9F9A0E411F1100016D64 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
+		B42F9FA70E411F8200016D64 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
 		B460A4CE0E226738009924BC /* VersionNotes in Resources */ = {isa = PBXBuildFile; fileRef = B460A4CD0E226738009924BC /* VersionNotes */; };
 		B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B42F9FA60E411F7000016D64 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B42F9FA70E411F8200016D64 /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -31,6 +46,7 @@
 		B406D9C10E11E4910098E862 /* InterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
 		B406D9E80E11E7C70098E862 /* LSOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSOF.h; sourceTree = "<group>"; };
 		B406D9E90E11E7C70098E862 /* LSOF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSOF.m; sourceTree = "<group>"; };
+		B42F9F990E411F1100016D64 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		B4496A040E14080F00CE6B42 /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
 		B4496A050E14080F00CE6B42 /* Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Alerts.m; sourceTree = "<group>"; };
 		B460A4CD0E226738009924BC /* VersionNotes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VersionNotes; sourceTree = "<group>"; };
@@ -43,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B42F9F9A0E411F1100016D64 /* Sparkle.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */,
 			);
@@ -87,6 +104,7 @@
 		29B97314FDCFA39411CA2CEA /* WhatsOpen */ = {
 			isa = PBXGroup;
 			children = (
+				B42F9F990E411F1100016D64 /* Sparkle.framework */,
 				B469A6970E2EAAE9008F1CBB /* Finder.h */,
 				B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */,
 				B460A4CD0E226738009924BC /* VersionNotes */,
@@ -143,6 +161,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				B42F9FA60E411F7000016D64 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -229,6 +248,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -247,6 +270,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = WhatsOpen_Prefix.pch;

@@ -13,6 +13,11 @@
 
 }
 
--(void) doInfoAlertWithTitle:(NSString *)text infoText:(NSString *)info forWindow:(NSWindow *)window withSelector:(SEL)sel withDelegate:(id)del runModal:(Boolean)modal;
+-(void) doInfoAlertWithTitle:(NSString *)text 
+					infoText:(NSString *)info 
+				   forWindow:(NSWindow *)window 
+				withSelector:(SEL)sel 
+				withDelegate:(id)del
+					runModal:(Boolean)modal;
 
 @end
