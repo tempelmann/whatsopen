@@ -57,7 +57,7 @@
 	return retVal;
 }
 
-- (void)getData:(NSString *)filter
+- (void)getData:(NSString *)filter forVolume:(NSString *)vol
 {
 	FILE *lsof;
 	NSString *cmd_string;
@@ -71,10 +71,22 @@
 	if( filter && [filter length] )
 	{
 		cmd_string = [[NSString alloc] initWithFormat:@"lsof | grep %@", filter];
+		one = YES;
 	}
 	else
 	{
 		cmd_string = [[NSString alloc] initWithString:@"lsof"];
+	}
+	
+	if( vol && [vol length] )
+	{
+		if( [vol compare:@"\"All\""] != NSOrderedSame )
+		{
+			NSString *p = cmd_string;
+			cmd_string = [cmd_string stringByAppendingString:[NSString stringWithFormat:@" | grep %@", vol]];
+			[p release];
+			one = YES;
+		}
 	}
 	
 	if( (lsof = popen([cmd_string UTF8String], "r")) == NULL )

@@ -14,6 +14,7 @@
 		B406D9EA0E11E7C70098E862 /* LSOF.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9E90E11E7C70098E862 /* LSOF.m */; };
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
 		B460A4CE0E226738009924BC /* VersionNotes in Resources */ = {isa = PBXBuildFile; fileRef = B460A4CD0E226738009924BC /* VersionNotes */; };
+		B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,8 @@
 		B4496A040E14080F00CE6B42 /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
 		B4496A050E14080F00CE6B42 /* Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Alerts.m; sourceTree = "<group>"; };
 		B460A4CD0E226738009924BC /* VersionNotes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VersionNotes; sourceTree = "<group>"; };
+		B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
+		B469A6970E2EAAE9008F1CBB /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +44,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +87,8 @@
 		29B97314FDCFA39411CA2CEA /* WhatsOpen */ = {
 			isa = PBXGroup;
 			children = (
+				B469A6970E2EAAE9008F1CBB /* Finder.h */,
+				B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */,
 				B460A4CD0E226738009924BC /* VersionNotes */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,

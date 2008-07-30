@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "LSOF.h"
 #import "Alerts.h"
+#import "Finder.h"
 
 @interface InterfaceController : NSObject {
 	IBOutlet NSTextField *filterField;
@@ -22,14 +23,20 @@
 	IBOutlet NSToolbar *toobar;
 	IBOutlet NSProgressIndicator *probar;
 	IBOutlet NSWindow *progSheet;
+	IBOutlet NSPopUpButton *volumesBox;
 
 	Boolean listing;
 	LSOF *lsofData;
+	FinderApplication *theFinder;
 }
 
 - (IBAction) listFiles:(id)sender;
 - (IBAction) killApplication:(id)sender;
 - (IBAction) openInFinder:(id)sender;
+// - (IBAction) showInfoFinder:(id)sender;
+
+// add our volumes to the UI volumes filter
+- (void)addVolumesToUI;
 
 // table delegates
 - (int)numberOfRowsInTableView:(NSTableView *)table;

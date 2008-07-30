@@ -1,3 +1,15 @@
 
-Added copy/paste features.
+1.2
+	Added a volume sort option to limit visibile files to those
+	from a specific volume.
+
+1.1
+	Added copy/paste features.
+	Show in finder properly selects the item now.
+	Added a right click menu for function access.
+	
+1.0
+	Initial Release
+
+
 

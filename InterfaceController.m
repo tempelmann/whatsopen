@@ -13,10 +13,27 @@
 
 - (id)init
 {
+	theFinder = [SBApplication applicationWithBundleIdentifier: @"com.apple.finder"];
 	listing = YES;
 	lsofData = [[[LSOF alloc] init] retain];
 	listing = NO;
 	return self;
+}
+
+- (void)awakeFromNib
+{
+	[self addVolumesToUI];
+}
+
+- (void)addVolumesToUI
+{
+	NSArray *items = [[NSFileManager defaultManager] directoryContentsAtPath:[NSString stringWithFormat:@"/Volumes"]];
+	NSString *i;
+	
+	for( i in items )
+	{
+		[volumesBox addItemWithTitle:i];
+	}
 }
 
 - (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo 
@@ -28,6 +45,7 @@
 - (IBAction) listFiles:(id)sender
 {
 	NSString *filter = [filterField stringValue];
+	NSString *vol = [NSString stringWithFormat:@"\"%@\"", [volumesBox titleOfSelectedItem]];
 	
 	[probar setUsesThreadedAnimation:YES];
 	
@@ -40,9 +58,9 @@
 		  contextInfo: nil];
 	
 	if( [filter length] )
-		[lsofData getData:filter];
+		[lsofData getData:filter forVolume:vol];
 	else
-		[lsofData getData:nil];
+		[lsofData getData:nil forVolume:vol];
 	
 	[probar stopAnimation:self];
 	
@@ -108,22 +126,10 @@
 	int rowIx = [outTable selectedRow];
 	if( rowIx >= 0 )
 	{
-		NSString *path = [[lsofData getFileOfRow:rowIx] copy];
-		char *upath = malloc([path length]);
-		if( upath )
-		{
-			strcpy(upath, [path UTF8String]);
-			char *p;
-			for( p = &upath[strlen(upath)-1]; p >= upath && *p != '/'; p-- ) *p = 0;
-			if( strlen(upath) )
-			{
-				char cmd[512];
-				sprintf(cmd, "open %s", upath);
-				system(cmd);
-			}
-
-			free(upath);
-		}
+		NSURL *fileUrl = [NSURL fileURLWithPath:[lsofData getFileOfRow:rowIx]]; 
+		FinderItem *theFile = [[theFinder items] objectAtLocation:fileUrl];
+		[theFile reveal];
+		[theFinder activate];
 	}
 }
 

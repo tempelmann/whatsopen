@@ -4,6 +4,7 @@
 English.lproj/InfoPlist.strings -text
 English.lproj/MainMenu.nib/designable.nib -text
 English.lproj/MainMenu.nib/keyedobjects.nib -text
+/Finder.h -text
 /Info.plist -text svneol=unset#unset
 /InterfaceController.h -text
 /InterfaceController.m -text
@@ -14,5 +15,4 @@ WhatsOpen.xcodeproj/marmon.mode1v3 -text
 WhatsOpen.xcodeproj/marmon.pbxuser -text
 WhatsOpen.xcodeproj/project.pbxproj -text
 /WhatsOpen_Prefix.pch -text
-/WhatsOpen_v1.0.dmg -text
 /main.m -text

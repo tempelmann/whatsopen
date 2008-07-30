@@ -13,7 +13,7 @@
 	NSMutableArray *data;
 }
 
-- (void)getData:(NSString *)filter;
+- (void)getData:(NSString *)filter forVolume:(NSString *)vol;
 - (NSInteger)dataCount;
 - (NSString *)getField:(int)field inRow:(int)row;
 - (NSString *)fileSize:(const char *)f;
