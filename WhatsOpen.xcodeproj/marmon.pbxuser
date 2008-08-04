@@ -82,25 +82,16 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 239147928;
-			PBXWorkspaceStateSaveDate = 239147928;
+			PBXPerProjectTemplateStateSaveDate = 239558588;
+			PBXWorkspaceStateSaveDate = 239558588;
 		};
 		perUserProjectItems = {
-			B42F9F670E411B9C00016D64 /* PBXTextBookmark */ = B42F9F670E411B9C00016D64 /* PBXTextBookmark */;
-			B42F9F830E411C1100016D64 /* PBXTextBookmark */ = B42F9F830E411C1100016D64 /* PBXTextBookmark */;
-			B42F9F900E411EBE00016D64 /* PBXTextBookmark */ = B42F9F900E411EBE00016D64 /* PBXTextBookmark */;
-			B42F9FA30E411F3200016D64 /* PBXTextBookmark */ = B42F9FA30E411F3200016D64 /* PBXTextBookmark */;
-			B42F9FA50E411F7000016D64 /* PBXTextBookmark */ = B42F9FA50E411F7000016D64 /* PBXTextBookmark */;
-			B42F9FAA0E411F8800016D64 /* PBXTextBookmark */ = B42F9FAA0E411F8800016D64 /* PBXTextBookmark */;
-			B42F9FAD0E41203A00016D64 /* PBXTextBookmark */ = B42F9FAD0E41203A00016D64 /* PBXTextBookmark */;
-			B42F9FB60E4123FC00016D64 /* PBXTextBookmark */ = B42F9FB60E4123FC00016D64 /* PBXTextBookmark */;
-			B42F9FC70E4124B300016D64 /* PBXTextBookmark */ = B42F9FC70E4124B300016D64 /* PBXTextBookmark */;
-			B42F9FCB0E41251A00016D64 /* PBXTextBookmark */ = B42F9FCB0E41251A00016D64 /* PBXTextBookmark */;
-			B42F9FFE0E41274600016D64 /* PBXTextBookmark */ = B42F9FFE0E41274600016D64 /* PBXTextBookmark */;
-			B4677BDB0E41105B0039FC36 = B4677BDB0E41105B0039FC36 /* PBXTextBookmark */;
-			B4677C1B0E4111940039FC36 = B4677C1B0E4111940039FC36 /* PBXTextBookmark */;
+			B42FA0000E4128A900016D64 = B42FA0000E4128A900016D64 /* PBXTextBookmark */;
 			B469A6BC0E2EB032008F1CBB = B469A6BC0E2EB032008F1CBB /* PlistBookmark */;
 			B469A6BE0E2EB032008F1CBB = B469A6BE0E2EB032008F1CBB /* PlistBookmark */;
+			B488A0870E4129F40075DD95 = B488A0870E4129F40075DD95 /* PBXTextBookmark */;
+			B4B2725F0E47600F008B2188 /* PBXTextBookmark */ = B4B2725F0E47600F008B2188 /* PBXTextBookmark */;
+			B4B2726B0E47601E008B2188 /* PBXTextBookmark */ = B4B2726B0E47601E008B2188 /* PBXTextBookmark */;
 		};
 		sourceControlManager = B406D9BE0E11E3E50098E862 /* Source Control */;
 		userBuildSettings = {
@@ -162,7 +153,7 @@
 		fallbackIsa = XCSourceControlManager;
 		isSCMEnabled = 0;
 		scmConfiguration = {
-			repositoryName = "";
+			repositoryName = WhatsOpen;
 		};
 	};
 	B406D9BF0E11E3E50098E862 /* Code sense */ = {
@@ -201,107 +192,7 @@
 			sepNavWindowFrame = "{{279, 114}, {861, 660}}";
 		};
 	};
-	B42F9F670E411B9C00016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9F830E411C1100016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9F900E411EBE00016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FA30E411F3200016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FA50E411F7000016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FAA0E411F8800016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FAD0E41203A00016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FB60E4123FC00016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FC70E4124B300016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FCB0E41251A00016D64 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B42F9FFE0E41274600016D64 /* PBXTextBookmark */ = {
+	B42FA0000E4128A900016D64 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
 		name = "Finder.h: 209";
@@ -329,34 +220,14 @@
 	B460A4CD0E226738009924BC /* VersionNotes */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {802, 532}}";
-			sepNavSelRange = "{128, 0}";
-			sepNavVisRange = "{0, 283}";
+			sepNavSelRange = "{46, 0}";
+			sepNavVisRange = "{0, 330}";
 			sepNavWindowFrame = "{{84, 150}, {861, 660}}";
 		};
 	};
-	B4677BDB0E41105B0039FC36 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
-	B4677C1B0E4111940039FC36 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
-		name = "Finder.h: 209";
-		rLen = 0;
-		rLoc = 8232;
-		rType = 0;
-		vrLen = 0;
-		vrLoc = 0;
-	};
 	B469A6970E2EAAE9008F1CBB /* Finder.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {3852, 11396}}";
+			sepNavIntBoundsRect = "{{0, 0}, {550, 11480}}";
 			sepNavSelRange = "{8232, 0}";
 			sepNavVisRange = "{0, 0}";
 			sepNavWindowFrame = "{{122, 75}, {1029, 739}}";
@@ -383,5 +254,35 @@
 		name = /Users/marmon/src/whatsopen/Info.plist;
 		rLen = 0;
 		rLoc = 2147483647;
+	};
+	B488A0870E4129F40075DD95 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
+		name = "Finder.h: 209";
+		rLen = 0;
+		rLoc = 8232;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	B4B2725F0E47600F008B2188 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
+		name = "Finder.h: 209";
+		rLen = 0;
+		rLoc = 8232;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	B4B2726B0E47601E008B2188 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = B469A6970E2EAAE9008F1CBB /* Finder.h */;
+		name = "Finder.h: 209";
+		rLen = 0;
+		rLoc = 8232;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
 	};
 }
