@@ -1,4 +1,13 @@
 
+1.5
+	Reworked searching so it can be done in place without reloading the file list. (Much faster)
+	Added colume sorting, reordering, and possitional saving.
+	Added automatic disk detection so new devices (or removed devices) change the volumes
+	popup properly.
+
+1.4
+	Version bump to finalize sparkle addition.
+
 1.3
 	Version bump to test sparkle's xml feed.
 

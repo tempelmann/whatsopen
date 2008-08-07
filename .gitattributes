@@ -10,6 +10,8 @@ English.lproj/MainMenu.nib/keyedobjects.nib -text
 /InterfaceController.m -text
 /LSOF.h -text
 /LSOF.m -text
+/OpenFile.h -text
+/OpenFile.m -text
 Sparkle.framework/Headers -text
 Sparkle.framework/Resources -text
 Sparkle.framework/Sparkle -text

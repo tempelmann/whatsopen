@@ -17,6 +17,8 @@
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
 		B460A4CE0E226738009924BC /* VersionNotes in Resources */ = {isa = PBXBuildFile; fileRef = B460A4CD0E226738009924BC /* VersionNotes */; };
 		B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */; };
+		B4C1550A0E48F7AC0019E734 /* OpenFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B4C155090E48F7AC0019E734 /* OpenFile.m */; };
+		B4C1584E0E4A2FD40019E734 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4C1584D0E4A2FD40019E734 /* DiskArbitration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +54,9 @@
 		B460A4CD0E226738009924BC /* VersionNotes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VersionNotes; sourceTree = "<group>"; };
 		B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		B469A6970E2EAAE9008F1CBB /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
+		B4C155080E48F7AC0019E734 /* OpenFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFile.h; sourceTree = "<group>"; };
+		B4C155090E48F7AC0019E734 /* OpenFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFile.m; sourceTree = "<group>"; };
+		B4C1584D0E4A2FD40019E734 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +67,7 @@
 				B42F9F9A0E411F1100016D64 /* Sparkle.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */,
+				B4C1584E0E4A2FD40019E734 /* DiskArbitration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +135,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B4C155080E48F7AC0019E734 /* OpenFile.h */,
+				B4C155090E48F7AC0019E734 /* OpenFile.m */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 				B406D9C00E11E4910098E862 /* InterfaceController.h */,
@@ -137,6 +145,7 @@
 				B4496A050E14080F00CE6B42 /* Alerts.m */,
 				B406D9E80E11E7C70098E862 /* LSOF.h */,
 				B406D9E90E11E7C70098E862 /* LSOF.m */,
+				B4C1584D0E4A2FD40019E734 /* DiskArbitration.framework */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -157,7 +166,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "WhatsOpen" */;
 			buildPhases = (
-				B4A5F8320E22CE060027675D /* ShellScript */,
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
@@ -202,22 +210,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		B4A5F8320E22CE060027675D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "DIR=$(pwd)\nv=$(svn info | grep Revision: | awk '{print $2}')\nv=$((v+1))\n$(defaults write ${DIR}/Info CFBundleVersion ${v})";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -227,6 +219,7 @@
 				B406D9C20E11E4910098E862 /* InterfaceController.m in Sources */,
 				B406D9EA0E11E7C70098E862 /* LSOF.m in Sources */,
 				B4496A060E14080F00CE6B42 /* Alerts.m in Sources */,
+				B4C1550A0E48F7AC0019E734 /* OpenFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

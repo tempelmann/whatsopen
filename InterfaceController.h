@@ -28,21 +28,34 @@
 	Boolean listing;
 	LSOF *lsofData;
 	FinderApplication *theFinder;
+	int appColSort;
+	int fileSizeSortFlag;
+	int filePathSort;
 }
 
 - (IBAction) listFiles:(id)sender;
 - (IBAction) killApplication:(id)sender;
 - (IBAction) openInFinder:(id)sender;
-// - (IBAction) showInfoFinder:(id)sender;
-
-// add our volumes to the UI volumes filter
-- (void)addVolumesToUI;
+- (IBAction) filterFiles:(id)sender;
 
 // table delegates
 - (int)numberOfRowsInTableView:(NSTableView *)table;
 - (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(int)rowIx;
 - (Boolean)tableView:(NSTableView *)table shouldEditTableColumn:(NSTableColumn *)col row:(int)row;
 - (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation;
+//- (void)tableView:(NSTableView *)aTableView sortDescriptorsDidChange:(NSArray *)oldDescriptors;
 - (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+
+- (void)reloadTable;
+
+// column sorting
+- (void)tableView:(NSTableView *)tableView mouseDownInHeaderOfTableColumn:(NSTableColumn *)tableColumn;
+- (NSArray *)sortByAppName;
+
+void diskAddCallback( DADiskRef disk, void *context );
+void diskRemovedCallback( DADiskRef disk, void *context );
+- (void)addVolumeToUI:(NSString *)vol;
+- (void)removeVolumeFromUI:(NSString *)vol;
+- (void)setupDiskWatcher;
 
 @end

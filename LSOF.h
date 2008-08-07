@@ -8,17 +8,29 @@
 
 #import <Cocoa/Cocoa.h>
 #import <sys/stat.h>
+#import "OpenFile.h"
 
 @interface LSOF : NSObject {
 	NSMutableArray *data;
+	NSMutableArray *displayData;
+	NSSortDescriptor *appNameSort;
+	NSSortDescriptor *fileSizeSort;
+	NSSortDescriptor *filePathSort;
 }
 
-- (void)getData:(NSString *)filter forVolume:(NSString *)vol;
+@property(readonly) NSSortDescriptor *appNameSort;
+@property(readonly) NSSortDescriptor *fileSizeSort;
+@property(readonly) NSSortDescriptor *filePathSort;
+
+- (void)getData;
 - (NSInteger)dataCount;
-- (NSString *)getField:(int)field inRow:(int)row;
 - (NSString *)fileSize:(const char *)f;
 - (void)releaseData;
-- (pid_t)getPidOfRow:(int)rowIx;
-- (NSString *)getFileOfRow:(int)rowIx;
+- (pid_t)getPidForRow:(int)rowIx;
+- (NSString *)getFilePathForRow:(int)rowIx;
+- (NSString *)getAppNameForRow:(int)rowIx;
+- (NSString *)getFileSizeForRow:(int)rowIx;
+- (void)filterDataWithString:(NSString *)filtr forVolume:(NSString *)vol;
+- (void) sortDataWithDescriptors:(NSArray *)sortDescs;
 
 @end

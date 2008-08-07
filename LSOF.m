@@ -11,83 +11,146 @@
 
 @implementation LSOF
 
+@synthesize appNameSort;
+@synthesize filePathSort;
+@synthesize fileSizeSort;
+
 - (id)init
 {
+	displayData = nil;
 	data = [[[NSMutableArray alloc] init] retain];
-	
+	appNameSort = [[[NSSortDescriptor alloc] initWithKey:@"appName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
+	filePathSort = [[[NSSortDescriptor alloc] initWithKey:@"filePath" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
+	fileSizeSort = [[[NSSortDescriptor alloc] initWithKey:@"realSize" ascending:YES selector:@selector(compare:)] retain];
 	return self;
+}
+
+- (void) sortDataWithDescriptors:(NSArray *)sortDescs
+{
+	if( displayData )
+	{
+		if( sortDescs )
+		{
+			NSMutableArray *tmpArray = [NSMutableArray arrayWithArray:[displayData sortedArrayUsingDescriptors:sortDescs]];
+			[displayData removeAllObjects];
+			[displayData release];
+			displayData = [[NSMutableArray arrayWithArray:tmpArray] retain];
+		}
+		else
+		{
+			[displayData removeAllObjects];
+			[displayData release];
+			displayData = [[NSMutableArray arrayWithArray:data] retain];
+		}
+	}
 }
 
 - (NSInteger)dataCount
 {
-	return [data count];
+	NSInteger count = 0;
+	if( displayData && ([displayData count] > 0) )
+		count = [displayData count];
+	return count;
 }
 
 - (void)releaseData
 {
-	NSMutableArray *row;
 	if( data )
 	{
 		if( [data count] )
 		{
-			for( row in data )
-				[row removeAllObjects];
 			[data removeAllObjects];
 		}
 	}
+	if( displayData )
+	{
+		[displayData release];
+		displayData = nil;
+	}
+}
+
+size_t getSize( const char *f )
+{
+	size_t retVal = 0;
+	struct stat st;
+	memset(&st, 0, sizeof(st));
+	if( stat( f, &st ) == 0 )
+	{
+		retVal = st.st_size;
+	}
+	return retVal;
 }
 
 - (NSString *) fileSize:(const char *)f
 {
 	NSString *retVal = nil;
-	struct stat st;
 	char *units[4] = { "B", "KB", "MB", "GB" };
 	int i;
 	size_t sz = 0;
-	memset(&st, 0, sizeof(st));
-	
-	if( stat( f, &st ) == 0 )
-	{
-		sz = st.st_size;
-		for( i = 0; i < 4 && sz > 1024; i++ ) sz = sz / 1024;
-		retVal = [[[NSString alloc] initWithFormat:@"%d%s", sz, units[i]] autorelease];
-	}
-	else
-		NSLog(@"stat error %s: %s", f, strerror(errno));
+
+	sz = getSize(f);
+	for( i = 0; i < 4 && sz > 1024; i++ ) sz = sz / 1024;
+	retVal = [[[NSString alloc] initWithFormat:@"%d%s", sz, units[i]] autorelease];
+
 	return retVal;
 }
 
-- (void)getData:(NSString *)filter forVolume:(NSString *)vol
+- (void)filterDataWithString:(NSString *)filter forVolume:(NSString *)vol
+{
+	NSPredicate *pred = nil;
+	
+	if( [vol compare:@"All"] != NSOrderedSame )
+	{
+		if( filter && [filter length])
+		{
+			pred = [NSPredicate predicateWithFormat:@"((SELF.appName CONTAINS[c] %@) OR (SELF.filePath CONTAINS[c] %@)) AND (SELF.filePath BEGINSWITH[c] '%@')", 
+					filter, filter, [NSString stringWithFormat:@"/Volumes/%@", vol]];
+		}
+		else
+		{
+			pred = [NSPredicate predicateWithFormat:@"SELF.filePath BEGINSWITH[c] '%@'", [NSString stringWithFormat:@"/Volumes/%@", vol]];
+		}
+	}
+	else if( filter && [filter length])
+	{
+		pred = [NSPredicate predicateWithFormat:@"(SELF.appName contains[c] %@) OR (SELF.filePath contains[c] %@)", 
+				filter, filter];
+	}
+	
+	if( pred )
+	{
+		if( displayData && ([displayData count] > 0))
+		{
+			[displayData removeAllObjects];
+			[displayData release];
+			displayData = nil;
+		}
+		if( data && ([data count] > 0) )
+			displayData = [[NSMutableArray arrayWithArray:[data filteredArrayUsingPredicate:pred]] retain];
+	}
+	else
+	{
+		if( displayData && ([displayData count] > 0 ))
+		{
+			[displayData removeAllObjects];
+			[displayData release];
+			displayData = nil;
+		}
+		if( data && ([data count] > 0) )
+			displayData = [[NSMutableArray arrayWithArray:data] retain];
+	}
+}
+
+- (void)getData
 {
 	FILE *lsof;
-	NSString *cmd_string;
+	NSString *cmd_string = [[NSString alloc] initWithString:@"lsof"];
 	char line[4096];
 	char *p, *p2, *lim;
 	Boolean one = NO;
 	NSMutableArray *lineArray;
 	NSString *tst;
 	int i;
-	
-	if( filter && [filter length] )
-	{
-		cmd_string = [[NSString alloc] initWithFormat:@"lsof | grep %@", filter];
-		one = YES;
-	}
-	else
-	{
-		cmd_string = [[NSString alloc] initWithString:@"lsof"];
-	}
-	
-	if( vol && [vol length] )
-	{
-		if( [vol compare:@"\"All\""] != NSOrderedSame )
-		{
-			NSString *p = cmd_string;
-			cmd_string = [cmd_string stringByAppendingString:[NSString stringWithFormat:@" | grep %@", vol]];
-			[p release];
-			one = YES;
-		}
-	}
 	
 	if( (lsof = popen([cmd_string UTF8String], "r")) == NULL )
 	{
@@ -130,13 +193,19 @@
 				}
 				if( [[lineArray objectAtIndex:4] isEqualToString:[NSString stringWithFormat:@"REG"]] )
 				{
+					OpenFile *f = [[OpenFile alloc] init];
 					tst = [[self fileSize:[[lineArray objectAtIndex:8] UTF8String]] retain];
 					if( tst )
 					{
-						[lineArray addObject:tst];
+						[f setFileSize:tst];
 						[tst release];
 					}
-					[data addObject:lineArray];
+					[f setAppName:[lineArray objectAtIndex:0]];
+					[f setFilePath:[lineArray objectAtIndex:8]];
+					[f setPid:[[lineArray objectAtIndex:1] integerValue]];
+					[f setRealSize:[NSNumber numberWithLongLong:getSize([[lineArray objectAtIndex:8] UTF8String])]];
+					[data addObject:f];
+					[lineArray release];
 				}
 				else
 					[lineArray release];
@@ -149,43 +218,48 @@
 		fclose(lsof);
 	}
 	
-	NSLog(@"data filled, %d objects", [data count]);
+	if( displayData && ([displayData count] > 0))
+	{
+		[displayData removeAllObjects];
+		[displayData release];
+		displayData = nil;
+	}
+	displayData = [[NSMutableArray arrayWithArray:data] retain];
 }
 
-- (pid_t)getPidOfRow:(int)rowIx
+- (pid_t)getPidForRow:(int)rowIx
 {
 	pid_t retVal = -1;
-	NSMutableArray *row = [data objectAtIndex:rowIx];
-	if( row )
-		retVal = [[row objectAtIndex:1] integerValue];
+	OpenFile *f = [displayData objectAtIndex:rowIx];
+	if( f )
+		retVal = [f pid];
 	return retVal;
 }
 
-- (NSString *)getFileOfRow:(int)rowIx
+- (NSString *)getFilePathForRow:(int)rowIx
 {
 	NSString * retVal = nil;
-	NSMutableArray *row = [data objectAtIndex:rowIx];
-	if( row )
-		retVal = [row objectAtIndex:8];
+	OpenFile *f = [displayData objectAtIndex:rowIx];
+	if( f )
+		retVal = [f filePath];
 	return retVal;
 }
 
-- (NSString *)getField:(int)field inRow:(int)rowIx
+- (NSString *)getAppNameForRow:(int)rowIx
 {
-	NSString *retVal = nil;
-	NSMutableArray *row;
-	
-	if( rowIx < [data count] )
-	{
-		row = [data objectAtIndex:rowIx];
+	NSString * retVal = nil;
+	OpenFile *f = [displayData objectAtIndex:rowIx];
+	if( f )
+		retVal = [f appName];
+	return retVal;
+}
 
-		if( row )
-		{
-			if( field < [row count] )
-				retVal = [row objectAtIndex:field];
-		}
-	}
-	
+- (NSString *)getFileSizeForRow:(int)rowIx
+{
+	NSString * retVal = nil;
+	OpenFile *f = [displayData objectAtIndex:rowIx];
+	if( f )
+		retVal = [f fileSize];
 	return retVal;
 }
 
