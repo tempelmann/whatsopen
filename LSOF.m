@@ -14,6 +14,8 @@
 @synthesize appNameSort;
 @synthesize filePathSort;
 @synthesize fileSizeSort;
+@synthesize usernameSort;
+@synthesize UsernameArray;
 
 - (id)init
 {
@@ -22,6 +24,12 @@
 	appNameSort = [[[NSSortDescriptor alloc] initWithKey:@"appName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
 	filePathSort = [[[NSSortDescriptor alloc] initWithKey:@"filePath" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
 	fileSizeSort = [[[NSSortDescriptor alloc] initWithKey:@"realSize" ascending:YES selector:@selector(compare:)] retain];
+	usernameSort = [[[NSSortDescriptor alloc] initWithKey:@"username" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
+	
+	UsernameArray = [[NSMutableArray alloc] init];
+	guidWrapperPath = [[NSString stringWithFormat:@"%@/Contents/MacOS/uidWrapper", [[NSBundle mainBundle] bundlePath]] retain];
+	guidWrapperPathUTF8 = (char *)[guidWrapperPath UTF8String];
+	
 	return self;
 }
 
@@ -67,6 +75,12 @@
 		[displayData release];
 		displayData = nil;
 	}
+	
+	if( UsernameArray )
+	{
+		[UsernameArray removeAllObjects];
+		[UsernameArray addObject:[NSString stringWithFormat:@"All"]];
+	}
 }
 
 size_t getSize( const char *f )
@@ -95,27 +109,48 @@ size_t getSize( const char *f )
 	return retVal;
 }
 
-- (void)filterDataWithString:(NSString *)filter forVolume:(NSString *)vol
+- (void)filterDataWithString:(NSString *)filter forVolume:(NSString *)vol forUser:(NSString *)user
 {
 	NSPredicate *pred = nil;
+	NSMutableString *baseString = nil;
+	NSString *volString = nil;
+	NSString *userString = nil;
 	
-	if( [vol compare:@"All"] != NSOrderedSame )
+	if( user && ([user compare:@"All"] != NSOrderedSame) )
 	{
-		if( filter && [filter length])
-		{
-			pred = [NSPredicate predicateWithFormat:@"((SELF.appName CONTAINS[c] %@) OR (SELF.filePath CONTAINS[c] %@)) AND (SELF.filePath BEGINSWITH[c] '%@')", 
-					filter, filter, [NSString stringWithFormat:@"/Volumes/%@", vol]];
-		}
-		else
-		{
-			pred = [NSPredicate predicateWithFormat:@"SELF.filePath BEGINSWITH[c] '%@'", [NSString stringWithFormat:@"/Volumes/%@", vol]];
-		}
+		userString = [NSString stringWithFormat:@"(SELF.username == '%@')", user];
 	}
-	else if( filter && [filter length])
+	
+	if( vol && ([vol compare:@"All"] != NSOrderedSame) )
 	{
-		pred = [NSPredicate predicateWithFormat:@"(SELF.appName contains[c] %@) OR (SELF.filePath contains[c] %@)", 
-				filter, filter];
+		volString = [NSString stringWithFormat:@"(SELF.filePath BEGINSWITH[c] '/Volumes/%@')", vol];
 	}
+	
+	if( filter && [filter length] )
+	{
+		baseString = [NSMutableString stringWithFormat:@"((SELF.appName contains[c] %@) OR (SELF.filePath contains[c] %@) OR (SELF.username contains[c] '%@')", filter, filter, filter];
+	}
+	else
+	{
+		baseString = [[NSMutableString alloc] init];
+	}
+	
+	if( userString )
+	{
+		if( [baseString length] )
+			[baseString appendString:@" AND "];
+		[baseString appendString:userString];
+	}
+	
+	if( volString )
+	{
+		if( [baseString length] )
+			[baseString appendString:@" AND "];
+		[baseString appendString:volString];
+	}
+	
+	if( baseString && [baseString length] )
+		pred = [NSPredicate predicateWithFormat:baseString];
 	
 	if( pred )
 	{
@@ -141,22 +176,77 @@ size_t getSize( const char *f )
 	}
 }
 
+- (Boolean)getCredentials
+{
+	Boolean retVal = YES;
+	AuthorizationFlags flags =  kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
+	AuthorizationItem progs[] = { {kAuthorizationRightExecute, strlen(guidWrapperPathUTF8), guidWrapperPathUTF8, 0} };
+	
+	AuthorizationRights rights = { sizeof(progs)/sizeof(AuthorizationItem), progs };
+	
+	if( authRef == nil )
+	{
+		if( AuthorizationCreate( NULL, kAuthorizationEmptyEnvironment, flags, &authRef ) != errAuthorizationSuccess )
+		{
+			retVal = NO;
+			if( authRef )
+				AuthorizationFree(authRef, kAuthorizationFlagDefaults);
+			authRef = nil;
+		}
+		else if( AuthorizationCopyRights( authRef, &rights, NULL, flags, NULL ) != errAuthorizationSuccess )
+		{
+			retVal = NO;
+			if( authRef )
+				AuthorizationFree(authRef, kAuthorizationFlagDefaults);
+			authRef = nil;
+		}
+	}
+	
+	return retVal;
+}
+
+- (void)releaseCredentials
+{
+	if( authRef )
+		AuthorizationFree(authRef, kAuthorizationFlagDefaults);
+	authRef = nil;
+}
+
 - (void)getData
 {
-	FILE *lsof;
-	NSString *cmd_string = [[NSString alloc] initWithString:@"lsof"];
+	FILE *lsof = NULL;
+	char *args[] = { "/usr/sbin/lsof", NULL };
 	char line[4096];
 	char *p, *p2, *lim;
 	Boolean one = NO;
 	NSMutableArray *lineArray;
 	NSString *tst;
 	int i;
+	Boolean isSet = NO;
 	
-	if( (lsof = popen([cmd_string UTF8String], "r")) == NULL )
+	if( CFPreferencesGetAppBooleanValue( CFSTR( "lsofFullList" ), kCFPreferencesCurrentApplication, &isSet ) )
+	{
+		if( ![self getCredentials] )
+		{
+			NSLog(@"Error obtaining credencials for lsof\n");
+			lsof = NULL;
+		}
+		else
+		{
+			if( AuthorizationExecuteWithPrivileges( authRef, [guidWrapperPath UTF8String], kAuthorizationFlagDefaults, args, &lsof) != errAuthorizationSuccess )
+			{
+				NSLog( @"error running lsof as root\n" );
+				lsof = NULL;
+			}
+		}
+	}
+	else if( (lsof = popen(args[0], "r")) == NULL )
 	{
 		NSLog(@"Unable to open lsof command");
+		lsof = NULL;
 	}
-	else
+	
+	if( lsof )
 	{
 		[self releaseData];
 		while( fgets( line, 4096, lsof ) )
@@ -204,6 +294,8 @@ size_t getSize( const char *f )
 					[f setFilePath:[lineArray objectAtIndex:8]];
 					[f setPid:[[lineArray objectAtIndex:1] integerValue]];
 					[f setRealSize:[NSNumber numberWithLongLong:getSize([[lineArray objectAtIndex:8] UTF8String])]];
+					[f setUsername:[lineArray objectAtIndex:2]];
+					[self addUserName:[lineArray objectAtIndex:2]];
 					[data addObject:f];
 					[lineArray release];
 				}
@@ -226,6 +318,25 @@ size_t getSize( const char *f )
 	}
 	displayData = [[NSMutableArray arrayWithArray:data] retain];
 }
+
+- (void)addUserName:(NSString *)username
+{
+	int found = 0;
+	id x;
+	for( x in UsernameArray )
+	{
+		if( [(NSString *)x compare:username] == NSOrderedSame )
+		{
+			found = 1;
+			break;
+		}
+	}
+	if( !found )
+	{
+		[UsernameArray addObject:[username copy]];
+	}
+}
+
 
 - (pid_t)getPidForRow:(int)rowIx
 {
@@ -260,6 +371,15 @@ size_t getSize( const char *f )
 	OpenFile *f = [displayData objectAtIndex:rowIx];
 	if( f )
 		retVal = [f fileSize];
+	return retVal;
+}
+
+- (NSString *)getUserForRow:(int)rowIx
+{
+	NSString * retVal = nil;
+	OpenFile *f = [displayData objectAtIndex:rowIx];
+	if( f )
+		retVal = [f username];
 	return retVal;
 }
 

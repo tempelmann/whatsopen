@@ -19,6 +19,7 @@
 	listing = NO;
 	appColSort = 0;
 	fileSizeSortFlag = 0;
+	usernameSort = 0;
 	
 	[self setupDiskWatcher];
 	
@@ -81,6 +82,14 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[sheet orderOut:self]; 
 } 
 
+- (void)resetUsernames
+{
+	if( [[lsofData UsernameArray] count] > 0 )
+	{
+		[userButton removeAllItems];
+		[userButton addItemsWithTitles:[lsofData UsernameArray]];
+	}
+}
 
 - (IBAction) listFiles:(id)sender
 {
@@ -94,6 +103,7 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 		  contextInfo: nil];
 	
 	[lsofData getData];
+	[self resetUsernames];
 	[self filterFiles:self];
 	
 	[probar stopAnimation:self];
@@ -107,6 +117,7 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	NSString *filter = ([[filterField stringValue] length] > 0 ? [filterField stringValue] : nil);
 	NSString *vol = [[volumesBox titleOfSelectedItem] copy];
 	NSString *volPath = [NSString stringWithFormat:@"/Volumes/%@", vol];
+	NSString *user = [NSString stringWithString:[userButton titleOfSelectedItem]];
 	struct stat st;
 	char buf[32];
 	
@@ -125,7 +136,7 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	}
 		
 	
-	[lsofData filterDataWithString:filter forVolume:vol];
+	[lsofData filterDataWithString:filter forVolume:vol forUser:user ];
 	[self reloadTable];
 }
 
@@ -165,6 +176,8 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 		retVal = [lsofData getFilePathForRow:rowIx];
 	else if( col == fileSizeColumn )
 		retVal = [lsofData getFileSizeForRow:rowIx];
+	else if( col == usernameColumn )
+		retVal = [lsofData getUserForRow:rowIx];
 	
 	return retVal;
 }
@@ -203,6 +216,8 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	NSArray *descs;
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
+	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+	usernameSort = 0;
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
 	switch( appColSort )
@@ -231,6 +246,8 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	NSArray *descs;
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
+	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+	usernameSort = 0;
 	filePathSort = 0;
 	appColSort = 0;
 	switch( fileSizeSortFlag )
@@ -259,6 +276,8 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	NSArray *descs;
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
+	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+	usernameSort = 0;
 	appColSort = 0;
 	fileSizeSortFlag = 0;
 	switch( filePathSort )
@@ -282,6 +301,36 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	return descs;
 }
 
+- (NSArray *)sortByUsername
+{
+	NSArray *descs;
+	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
+	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
+	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
+	fileSizeSortFlag = 0;
+	filePathSort = 0;
+	appColSort = 0;
+	switch( usernameSort )
+	{
+		case 0: // unsorted -> ascending
+			descs = [NSArray arrayWithObjects:[lsofData usernameSort], nil ];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:usernameColumn];
+			usernameSort = 1;
+			break;
+		case 1: // ascending -> descending
+			descs = [NSArray arrayWithObjects:[[lsofData usernameSort] reversedSortDescriptor], nil ];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:usernameColumn];
+			usernameSort = 2;
+			break;
+		case 2: // descending -> unsorted
+			descs = nil;
+			usernameSort = 0;
+			[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+			break;
+	}
+	return descs;
+}
+
 - (void)tableView:(NSTableView *)tableView mouseDownInHeaderOfTableColumn:(NSTableColumn *)tableColumn
 {
 	NSArray *descs = nil;
@@ -297,11 +346,64 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	{
 		descs = [[self sortByFilePath] retain];
 	}
+	else if( tableColumn == usernameColumn )
+	{
+		descs = [[self sortByUsername] retain];
+	}
 	
 	[lsofData sortDataWithDescriptors:descs];
 	[self reloadTable];
 	if( descs )
 		[descs release];
+}
+
+- (IBAction) submitComment:(id)sender
+{
+	NSLog(@"submit comment");
+	NSURL *url = [NSURL URLWithString:@"http://www.agasupport.com/programComment.php"];
+	NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+	NSString *stringBoundary = [NSString stringWithString:@"0xKhTmLbOuNdArY"];
+	NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",stringBoundary];
+	[urlRequest addValue:contentType forHTTPHeaderField: @"Content-Type"];
+	
+	[urlRequest setHTTPMethod:@"POST"];
+	NSMutableString *postData = [[NSMutableString alloc] init];
+	[postData appendString:[NSString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"programname", @"whatsopen"]];
+	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"subject", [commentSubject stringValue]]];
+	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"type", [commentType titleOfSelectedItem]]];
+	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"from", [commentFrom stringValue]]];
+	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"text", [[commentText textStorage] string]]];
+	[postData appendString:[NSString stringWithFormat:@"\r\n--%@", stringBoundary]];
+	
+	[urlRequest setHTTPBody:[postData dataUsingEncoding:NSUTF8StringEncoding]];
+	NSURLConnection *connectionResponse = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self];
+	if( !connectionResponse )
+	{
+		NSLog(@"failed to submit request");
+	}
+	else
+	{
+		[NSApp endSheet:commentPanel];
+		[commentFrom setStringValue:@"your@email.dom"];
+		[commentSubject setStringValue:@"Your Subject"];
+		[[commentText textStorage] setAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+	}
+}
+
+- (IBAction) cancelComment:(id)sender
+{
+	NSLog(@"cancel comment");
+	[NSApp endSheet:commentPanel];
+}
+
+- (IBAction) showCommentPane:(id)sender
+{
+	NSLog(@"show comment");
+	[NSApp beginSheet: commentPanel
+	   modalForWindow: mainWindow
+		modalDelegate: self
+	   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
+		  contextInfo: nil];
 }
 
 @end

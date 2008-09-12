@@ -20,10 +20,17 @@
 	IBOutlet NSTableColumn *applicationColumn;
 	IBOutlet NSTableColumn *filePathColumn;
 	IBOutlet NSTableColumn *fileSizeColumn;
+	IBOutlet NSTableColumn *usernameColumn;
 	IBOutlet NSToolbar *toobar;
 	IBOutlet NSProgressIndicator *probar;
 	IBOutlet NSWindow *progSheet;
 	IBOutlet NSPopUpButton *volumesBox;
+	IBOutlet NSPopUpButton *userButton;
+	IBOutlet NSPanel *commentPanel;
+	IBOutlet NSPopUpButton *commentType;
+	IBOutlet NSTextField *commentSubject;
+	IBOutlet NSTextView *commentText;
+	IBOutlet NSTextField *commentFrom;
 
 	Boolean listing;
 	LSOF *lsofData;
@@ -31,12 +38,16 @@
 	int appColSort;
 	int fileSizeSortFlag;
 	int filePathSort;
+	int usernameSort;
 }
 
 - (IBAction) listFiles:(id)sender;
 - (IBAction) killApplication:(id)sender;
 - (IBAction) openInFinder:(id)sender;
 - (IBAction) filterFiles:(id)sender;
+- (IBAction) submitComment:(id)sender;
+- (IBAction) cancelComment:(id)sender;
+- (IBAction) showCommentPane:(id)sender;
 
 // table delegates
 - (int)numberOfRowsInTableView:(NSTableView *)table;

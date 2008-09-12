@@ -1,0 +1,54 @@
+MainImage {
+	float: left;
+	display: inline;
+	padding-left: 32px;
+	border-right: 1px solid #858585;
+	margin-top: 64px;
+	padding-right: 32px;
+}
+
+helptopic {
+	color: #4d53d2;
+	font: 10px Georgia, "Times New Roman", Times, serif;
+	text-align: left;
+	direction: ltr;
+}
+
+topic {
+	color: #4d53d5;
+	font: bold 14px Georgia, "Times New Roman", Times, serif;
+	text-decoration: underline;
+	display: block;
+	margin-top: 32px;
+}
+
+help {
+	font: 10px Georgia, "Times New Roman", Times, serif;
+	text-align: justify;
+	direction: ltr;
+	padding-left: 16px;
+	display: block;
+	top: 16px;
+	margin-top: 8px;
+	width: 320px;
+}
+
+AppTitle {
+	color: #2f00cd;
+	font: normal bold 24px Georgia, "Times New Roman", Times, serif;
+}
+
+CopyRight {
+	color: #4c4c4c;
+	font: 10px Georgia, "Times New Roman", Times, serif;
+	text-align: center;
+	width: 320px;
+	padding-top: 16px;
+}
+
+appinfo {
+	float: left;
+	display: inline-block;
+	margin-top: 96px;
+	padding-left: 32px;
+}

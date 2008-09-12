@@ -16,6 +16,6 @@
 @synthesize fileSize;
 @synthesize realSize;
 @synthesize pid;
-
+@synthesize username;
 
 @end

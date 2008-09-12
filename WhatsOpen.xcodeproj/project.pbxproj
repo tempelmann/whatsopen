@@ -15,11 +15,27 @@
 		B42F9F9A0E411F1100016D64 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		B42F9FA70E411F8200016D64 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
+		B45AC3C90E79CF40009CE932 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B45AC3C80E79CF40009CE932 /* Security.framework */; };
+		B45AC4820E7A28CD009CE932 /* uidWrapper in CopyFiles */ = {isa = PBXBuildFile; fileRef = B45AC47B0E7A28B8009CE932 /* uidWrapper */; };
+		B45AC4850E7A28DC009CE932 /* uidWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = B45AC4840E7A28DC009CE932 /* uidWrapper.c */; };
 		B460A4CE0E226738009924BC /* VersionNotes in Resources */ = {isa = PBXBuildFile; fileRef = B460A4CD0E226738009924BC /* VersionNotes */; };
 		B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */; };
+		B475FA690E5628CB007A27B9 /* WhatsOpen Help in Resources */ = {isa = PBXBuildFile; fileRef = B475FA680E5628CB007A27B9 /* WhatsOpen Help */; };
 		B4C1550A0E48F7AC0019E734 /* OpenFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B4C155090E48F7AC0019E734 /* OpenFile.m */; };
 		B4C1584E0E4A2FD40019E734 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4C1584D0E4A2FD40019E734 /* DiskArbitration.framework */; };
+		B4C15AD30E4BAEAA0019E734 /* whatsopen.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */; };
+		B4F9733B0E6EEBA70091D4A2 /* lightBulbIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B45AC4800E7A28C6009CE932 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B45AC47A0E7A28B8009CE932 /* uidWrapper */;
+			remoteInfo = uidWrapper;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		B42F9FA60E411F7000016D64 /* CopyFiles */ = {
@@ -29,6 +45,16 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B42F9FA70E411F8200016D64 /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B45AC4450E79DA0C009CE932 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				B45AC4820E7A28CD009CE932 /* uidWrapper in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,12 +77,19 @@
 		B42F9F990E411F1100016D64 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		B4496A040E14080F00CE6B42 /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
 		B4496A050E14080F00CE6B42 /* Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Alerts.m; sourceTree = "<group>"; };
+		B45AC3C80E79CF40009CE932 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		B45AC47B0E7A28B8009CE932 /* uidWrapper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = uidWrapper; sourceTree = BUILT_PRODUCTS_DIR; };
+		B45AC4830E7A28DC009CE932 /* uidWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uidWrapper.h; sourceTree = "<group>"; };
+		B45AC4840E7A28DC009CE932 /* uidWrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uidWrapper.c; sourceTree = "<group>"; };
 		B460A4CD0E226738009924BC /* VersionNotes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VersionNotes; sourceTree = "<group>"; };
 		B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		B469A6970E2EAAE9008F1CBB /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
+		B475FA680E5628CB007A27B9 /* WhatsOpen Help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "WhatsOpen Help"; path = "../Users/marmon/src/whatsopen/WhatsOpen Help"; sourceTree = DEVELOPER_DIR; };
 		B4C155080E48F7AC0019E734 /* OpenFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFile.h; sourceTree = "<group>"; };
 		B4C155090E48F7AC0019E734 /* OpenFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFile.m; sourceTree = "<group>"; };
 		B4C1584D0E4A2FD40019E734 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
+		B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = whatsopen.icns; path = ../../whatsopen.icns; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = lightBulbIcon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +101,14 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */,
 				B4C1584E0E4A2FD40019E734 /* DiskArbitration.framework in Frameworks */,
+				B45AC3C90E79CF40009CE932 /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B45AC4790E7A28B8009CE932 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				8D1107320486CEB800E47090 /* WhatsOpen.app */,
+				B45AC47B0E7A28B8009CE932 /* uidWrapper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -110,6 +152,9 @@
 		29B97314FDCFA39411CA2CEA /* WhatsOpen */ = {
 			isa = PBXGroup;
 			children = (
+				B45AC3C80E79CF40009CE932 /* Security.framework */,
+				B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */,
+				B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */,
 				B42F9F990E411F1100016D64 /* Sparkle.framework */,
 				B469A6970E2EAAE9008F1CBB /* Finder.h */,
 				B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */,
@@ -119,6 +164,8 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				B45AC4830E7A28DC009CE932 /* uidWrapper.h */,
+				B45AC4840E7A28DC009CE932 /* uidWrapper.c */,
 			);
 			name = WhatsOpen;
 			sourceTree = "<group>";
@@ -135,6 +182,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B475FA680E5628CB007A27B9 /* WhatsOpen Help */,
 				B4C155080E48F7AC0019E734 /* OpenFile.h */,
 				B4C155090E48F7AC0019E734 /* OpenFile.m */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -170,16 +218,34 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				B42F9FA60E411F7000016D64 /* CopyFiles */,
+				B45AC4450E79DA0C009CE932 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B45AC4810E7A28C6009CE932 /* PBXTargetDependency */,
 			);
 			name = WhatsOpen;
 			productInstallPath = "$(HOME)/Applications";
 			productName = WhatsOpen;
 			productReference = 8D1107320486CEB800E47090 /* WhatsOpen.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B45AC47A0E7A28B8009CE932 /* uidWrapper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B45AC4860E7A28DC009CE932 /* Build configuration list for PBXNativeTarget "uidWrapper" */;
+			buildPhases = (
+				B45AC4780E7A28B8009CE932 /* Sources */,
+				B45AC4790E7A28B8009CE932 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = uidWrapper;
+			productName = uidWrapper;
+			productReference = B45AC47B0E7A28B8009CE932 /* uidWrapper */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -194,6 +260,7 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* WhatsOpen */,
+				B45AC47A0E7A28B8009CE932 /* uidWrapper */,
 			);
 		};
 /* End PBXProject section */
@@ -205,6 +272,9 @@
 			files = (
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				B460A4CE0E226738009924BC /* VersionNotes in Resources */,
+				B4C15AD30E4BAEAA0019E734 /* whatsopen.icns in Resources */,
+				B475FA690E5628CB007A27B9 /* WhatsOpen Help in Resources */,
+				B4F9733B0E6EEBA70091D4A2 /* lightBulbIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +293,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B45AC4780E7A28B8009CE932 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B45AC4850E7A28DC009CE932 /* uidWrapper.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B45AC4810E7A28C6009CE932 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B45AC47A0E7A28B8009CE932 /* uidWrapper */;
+			targetProxy = B45AC4800E7A28C6009CE932 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
@@ -237,6 +323,80 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		B436722E0E508671004EED4D /* 10.4 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+			};
+			name = 10.4;
+		};
+		B436722F0E508671004EED4D /* 10.4 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = WhatsOpen_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = WhatsOpen;
+				WRAPPER_EXTENSION = app;
+			};
+			name = 10.4;
+		};
+		B45AC47D0E7A28B9009CE932 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = uidWrapper;
+			};
+			name = Debug;
+		};
+		B45AC47E0E7A28B9009CE932 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = uidWrapper;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		B45AC47F0E7A28B9009CE932 /* 10.4 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = uidWrapper;
+			};
+			name = 10.4;
+		};
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -304,11 +464,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B45AC4860E7A28DC009CE932 /* Build configuration list for PBXNativeTarget "uidWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B45AC47D0E7A28B9009CE932 /* Debug */,
+				B45AC47E0E7A28B9009CE932 /* Release */,
+				B45AC47F0E7A28B9009CE932 /* 10.4 */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "WhatsOpen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
 				C01FCF4C08A954540054247B /* Release */,
+				B436722F0E508671004EED4D /* 10.4 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -318,6 +489,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				B436722E0E508671004EED4D /* 10.4 */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

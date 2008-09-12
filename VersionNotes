@@ -1,4 +1,18 @@
+1.8
+	Added a suggest/bug reporting feature.
+	Added root level lsof to list all files.
+	Added a username column to the main table view.
+	Added a username pull down search button.
+	Added toolbar customization.
+	Searching now includes username.
 
+1.7
+	New program icon. 
+	Added help to the program.
+
+1.6
+	Created an icon for the program.
+	
 1.5
 	Reworked searching so it can be done in place without reloading the file list. (Much faster)
 	Added colume sorting, reordering, and possitional saving.
