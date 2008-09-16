@@ -1,3 +1,8 @@
+1.9
+	Added help files for the Google screen and the App Doc screen.
+	Removed the right and left window bordering.
+	Added new icons for the remaining stock black/white icons.
+
 1.8
 	Added a suggest/bug reporting feature.
 	Added root level lsof to list all files.
@@ -5,6 +10,10 @@
 	Added a username pull down search button.
 	Added toolbar customization.
 	Searching now includes username.
+	Search box will now just filter in place.
+	Added confirmation when killing applications.
+	Fixed a bug that would prevent the first row application from being killable.
+	Added man pages and google lookup for applications.
 
 1.7
 	New program icon. 

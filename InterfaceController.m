@@ -43,6 +43,7 @@
 - (void)awakeFromNib
 {
 	[volumesBox addItemWithTitle:@"All"];
+	[killButtonItem setEnabled:NO];
 }
 
 void diskAddCallback( DADiskRef disk, void *context )
@@ -145,19 +146,44 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[alert release];
 }
 
+- (void)killAlertDidEnd:(NSAlert *)alert resultCode:(int)resultCode contextInfo:(void *)context
+{
+	if( resultCode ==  NSAlertDefaultReturn )
+	{
+		int rowIx = [outTable selectedRow];
+		pid_t pid;
+		
+		if( rowIx >= 0 )
+			pid = [lsofData getPidForRow:rowIx];
+		if( pid >= 0 )
+		{
+			if( kill(pid, SIGQUIT) )
+			{
+				[[[Alerts alloc] retain] doInfoAlertWithTitle:[[NSString alloc] initWithFormat:@"Error killing process."] infoText:[[NSString alloc] initWithFormat:@"%s", strerror(errno)] forWindow:mainWindow withSelector:@selector(alertDidEnd:returnCode:contextInfo:) withDelegate:self runModal:NO];
+			}
+		}
+	}
+	else if( resultCode == NSAlertAlternateReturn )
+	{
+		[[alert window] orderOut:self];
+		[self showDocPane:self];
+	}
+}
+
 - (IBAction) killApplication:(id)sender
 {
 	int rowIx = [outTable selectedRow];
-	pid_t pid;
-	
-	if( rowIx > 0 )
-		pid = [lsofData getPidForRow:rowIx];
-	if( pid > 0 )
+	if( rowIx >= 0)
 	{
-		if( kill(pid, SIGQUIT) )
-		{
-			[[[Alerts alloc] retain] doInfoAlertWithTitle:[[NSString alloc] initWithFormat:@"Error killing process."] infoText:[[NSString alloc] initWithFormat:@"%s", strerror(errno)] forWindow:mainWindow withSelector:@selector(alertDidEnd:returnCode:contextInfo:) withDelegate:self runModal:NO];
-		}
+		Alerts *killAlert = [[[Alerts alloc] init] retain];
+		NSString *title = [NSString stringWithFormat:@"Are you sure you want to kill '%@'?", [lsofData getAppNameForRow:rowIx]];
+		[killAlert setAltButton:@"App Docs"];
+		[killAlert setOtherButton:@"Cancel"];
+		[killAlert doInfoAlertWithTitle:title  
+							   infoText:@"No data will be saved in the application." 
+							  forWindow:mainWindow withSelector:@selector(killAlertDidEnd:resultCode:contextInfo:)
+						   withDelegate:self 
+							   runModal:NO];
 	}
 }
 
@@ -365,6 +391,7 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	NSString *stringBoundary = [NSString stringWithString:@"0xKhTmLbOuNdArY"];
 	NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",stringBoundary];
 	[urlRequest addValue:contentType forHTTPHeaderField: @"Content-Type"];
+	Alerts *resAlert = [[[Alerts alloc] init] retain];
 	
 	[urlRequest setHTTPMethod:@"POST"];
 	NSMutableString *postData = [[NSMutableString alloc] init];
@@ -380,6 +407,12 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	if( !connectionResponse )
 	{
 		NSLog(@"failed to submit request");
+		[resAlert doInfoAlertWithTitle:@"I'm sorry, your message couldn't be sent." 
+	                          infoText:@"http submission failed" 
+							 forWindow:mainWindow 
+						  withSelector:@selector(alertDidEnd:returnCode:contextInfo:) 
+						  withDelegate:self 
+							  runModal:NO];
 	}
 	else
 	{
@@ -387,23 +420,147 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 		[commentFrom setStringValue:@"your@email.dom"];
 		[commentSubject setStringValue:@"Your Subject"];
 		[[commentText textStorage] setAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+		[resAlert doInfoAlertWithTitle:@"Your message has been sent." 
+	                          infoText:@"Thank you for using WhatsOpen!" 
+							 forWindow:mainWindow 
+						  withSelector:@selector(alertDidEnd:returnCode:contextInfo:) 
+						  withDelegate:self 
+							  runModal:NO];
 	}
 }
 
 - (IBAction) cancelComment:(id)sender
 {
-	NSLog(@"cancel comment");
 	[NSApp endSheet:commentPanel];
 }
 
+- (IBAction) dismissDoc:(id)sender
+{
+	[NSApp endSheet:documentPanel];
+}
+
+
 - (IBAction) showCommentPane:(id)sender
 {
-	NSLog(@"show comment");
 	[NSApp beginSheet: commentPanel
 	   modalForWindow: mainWindow
 		modalDelegate: self
 	   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
 		  contextInfo: nil];
+}
+
+- (void)loadDocText:(FILE *)man
+{
+	char buff[1024];
+	
+	if( man )
+	{
+		[documentTextView setEditable:YES];
+		[[documentTextView textStorage] beginEditing];
+		while( fgets( buff, 1024, man ) )
+		{
+			[[documentTextView textStorage] appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%s", buff]]];
+		}
+		[[documentTextView textStorage] endEditing];
+		[documentTextView setEditable:NO];
+	}
+}
+	
+
+- (IBAction) showDocPane:(id)sender
+{
+	int row = [outTable selectedRow];
+	NSString *an = [lsofData getAppNameForRow:row];
+	
+	[[documentTextView textStorage] setAttributedString:[[NSAttributedString alloc] init]];
+	
+	if( row >= 0 )
+	{
+		NSString *commandString = [NSString stringWithFormat:@"man %@ | col -b", an ];
+		
+		FILE *man = popen( [commandString UTF8String], "r" );
+		[self loadDocText:man];
+		fclose(man);
+		
+		if( [[documentTextView textStorage] length] == 0 )
+			[[documentTextView textStorage] setAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"There is no documentation available for %@.", an]]];
+		
+		[NSApp beginSheet: documentPanel
+		   modalForWindow: mainWindow
+			modalDelegate: self
+		   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
+			  contextInfo: nil];
+	}
+	else
+	{
+		Alerts *oops = [[[Alerts alloc] init] retain];
+		[oops doInfoAlertWithTitle:@"Error obtaining documentation." 
+						  infoText:@"You must select a row." 
+						 forWindow:mainWindow 
+					  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+					  withDelegate:self 
+						  runModal:NO];
+	}
+}
+
+- (Boolean)tableView:(NSTableView *)table shouldSelectRow:(NSInteger)row
+{
+	NSString *rowUser = [lsofData getUserForRow:row];
+	struct passwd *pw = NULL;
+	uid_t uid = getuid();
+	
+	if( rowUser )
+	{
+		pw = getpwnam( [rowUser UTF8String] );
+		if( pw )
+		{
+			if( pw->pw_uid == uid )
+			{
+				[killButtonItem setEnabled:YES];
+			}
+			else
+			{
+				[killButtonItem setEnabled:NO];
+			}
+		}
+	}
+	
+	return YES;
+}
+
+- (void) toolbarWillAddItem:(NSNotification *)note 
+{
+    NSToolbarItem *addedItem = [[note userInfo] objectForKey: @"item"];
+    if( [addedItem tag] == kVolumesTag ) 
+	{
+		volumesBox = (NSPopUpButton *)[addedItem view];
+    }
+	else if( [addedItem tag] == kUsersTag )
+	{
+		userButton = (NSPopUpButton *)[addedItem view];
+	}
+}
+
+- (IBAction)googleAppName:(id)sender
+{
+	int row = [outTable selectedRow];
+	if( row >= 0 )
+	{
+		NSString *an = [lsofData getAppNameForRow:row];
+		NSString *url = [NSString stringWithFormat:@"http://www.google.com/search?q=macosx+%@", an];
+		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
+		[self dismissDoc:self];
+	}
+	else
+	{
+		Alerts *oops = [[[Alerts alloc] init] retain];
+		[oops doInfoAlertWithTitle:@"Error Googling application." 
+						  infoText:@"You must select a row." 
+						 forWindow:mainWindow 
+					  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+					  withDelegate:self 
+						  runModal:NO];
+	}
 }
 
 @end

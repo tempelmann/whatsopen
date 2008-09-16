@@ -5,17 +5,26 @@
 </HEAD>
 <meta name="description" content="Troubleshooting"></meta>
 
+<linkbox>
 <helptopic><a href="index.html">Main</a></helptopic>
 <helptopic><a href="GettingStarted.html">Getting Started</a></helptopic>
 <helptopic><a href="Reporter.html">Idea/Bug Reporter</a></helptopic>
+<helptopic><a href="Root.html">Root</a></helptopic>
+<helptopic><a href="Google.html">Google App</a></helptopic>
+<helptopic><a href="AppDoc.html">App Doc</a></helptopic>
+<helptopic><a href="Troubleshooting.html">Troubleshooting</a></helptopic>
 <helptopic><a href="Credits.html">Credits</a></helptopic>
-<hr>
+</linkbox>
 
+<helptext>
 <topic>What should I do if it crashes?</topic>
 <help>If WhatsOpen crashes I'd appreciate a crash trace. That is the big mess of text that shows up in the "Report to Apple" window when a program crashes. You may have to click a details button to get the full text. You can then just e-mail it to me at <a href="agathezol@agasupport.com">agathezol@agasupport.com</a>.</help>
 <topic>How does it work?</topic>
-<help>WhatsOpen uses a common unix utility known as <i>lsof</i> to obtain a list of open files from the operating system. This list includes only files your current user has open. This protects you from accidentilly killing system level programs that could cause data loss or disk corruption.</help>
+<help>WhatsOpen uses a common unix utility known as <i>lsof</i> to obtain a list of open files from the operating system. Unless you have enabled root level listings this list includes only files your current user has open. This protects you from accidentilly killing system level programs that could cause data loss or disk corruption.</help>
 <help>The program parses out the data provided by lsof and presents it in an easy to use format so you can quickly determine what is preventing you from ejecting your media device, or other system administration functions.</help>
+<topic>Why can't I kill some programs?</topic>
+<help>WhatsOpen only allows you to kill programs you own. This prevents you from killing system level programs, something that could destablize the system or even cause data loss or corruption.</help>
+</helptext>
 
 
 </HTML>

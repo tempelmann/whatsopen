@@ -14,6 +14,7 @@
 		B406D9EA0E11E7C70098E862 /* LSOF.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9E90E11E7C70098E862 /* LSOF.m */; };
 		B42F9F9A0E411F1100016D64 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		B42F9FA70E411F8200016D64 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
+		B4348EAF0E7F174A0093F24E /* googleG.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4348EAE0E7F174A0093F24E /* googleG.icns */; };
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
 		B45AC3C90E79CF40009CE932 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B45AC3C80E79CF40009CE932 /* Security.framework */; };
 		B45AC4820E7A28CD009CE932 /* uidWrapper in CopyFiles */ = {isa = PBXBuildFile; fileRef = B45AC47B0E7A28B8009CE932 /* uidWrapper */; };
@@ -21,6 +22,9 @@
 		B460A4CE0E226738009924BC /* VersionNotes in Resources */ = {isa = PBXBuildFile; fileRef = B460A4CD0E226738009924BC /* VersionNotes */; };
 		B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */; };
 		B475FA690E5628CB007A27B9 /* WhatsOpen Help in Resources */ = {isa = PBXBuildFile; fileRef = B475FA680E5628CB007A27B9 /* WhatsOpen Help */; };
+		B497DA6B0E80010E003F0EFE /* listFiles.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6A0E80010E003F0EFE /* listFiles.icns */; };
+		B497DA6D0E8001D0003F0EFE /* StopImg.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6C0E8001D0003F0EFE /* StopImg.icns */; };
+		B497DA6F0E8002CD003F0EFE /* Eye.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6E0E8002CD003F0EFE /* Eye.icns */; };
 		B4C1550A0E48F7AC0019E734 /* OpenFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B4C155090E48F7AC0019E734 /* OpenFile.m */; };
 		B4C1584E0E4A2FD40019E734 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4C1584D0E4A2FD40019E734 /* DiskArbitration.framework */; };
 		B4C15AD30E4BAEAA0019E734 /* whatsopen.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */; };
@@ -32,7 +36,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = B45AC47A0E7A28B8009CE932 /* uidWrapper */;
+			remoteGlobalIDString = B45AC47A0E7A28B8009CE932;
 			remoteInfo = uidWrapper;
 		};
 /* End PBXContainerItemProxy section */
@@ -75,6 +79,7 @@
 		B406D9E80E11E7C70098E862 /* LSOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSOF.h; sourceTree = "<group>"; };
 		B406D9E90E11E7C70098E862 /* LSOF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSOF.m; sourceTree = "<group>"; };
 		B42F9F990E411F1100016D64 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		B4348EAE0E7F174A0093F24E /* googleG.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = googleG.icns; sourceTree = "<group>"; };
 		B4496A040E14080F00CE6B42 /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
 		B4496A050E14080F00CE6B42 /* Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Alerts.m; sourceTree = "<group>"; };
 		B45AC3C80E79CF40009CE932 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -85,6 +90,9 @@
 		B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		B469A6970E2EAAE9008F1CBB /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
 		B475FA680E5628CB007A27B9 /* WhatsOpen Help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "WhatsOpen Help"; path = "../Users/marmon/src/whatsopen/WhatsOpen Help"; sourceTree = DEVELOPER_DIR; };
+		B497DA6A0E80010E003F0EFE /* listFiles.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = listFiles.icns; sourceTree = "<group>"; };
+		B497DA6C0E8001D0003F0EFE /* StopImg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = StopImg.icns; sourceTree = "<group>"; };
+		B497DA6E0E8002CD003F0EFE /* Eye.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Eye.icns; sourceTree = "<group>"; };
 		B4C155080E48F7AC0019E734 /* OpenFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFile.h; sourceTree = "<group>"; };
 		B4C155090E48F7AC0019E734 /* OpenFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFile.m; sourceTree = "<group>"; };
 		B4C1584D0E4A2FD40019E734 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
@@ -152,6 +160,7 @@
 		29B97314FDCFA39411CA2CEA /* WhatsOpen */ = {
 			isa = PBXGroup;
 			children = (
+				B4348EAE0E7F174A0093F24E /* googleG.icns */,
 				B45AC3C80E79CF40009CE932 /* Security.framework */,
 				B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */,
 				B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */,
@@ -182,6 +191,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B497DA6E0E8002CD003F0EFE /* Eye.icns */,
+				B497DA6C0E8001D0003F0EFE /* StopImg.icns */,
+				B497DA6A0E80010E003F0EFE /* listFiles.icns */,
 				B475FA680E5628CB007A27B9 /* WhatsOpen Help */,
 				B4C155080E48F7AC0019E734 /* OpenFile.h */,
 				B4C155090E48F7AC0019E734 /* OpenFile.m */,
@@ -275,6 +287,10 @@
 				B4C15AD30E4BAEAA0019E734 /* whatsopen.icns in Resources */,
 				B475FA690E5628CB007A27B9 /* WhatsOpen Help in Resources */,
 				B4F9733B0E6EEBA70091D4A2 /* lightBulbIcon.icns in Resources */,
+				B4348EAF0E7F174A0093F24E /* googleG.icns in Resources */,
+				B497DA6B0E80010E003F0EFE /* listFiles.icns in Resources */,
+				B497DA6D0E8001D0003F0EFE /* StopImg.icns in Resources */,
+				B497DA6F0E8002CD003F0EFE /* Eye.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

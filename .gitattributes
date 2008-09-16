@@ -4,6 +4,7 @@
 English.lproj/InfoPlist.strings -text
 English.lproj/MainMenu.nib/designable.nib -text
 English.lproj/MainMenu.nib/keyedobjects.nib -text
+/Eye.icns -text
 /Finder.h -text
 /Info.plist -text svneol=unset#unset
 /InterfaceController.h -text
@@ -114,9 +115,11 @@ Sparkle.framework/Versions/A/Resources/nl.lproj/Sparkle.strings -text
 Sparkle.framework/Versions/A/Resources/relaunch -text
 Sparkle.framework/Versions/A/Sparkle -text
 Sparkle.framework/Versions/Current -text
+/StopImg.icns -text
 /VersionNotes -text
 WhatsOpen[!!-~]Help/.DS_Store -text
 WhatsOpen[!!-~]Help/BoxImgMd.png -text
+WhatsOpen[!!-~]Help/BoxImgSm.png -text
 WhatsOpen[!!-~]Help/GettingStarted.html -text
 WhatsOpen[!!-~]Help/Troubleshooting.html -text
 WhatsOpen[!!-~]Help/WhatsOpen[!!-~]Help.helpindex -text
@@ -127,6 +130,7 @@ WhatsOpen.xcodeproj/marmon.pbxuser -text
 WhatsOpen.xcodeproj/project.pbxproj -text
 /WhatsOpen_Prefix.pch -text
 /lightBulbIcon.icns -text
+/listFiles.icns -text
 /main.m -text
 /uidWrapper.c -text
 /uidWrapper.h -text

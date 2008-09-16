@@ -128,7 +128,7 @@ size_t getSize( const char *f )
 	
 	if( filter && [filter length] )
 	{
-		baseString = [NSMutableString stringWithFormat:@"((SELF.appName contains[c] %@) OR (SELF.filePath contains[c] %@) OR (SELF.username contains[c] '%@')", filter, filter, filter];
+		baseString = [NSMutableString stringWithFormat:@"((SELF.appName contains[c] '%@') OR (SELF.filePath contains[c] '%@') OR (SELF.username contains[c] '%@'))", filter, filter, filter];
 	}
 	else
 	{

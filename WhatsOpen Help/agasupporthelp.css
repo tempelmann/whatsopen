@@ -9,9 +9,20 @@ MainImage {
 
 helptopic {
 	color: #4d53d2;
+	font: 12px Georgia, "Times New Roman", Times, serif;
+	text-align: left;
+	direction: ltr;
+	display: block;
+	padding-right: 8px;
+}
+
+helptopicindex {
+	color: #4d53d2;
 	font: 10px Georgia, "Times New Roman", Times, serif;
 	text-align: left;
 	direction: ltr;
+	display: inline;
+	padding-right: 8px;
 }
 
 topic {
@@ -49,6 +60,32 @@ CopyRight {
 appinfo {
 	float: left;
 	display: inline-block;
-	margin-top: 96px;
 	padding-left: 32px;
+	padding-top: 72px;
+}
+
+linkbox {
+	background-color: white;
+	border: 2px none #9f9f9f;
+	float: left;
+	text-align: left;
+	display: block;
+	border-bottom-style: none;
+	border-bottom-width: 2px;
+	border-right-style: none;
+	border-right-width: 1px;
+	width: 120px;
+}
+
+logo {
+	height: 32px;
+	width: 32px;
+}
+
+helptext {
+	padding-left: 16px;
+	display: block;
+	float: none;
+	margin-left: 120px;
+	border-left: 1px solid #bcbcbc;
 }
