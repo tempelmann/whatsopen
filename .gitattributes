@@ -118,9 +118,14 @@ Sparkle.framework/Versions/Current -text
 /StopImg.icns -text
 /VersionNotes -text
 WhatsOpen[!!-~]Help/.DS_Store -text
+WhatsOpen[!!-~]Help/AppDoc.html -text
 WhatsOpen[!!-~]Help/BoxImgMd.png -text
 WhatsOpen[!!-~]Help/BoxImgSm.png -text
+WhatsOpen[!!-~]Help/Credits.html -text
 WhatsOpen[!!-~]Help/GettingStarted.html -text
+WhatsOpen[!!-~]Help/Google.html -text
+WhatsOpen[!!-~]Help/Reporter.html -text
+WhatsOpen[!!-~]Help/Root.html -text
 WhatsOpen[!!-~]Help/Troubleshooting.html -text
 WhatsOpen[!!-~]Help/WhatsOpen[!!-~]Help.helpindex -text
 WhatsOpen[!!-~]Help/agasupporthelp.css -text
@@ -129,6 +134,7 @@ WhatsOpen.xcodeproj/marmon.mode1v3 -text
 WhatsOpen.xcodeproj/marmon.pbxuser -text
 WhatsOpen.xcodeproj/project.pbxproj -text
 /WhatsOpen_Prefix.pch -text
+/googleG.icns -text
 /lightBulbIcon.icns -text
 /listFiles.icns -text
 /main.m -text
