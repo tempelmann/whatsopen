@@ -17,5 +17,7 @@
 @synthesize realSize;
 @synthesize pid;
 @synthesize username;
+@synthesize cputime;
+@synthesize fileType;
 
 @end

@@ -9,3 +9,4 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <syslog.h>

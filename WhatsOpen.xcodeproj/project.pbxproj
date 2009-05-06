@@ -15,6 +15,8 @@
 		B42F9F9A0E411F1100016D64 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		B42F9FA70E411F8200016D64 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		B4348EAF0E7F174A0093F24E /* googleG.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4348EAE0E7F174A0093F24E /* googleG.icns */; };
+		B44479660ED22918009B246B /* cpuLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = B44479650ED22918009B246B /* cpuLoader.c */; };
+		B44479B40ED23193009B246B /* cpuLoader in CopyFiles */ = {isa = PBXBuildFile; fileRef = B444795D0ED228ED009B246B /* cpuLoader */; };
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
 		B45AC3C90E79CF40009CE932 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B45AC3C80E79CF40009CE932 /* Security.framework */; };
 		B45AC4820E7A28CD009CE932 /* uidWrapper in CopyFiles */ = {isa = PBXBuildFile; fileRef = B45AC47B0E7A28B8009CE932 /* uidWrapper */; };
@@ -32,6 +34,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B44479A10ED230CE009B246B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B444795C0ED228ED009B246B;
+			remoteInfo = cpuLoader;
+		};
 		B45AC4800E7A28C6009CE932 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -58,6 +67,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				B44479B40ED23193009B246B /* cpuLoader in CopyFiles */,
 				B45AC4820E7A28CD009CE932 /* uidWrapper in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -80,6 +90,9 @@
 		B406D9E90E11E7C70098E862 /* LSOF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSOF.m; sourceTree = "<group>"; };
 		B42F9F990E411F1100016D64 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		B4348EAE0E7F174A0093F24E /* googleG.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = googleG.icns; sourceTree = "<group>"; };
+		B444795D0ED228ED009B246B /* cpuLoader */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cpuLoader; sourceTree = BUILT_PRODUCTS_DIR; };
+		B44479640ED22918009B246B /* cpuLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpuLoader.h; sourceTree = "<group>"; };
+		B44479650ED22918009B246B /* cpuLoader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cpuLoader.c; sourceTree = "<group>"; };
 		B4496A040E14080F00CE6B42 /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
 		B4496A050E14080F00CE6B42 /* Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Alerts.m; sourceTree = "<group>"; };
 		B45AC3C80E79CF40009CE932 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -110,6 +123,13 @@
 				B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */,
 				B4C1584E0E4A2FD40019E734 /* DiskArbitration.framework in Frameworks */,
 				B45AC3C90E79CF40009CE932 /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B444795B0ED228ED009B246B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,6 +173,7 @@
 			children = (
 				8D1107320486CEB800E47090 /* WhatsOpen.app */,
 				B45AC47B0E7A28B8009CE932 /* uidWrapper */,
+				B444795D0ED228ED009B246B /* cpuLoader */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -175,6 +196,8 @@
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				B45AC4830E7A28DC009CE932 /* uidWrapper.h */,
 				B45AC4840E7A28DC009CE932 /* uidWrapper.c */,
+				B44479640ED22918009B246B /* cpuLoader.h */,
+				B44479650ED22918009B246B /* cpuLoader.c */,
 			);
 			name = WhatsOpen;
 			sourceTree = "<group>";
@@ -235,6 +258,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B44479A20ED230CE009B246B /* PBXTargetDependency */,
 				B45AC4810E7A28C6009CE932 /* PBXTargetDependency */,
 			);
 			name = WhatsOpen;
@@ -242,6 +266,22 @@
 			productName = WhatsOpen;
 			productReference = 8D1107320486CEB800E47090 /* WhatsOpen.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B444795C0ED228ED009B246B /* cpuLoader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B44479630ED2290C009B246B /* Build configuration list for PBXNativeTarget "cpuLoader" */;
+			buildPhases = (
+				B444795A0ED228ED009B246B /* Sources */,
+				B444795B0ED228ED009B246B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = cpuLoader;
+			productName = cpuLoader;
+			productReference = B444795D0ED228ED009B246B /* cpuLoader */;
+			productType = "com.apple.product-type.tool";
 		};
 		B45AC47A0E7A28B8009CE932 /* uidWrapper */ = {
 			isa = PBXNativeTarget;
@@ -273,6 +313,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* WhatsOpen */,
 				B45AC47A0E7A28B8009CE932 /* uidWrapper */,
+				B444795C0ED228ED009B246B /* cpuLoader */,
 			);
 		};
 /* End PBXProject section */
@@ -309,6 +350,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B444795A0ED228ED009B246B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B44479660ED22918009B246B /* cpuLoader.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B45AC4780E7A28B8009CE932 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -320,6 +369,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B44479A20ED230CE009B246B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B444795C0ED228ED009B246B /* cpuLoader */;
+			targetProxy = B44479A10ED230CE009B246B /* PBXContainerItemProxy */;
+		};
 		B45AC4810E7A28C6009CE932 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B45AC47A0E7A28B8009CE932 /* uidWrapper */;
@@ -368,6 +422,48 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = WhatsOpen;
 				WRAPPER_EXTENSION = app;
+			};
+			name = 10.4;
+		};
+		B444795F0ED228EE009B246B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = cpuLoader;
+			};
+			name = Debug;
+		};
+		B44479600ED228EE009B246B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = cpuLoader;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		B44479610ED228EE009B246B /* 10.4 */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = cpuLoader;
 			};
 			name = 10.4;
 		};
@@ -480,6 +576,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B44479630ED2290C009B246B /* Build configuration list for PBXNativeTarget "cpuLoader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B444795F0ED228EE009B246B /* Debug */,
+				B44479600ED228EE009B246B /* Release */,
+				B44479610ED228EE009B246B /* 10.4 */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B45AC4860E7A28DC009CE932 /* Build configuration list for PBXNativeTarget "uidWrapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -8,6 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef int fileTypes;
+#define NormalFile 1
+#define IPv4File   2
+
 @interface OpenFile : NSObject {
 	NSString *appName;
 	NSString *filePath;
@@ -15,6 +19,8 @@
 	NSInteger pid;
 	NSNumber *realSize; 
 	NSString *username;
+	NSInteger cputime;
+	fileTypes fileType;
 }
 
 @property(copy,readwrite) NSString *appName;
@@ -23,6 +29,8 @@
 @property(copy,readwrite) NSNumber *realSize;
 @property(copy,readwrite) NSString *username;
 @property NSInteger pid;
+@property NSInteger cputime;
+@property fileTypes fileType;
 
 
 @end

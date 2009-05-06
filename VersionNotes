@@ -1,3 +1,7 @@
+1.10
+	Added CPU Time field.
+	Fixed tooltips to not display a default string.
+
 1.9
 	Added help files for the Google screen and the App Doc screen.
 	Removed the right and left window bordering.

@@ -26,6 +26,7 @@
 	IBOutlet NSTableColumn *filePathColumn;
 	IBOutlet NSTableColumn *fileSizeColumn;
 	IBOutlet NSTableColumn *usernameColumn;
+	IBOutlet NSTableColumn *cputimeColumn;
 	IBOutlet NSToolbar *toobar;
 	IBOutlet NSProgressIndicator *probar;
 	IBOutlet NSWindow *progSheet;
@@ -34,12 +35,14 @@
 	IBOutlet NSPanel *commentPanel;
 	IBOutlet NSPanel *documentPanel;
 	IBOutlet NSPopUpButton *commentType;
+	IBOutlet NSPopUpButton *fileTypesButton;
 	IBOutlet NSTextField *commentSubject;
 	IBOutlet NSTextView *commentText;
 	IBOutlet NSTextField *commentFrom;
 	IBOutlet NSToolbarItem *killButtonItem;
 	IBOutlet NSToolbarItem *userButtonItem;
 	IBOutlet NSTextView *documentTextView;
+	IBOutlet NSTextField *progressText;
 
 	Boolean listing;
 	LSOF *lsofData;
@@ -48,6 +51,7 @@
 	int fileSizeSortFlag;
 	int filePathSort;
 	int usernameSort;
+	int cpusort;
 }
 
 - (IBAction) listFiles:(id)sender;
@@ -69,6 +73,7 @@
 - (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (Boolean)tableView:(NSTableView *)table shouldSelectRow:(NSInteger)row;
 - (void) toolbarWillAddItem:(NSNotification *)note;
+- (void)tableView: (NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(int)row;
 
 - (void)reloadTable;
 
@@ -81,5 +86,6 @@ void diskRemovedCallback( DADiskRef disk, void *context );
 - (void)addVolumeToUI:(NSString *)vol;
 - (void)removeVolumeFromUI:(NSString *)vol;
 - (void)setupDiskWatcher;
+- (NSString *)formatCpuTime:(int)secs;
 
 @end

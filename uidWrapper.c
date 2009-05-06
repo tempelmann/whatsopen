@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 		while( fgets( buff, 4096, f ) )
 			fprintf(stdout, "%s", buff);
 		
+		fflush(stdout);
 		fclose(f);
 	}
 	

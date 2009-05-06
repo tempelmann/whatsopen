@@ -16,6 +16,9 @@
 	theFinder = [SBApplication applicationWithBundleIdentifier: @"com.apple.finder"];
 	listing = YES;
 	lsofData = [[[LSOF alloc] init] retain];
+	[lsofData bind:@"ipv4Color" toObject:[NSUserDefaultsController sharedUserDefaultsController]
+	   withKeyPath:@"values.ipv4HilightColor"
+		   options:[NSDictionary dictionaryWithObject:NSUnarchiveFromDataTransformerName forKey:NSValueTransformerNameBindingOption]];
 	listing = NO;
 	appColSort = 0;
 	fileSizeSortFlag = 0;
@@ -103,7 +106,8 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
 		  contextInfo: nil];
 	
-	[lsofData getData];
+	[lsofData getData:progressText];
+
 	[self resetUsernames];
 	[self filterFiles:self];
 	
@@ -119,6 +123,7 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	NSString *vol = [[volumesBox titleOfSelectedItem] copy];
 	NSString *volPath = [NSString stringWithFormat:@"/Volumes/%@", vol];
 	NSString *user = [NSString stringWithString:[userButton titleOfSelectedItem]];
+	int fileType = [fileTypesButton indexOfSelectedItem];
 	struct stat st;
 	char buf[32];
 	
@@ -137,7 +142,7 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	}
 		
 	
-	[lsofData filterDataWithString:filter forVolume:vol forUser:user ];
+	[lsofData filterDataWithString:filter forVolume:vol forUser:user forType:fileType ];
 	[self reloadTable];
 }
 
@@ -192,18 +197,47 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	return [lsofData dataCount];
 }
 
+- (NSString *)formatCpuTime:(int)secs
+{
+	int mins, hours, days;
+	mins = hours = days = 0;
+	if( secs > 86400 )
+	{
+		days = (secs / 86400);
+		secs -= days * 86400;
+	}
+	if( secs > 3600 )
+	{
+		hours = (secs / 3600);
+		secs -= (hours * 3600);
+	}
+	if( secs > 60 )
+	{
+		mins = (secs / 60);
+		secs -= (mins * 60);
+	}
+	return [NSString stringWithFormat:@"%d.%d:%d:%d", days, hours, mins, secs];
+}
+
 - (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(int)rowIx
 {
 	NSString *retVal = nil;
+
 	
 	if( col == applicationColumn )
+	{
 		retVal = [lsofData getAppNameForRow:rowIx];
+	}
 	else if( col == filePathColumn )
 		retVal = [lsofData getFilePathForRow:rowIx];
 	else if( col == fileSizeColumn )
 		retVal = [lsofData getFileSizeForRow:rowIx];
 	else if( col == usernameColumn )
 		retVal = [lsofData getUserForRow:rowIx];
+	else if( col == cputimeColumn )
+	{
+		retVal = [self formatCpuTime:[lsofData getCpuTimeForRow:rowIx]];
+	}
 	
 	return retVal;
 }
@@ -215,7 +249,15 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 
 - (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation
 {
-	NSString *retVal = [[[NSString alloc] initWithString:@"this is a tool tip"] retain];
+	NSString *retVal = [NSString stringWithFormat:@"pid:%d", [lsofData getPidForRow:row]];
+	Boolean isSet;
+	
+	if( aTableColumn == cputimeColumn )
+	{
+		retVal = [retVal stringByAppendingString:@"\nFormat: days.hours:minutes:seconds"];
+		if( CFPreferencesGetAppBooleanValue( CFSTR( "lsofFullList" ), kCFPreferencesCurrentApplication, &isSet ) == NO )
+			retVal = [retVal stringByAppendingString:@"\nCpu Time Disabled (turn on root to enable)"];
+	}
 	
 	return retVal;
 }
@@ -243,9 +285,11 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
 	usernameSort = 0;
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
+	cpusort = 0;
 	switch( appColSort )
 	{
 		case 0: // unsorted -> ascending
@@ -273,9 +317,11 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
 	usernameSort = 0;
 	filePathSort = 0;
 	appColSort = 0;
+	cpusort = 0;
 	switch( fileSizeSortFlag )
 	{
 		case 0: // unsorted -> ascending
@@ -303,9 +349,11 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
 	usernameSort = 0;
 	appColSort = 0;
 	fileSizeSortFlag = 0;
+	cpusort = 0;
 	switch( filePathSort )
 	{
 		case 0: // unsorted -> ascending
@@ -333,9 +381,11 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
+	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
 	appColSort = 0;
+	cpusort = 0;
 	switch( usernameSort )
 	{
 		case 0: // unsorted -> ascending
@@ -352,6 +402,36 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 			descs = nil;
 			usernameSort = 0;
 			[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
+			break;
+	}
+	return descs;
+}
+
+- (NSArray *)sortByCPU
+{
+	NSArray *descs;
+	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
+	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
+	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
+	fileSizeSortFlag = 0;
+	filePathSort = 0;
+	appColSort = 0;
+	switch( cpusort )
+	{
+		case 0: // unsorted -> ascending
+			descs = [NSArray arrayWithObjects:[lsofData cpuSort], nil ];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:cputimeColumn];
+			cpusort = 1;
+			break;
+		case 1: // ascending -> descending
+			descs = [NSArray arrayWithObjects:[[lsofData cpuSort] reversedSortDescriptor], nil ];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:cputimeColumn];
+			cpusort = 2;
+			break;
+		case 2: // descending -> unsorted
+			descs = nil;
+			cpusort = 0;
+			[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
 			break;
 	}
 	return descs;
@@ -375,6 +455,10 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	else if( tableColumn == usernameColumn )
 	{
 		descs = [[self sortByUsername] retain];
+	}
+	else if (tableColumn == cputimeColumn )
+	{
+		descs = [[self sortByCPU] retain];
 	}
 	
 	[lsofData sortDataWithDescriptors:descs];
@@ -560,6 +644,24 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 					  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
 					  withDelegate:self 
 						  runModal:NO];
+	}
+}
+
+- (void)tableView: (NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(int)row
+{
+	fileTypes type = [lsofData getFileTypeForRow:row];
+	NSColor *color = [lsofData ipv4Color];
+
+	switch(type)
+	{
+		case IPv4File:
+			[aCell setDrawsBackground: YES];
+			[aCell setBackgroundColor:color];
+			break;
+		default:
+			[aCell setDrawsBackground: NO];
+			[aCell setBackgroundColor:[NSColor whiteColor]];
+			break;
 	}
 }
 
