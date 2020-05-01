@@ -1,3 +1,7 @@
+TT 2 May 2020: The notes below are a bit outdated. Please see the svn or git report for the change long instead.
+
+--------
+
 1.10
 	Added CPU Time field.
 	Fixed tooltips to not display a default string.
