@@ -1,0 +1,245 @@
+.topic {
+	text-decoration: underline;
+	display: block;
+	padding-top: 16px;
+}
+
+.help {
+	text-align: justify;
+	padding-left: 16px;
+	display: block;
+	margin-top: 8px;
+	width: 320px;
+}
+
+/* The following was copied from iClip Help */
+
+body {
+	color: #525252;
+	text-align: left;
+	font: 14px/24px Georgia, "Times New Roman", Times, serif;
+	background-color: #fff;
+}
+
+#header {
+	width: 100%;
+	padding: 50px 0 20px 97px;
+	position: fixed;
+	background: #fff;
+	z-index:1000;
+}
+
+#content {
+	color: #000;
+	height: 100%;
+	padding: 120px 0 40px 0;
+	margin: 0 0 0 300px;
+}
+
+#menu {
+	width: 240px;
+	height: 100%;
+	float: left;
+	position: fixed;
+	margin: 100px 0 0 0px;
+	padding: 20px 14px 50px 0px;
+	background: #fff url(menu_line.gif) no-repeat right top;
+}
+
+#menu_footer {
+	padding-top: 4em;
+	text-align: right;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-size: 1.54em;
+	color: #000;
+	margin: 0 0 10px 0;
+}
+
+h2 {
+	font-size: 1.64em;
+	font-weight: normal;
+	margin: 25px 0 15px 0;
+}
+
+.first {
+	margin-top: 0;
+}
+
+h3 {
+	font-size: 1.2em;
+	margin: 10px 0 5px 0;
+}
+
+h4, h5 {
+	color: #000;
+	font-size: 2.31em;
+	text-align: left;
+	font-weight: normal;
+	display: inline;
+}
+
+h5 {
+	color: #8e8e8e;
+	margin: 0;
+}
+
+p {
+	text-align: left;
+	padding-bottom: 10px;
+}
+
+p.listintro {
+	padding-bottom: 0px;
+}
+
+p.listintrobig {
+	font-size: 1.15em;
+	padding-bottom: 0px;
+}
+
+img {
+	border: none;
+}
+
+.movie {
+	border: 1px solid #16a0cf;
+}
+
+/* @group links */
+
+a:link, a:visited {
+	color: #16a0cf;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h4>a:link, h4>a:visited {
+	color: #000;
+	text-decoration: none;
+}
+
+#menu ul {
+	text-align: right;
+}
+
+#menu li {
+	list-style-type: none;
+}
+
+#menu a:link, #menu a:visited {
+	width: 100%;
+	font-size: 1.14em;
+	color: #00C;
+	display: block;
+	text-align: right;
+	text-decoration: none;
+}
+
+#menu a:hover {
+	color: #16a0cf;
+}
+
+/* @end */
+
+div.figure {
+	color: #16a0cf;
+	text-align: left;
+	padding-bottom: 1em;
+}
+
+div.figure p, div.figureRight p {
+	font-size: 0.85em;
+	margin-bottom: -12px;
+	text-align: center;
+}
+
+div.figureRight, div.figureLeft {
+	color: #16a0cf;
+	float: right;
+	clear: right;
+	padding: 0 0 1em 1em;
+	text-align: right;
+}
+
+div.figureLeft {
+	float: left;
+	clear: left;
+	padding: 0 1em 0 0;
+}
+
+div.figureClear {
+	clear: both;
+}
+
+li {
+	list-style-type: circle;
+	list-style-position: inside;
+	opacity: 1;
+}
+
+#content ul {
+	padding: 0 0 1em 0;
+}
+
+.date {
+	color: #16a0cf;
+	font-size: 1em;
+	margin: 0 0 10px 0;
+	display: block;
+}
+
+dt {
+	font-weight: bold;
+}
+
+dd {
+	margin:  0 0 1em 2em;
+}
+
+td {
+	padding-right:25px;
+}
+
+a[name] {
+	display:block;
+	position: relative;
+	top: -100px;
+	visibility: hidden;
+}
+
+@media print {
+	div, p, pre, ol, ul, tr, td, th {
+		page-break-inside: avoid;
+		page-break-before: avoid;
+		page-break-after: avoid;
+	}
+	.page-break, h1 {
+		page-break-before: always
+	}
+
+	#header {
+		padding: 20px 0 20px 20px;
+		position: relative;
+	}
+
+	#content {
+		height: 100%;
+		width: 100%;
+		padding: 0 0 0 0;
+		margin: 0 0 0 0;
+	}
+
+	#menu {
+		display: none;
+	}
+}

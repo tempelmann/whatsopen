@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en-us</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.AgaSupport.WhatsOpen.help</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1</string>
+	<key>CFBundleSignature</key>
+	<string>hbwr</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>HPDBookAccessPath</key>
+	<string>index.html</string>
+	<key>HPDBookIconPath</key>
+	<string>BoxImgMd.png</string>
+	<key>HPDBookIndexPath</key>
+	<string>WhatsOpen.helpindex</string>
+	<key>HPDBookKBProduct</key>
+	<string>WhatsOpen4</string>
+	<key>HPDBookType</key>
+	<string>3</string>
+	<key>HPDBookUsesExternalViewer</key>
+	<false/>
+	<key>CFBundleName</key>
+	<string>WhatsOpen</string>
+	<key>HPDBookTitle</key>
+	<string>WhatsOpen Help</string>
+</dict>
+</plist>

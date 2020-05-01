@@ -1,32 +1,42 @@
-<HTML>
-<HEAD>
-<TITLE>WhatsOpen Help</TITLE>
-<link rel="stylesheet" href="agasupporthelp.css" type="text.css">
-</HEAD>
-<meta name="description" content="Troubleshooting"></meta>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" href="main.css" type="text/css" media="all" />
+		<title>WhatsOpen Help</title>
+		<meta name="description" content="Troubleshooting"></meta>
+	</head>
+	<body>
 
-<linkbox>
-<helptopic><a href="index.html">Main</a></helptopic>
-<helptopic><a href="GettingStarted.html">Getting Started</a></helptopic>
-<helptopic><a href="Reporter.html">Idea/Bug Reporter</a></helptopic>
-<helptopic><a href="Root.html">Root</a></helptopic>
-<helptopic><a href="Google.html">Google App</a></helptopic>
-<helptopic><a href="AppDoc.html">App Doc</a></helptopic>
-<helptopic><a href="Troubleshooting.html">Troubleshooting</a></helptopic>
-<helptopic><a href="Credits.html">Credits</a></helptopic>
-</linkbox>
+		<div id="header">
+			<h4><a href="index.html"><strong>What's Open</strong> Help</a></h4>
+		</div>
 
-<helptext>
-<topic>CPU totals are always zero, why?</topic>
-<help>You must enable root/adminstator access in the preferences to get cpu totals.</help>
-<topic>What should I do if it crashes?</topic>
-<help>If WhatsOpen crashes I'd appreciate a crash trace. That is the big mess of text that shows up in the "Report to Apple" window when a program crashes. You may have to click a details button to get the full text. You can then just e-mail it to me at <a href="agathezol@agasupport.com">agathezol@agasupport.com</a>.</help>
-<topic>How does it work?</topic>
-<help>WhatsOpen uses a common unix utility known as <i>lsof</i> to obtain a list of open files from the operating system. Unless you have enabled root level listings this list includes only files your current user has open. This protects you from accidentilly killing system level programs that could cause data loss or disk corruption.</help>
-<help>The program parses out the data provided by lsof and presents it in an easy to use format so you can quickly determine what is preventing you from ejecting your media device, or other system administration functions.</help>
-<topic>Why can't I kill some programs?</topic>
-<help>WhatsOpen only allows you to kill programs you own. This prevents you from killing system level programs, something that could destablize the system or even cause data loss or corruption.</help>
-</helptext>
+		<div id="menu">
+			<ul>
+				<li><a href="GettingStarted.html">Getting Started</a></li>
+				<li><a href="Root.html">Root</a></li>
+				<li><a href="Google.html">Google App</a></li>
+				<li><a href="AppDoc.html">App Doc</a></li>
+				<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+				<li><a href="Credits.html">Credits</a></li>
+			</ul>
 
+			<div id="menu_footer">
+				<div>© 2008 AGASupport<br />© 2020 Thomas Tempelmann<br />All Rights Reserved</div>
+			</div>
+		</div>
 
-</HTML>
+		<div id="content">
+
+<div class="topic">What should I do if it crashes?</div>
+<div class="help">If WhatsOpen crashes I'd appreciate a crash trace. That is the big mess of text that shows up in the "Report to Apple" window when a program crashes. You may have to click a details button to get the full text. You can then just e-mail it to me at <a href="mailto:tt@tempel.org?subject=WhatsOpen%20crash">tt@tempel.org</a>.</div>
+<div class="topic">How does it work?</div>
+<div class="help">WhatsOpen uses a common unix utility known as <i>lsof</i> to obtain a list of open files from the operating system. Unless you have enabled root level listings this list includes only files your current user has open. This protects you from accidentilly killing system level programs that could cause data loss or disk corruption.</div>
+<div class="help">The program parses out the data provided by lsof and presents it in an easy to use format so you can quickly determine what is preventing you from ejecting your media device, or other system administration functions.</div>
+<div class="topic">Why can't I kill some programs?</div>
+<div class="help">WhatsOpen only allows you to kill programs you own. This prevents you from killing system level programs, something that could destablize the system or even cause data loss or corruption.</div>
+
+		</div>
+	</body>
+</html>

@@ -1,30 +1,43 @@
-<HTML>
-<HEAD>
-<TITLE>WhatsOpen Help</TITLE>
-<link rel="stylesheet" href="agasupporthelp.css" type="text.css">
-</HEAD>
-<meta name="description" content="Getting Started"></meta>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" href="main.css" type="text/css" media="all" />
+		<title>WhatsOpen Help</title>
+		<meta name="description" content="Getting Started"></meta>
+	</head>
+	<body>
 
-<linkbox>
-<helptopic><a href="index.html">Main</a></helptopic>
-<helptopic><a href="GettingStarted.html">Getting Started</a></helptopic>
-<helptopic><a href="Reporter.html">Idea/Bug Reporter</a></helptopic>
-<helptopic><a href="Root.html">Root</a></helptopic>
-<helptopic><a href="Google.html">Google App</a></helptopic>
-<helptopic><a href="AppDoc.html">App Doc</a></helptopic>
-<helptopic><a href="Troubleshooting.html">Troubleshooting</a></helptopic>
-<helptopic><a href="Credits.html">Credits</a></helptopic>
-</linkbox>
+		<div id="header">
+			<h4><a href="index.html"><strong>What's Open</strong> Help</a></h4>
+		</div>
 
-<helptext>
-<topic>Getting Started</topic>
-<help>When you launch the program you need to click the "list files" button to get a listing of files. This produces your current working set of open files. If you type something into the filter, sort the columns or change a volume view it will work this this file set.</help>
+		<div id="menu">
+			<ul>
+				<li><a href="GettingStarted.html">Getting Started</a></li>
+				<li><a href="Root.html">Root</a></li>
+				<li><a href="Google.html">Google App</a></li>
+				<li><a href="AppDoc.html">App Doc</a></li>
+				<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+				<li><a href="Credits.html">Credits</a></li>
+			</ul>
 
-<topic>How do I reload the file list?</topic>
-<help>Just click on the "list files" button and the list will reload.</help>
+			<div id="menu_footer">
+				<div>© 2008 AGASupport<br />© 2020 Thomas Tempelmann<br />All Rights Reserved</div>
+			</div>
+		</div>
 
-<topic>Why can't the list auto-refresh?</topic>
-<help>The list of open files is obtained via the unix utility <i>lsof</i>. This utility is very CPU intensive and refreshing the list over and over would eat significant resources. If you want to watch realtime system resource usage you should use Apple's <i>Activity Monitor</i>.</help>
-</helptext>
+		<div id="content">
 
-</HTML>
+<div class="topic">Getting Started</div>
+<div class="help">When you launch the program you need to click the "list files" button to get a listing of files. This produces your current working set of open files. If you type something into the filter, sort the columns or change a volume view it will work this this file set.</div>
+
+<div class="topic">How do I reload the file list?</div>
+<div class="help">Just click on the "list files" button and the list will reload.</div>
+
+<div class="topic">Why can't the list auto-refresh?</div>
+<div class="help">The list of open files is obtained via the unix utility <i>lsof</i>. This utility is very CPU intensive and refreshing the list over and over would eat significant resources. If you want to watch realtime system resource usage you should use Apple's <i>Activity Monitor</i>.</div>
+
+		</div>
+	</body>
+</html>
