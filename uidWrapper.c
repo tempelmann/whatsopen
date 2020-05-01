@@ -14,12 +14,15 @@ int main(int argc, char *argv[])
 	FILE *f = NULL;
 	char buff[4096];
 	
-	setuid( geteuid() );
-	if( (f = popen( argv[1], "r" )) )
-	{
-		while( fgets( buff, 4096, f ) )
+	if (setuid (geteuid()) != 0) {
+		// failed
+		return 1;
+	}
+
+	if ( (f = popen( argv[1], "r" )) ) {
+		while( fgets( buff, 4096, f ) ) {
 			fprintf(stdout, "%s", buff);
-		
+		}
 		fflush(stdout);
 		fclose(f);
 	}
