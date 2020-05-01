@@ -1,5 +1,5 @@
 /*
- * Finder.h
+ * ScriptableFinder.h
  */
 
 #import <AppKit/AppKit.h>
