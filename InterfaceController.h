@@ -47,7 +47,6 @@
 
 	Boolean listing;
 	LSOF *lsofData;
-	//FinderApplication *theFinder;
 	int appColSort;
 	int fileSizeSortFlag;
 	int filePathSort;

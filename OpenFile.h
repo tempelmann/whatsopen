@@ -15,25 +15,15 @@ typedef enum {
 	Other
 }  fileTypes;
 
-@interface OpenFile : NSObject {
-	NSString *appName;
-	NSString *filePath;
-	NSString *fileSize;
-	pid_t pid;
-	NSNumber *realSize; 
-	NSString *username;
-	//NSInteger cputime;
-	fileTypes fileType;
-}
+@interface OpenFile : NSObject
 
 @property(copy,readwrite) NSString *appName;
 @property(copy,readwrite) NSString *filePath;
 @property(copy,readwrite) NSString *fileSize;
 @property(copy,readwrite) NSNumber *realSize;
 @property(copy,readwrite) NSString *username;
+@property(copy,readwrite) NSString *volName;
 @property pid_t pid;
-//@property NSInteger cputime;
 @property fileTypes fileType;
-
 
 @end

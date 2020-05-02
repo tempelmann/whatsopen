@@ -13,7 +13,9 @@
 {
 	NSColor *bgColor = [NSColor colorWithRed:1 green:1 blue:0.6 alpha:1];
 	[NSUserDefaults.standardUserDefaults registerDefaults:@{
-		@"alternateHilightColor": [NSArchiver archivedDataWithRootObject:bgColor]
+		@"alternateHilightColor": [NSArchiver archivedDataWithRootObject:bgColor],
+		@"listAtLaunch": @NO,
+		@"lsofFullList": @NO
 	}];
 }
 

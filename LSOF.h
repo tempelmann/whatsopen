@@ -11,13 +11,7 @@
 #import "OpenFile.h"
 
 
-@interface LSOF : NSObject {
-	NSMutableArray *data;
-	NSMutableArray *displayData;
-	
-	AuthorizationRef authRef;
-	NSColor          *alternateColor;
-}
+@interface LSOF : NSObject
 
 @property(readonly) NSSortDescriptor *processNameSortDesc;
 @property(readonly) NSSortDescriptor *fileSizeSortDesc;
@@ -25,6 +19,7 @@
 @property(readonly) NSSortDescriptor *usernameSortDesc;
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allUserNames;
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
+@property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allVolumes;	// key is volume name
 @property(copy)     NSColor *alternateColor;
 		  
 - (BOOL)getData:(NSTextField *)progressText;

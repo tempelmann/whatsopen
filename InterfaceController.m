@@ -11,7 +11,6 @@
 #import "InterfaceController.h"
 
 @interface InterfaceController()
-	@property NSMutableSet<NSString*> *volumeNames;
 @end
 
 @implementation InterfaceController
@@ -20,7 +19,6 @@
 {
 	self = [super init];
 	if (self) {
-		//theFinder = [SBApplication applicationWithBundleIdentifier:@"com.apple.finder"];
 		listing = YES;
 		lsofData = [[LSOF alloc] init];
 		[lsofData bind:@"alternateColor"
@@ -32,8 +30,6 @@
 		appColSort = 0;
 		fileSizeSortFlag = 0;
 		usernameSort = 0;
-
-		[self setupDiskWatcher];
 	}
 	return self;
 }
@@ -42,10 +38,9 @@
 {
 	[killButtonItem setEnabled:NO];
 	
-	#if 1
-		// Always list at start
+	if ([NSUserDefaults.standardUserDefaults boolForKey:@"listAtLaunch"]) {
 		[self performSelector:@selector(listFiles:) withObject:nil afterDelay:0];
-	#endif
+	}
 }
 
 - (void)reloadTable
@@ -53,51 +48,9 @@
 	[outTable reloadData];
 }
 
-- (void)setupDiskWatcher
-{
-	self.volumeNames = [NSMutableSet set];
-	DASessionRef diskSession;
-	diskSession = DASessionCreate(kCFAllocatorDefault);
-	DARegisterDiskAppearedCallback(diskSession, NULL, diskAddCallback, (__bridge void *_Nullable)(self));
-	DARegisterDiskDisappearedCallback(diskSession, NULL, diskRemovedCallback, (__bridge void *_Nullable)(self));
-	DASessionScheduleWithRunLoop(diskSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-}
-
-static void diskAddCallback(DADiskRef disk, void *context)
-{
-	CFDictionaryRef dic = DADiskCopyDescription(disk);
-	NSString *name = (NSString *)CFDictionaryGetValue(dic, @"DAVolumeName");
-	if (name) {
-		[(__bridge InterfaceController *)context addVolume:name];
-	}
-	CFRelease(dic);
-}
-
-static void diskRemovedCallback(DADiskRef disk, void *context)
-{
-	CFDictionaryRef dic = DADiskCopyDescription(disk);
-	NSString *name = (NSString *)CFDictionaryGetValue(dic, @"DAVolumeName");
-	if (name) {
-		[(__bridge InterfaceController *)context removeVolume:name];
-	}
-	CFRelease(dic);
-}
-
-- (void)addVolume:(NSString *)vol
-{
-	[self.volumeNames addObject:vol];
-	[self refreshVolumesBox];
-}
-
-- (void)removeVolume:(NSString *)vol
-{
-	[self.volumeNames removeObject:vol];
-	[self refreshVolumesBox];
-}
-
 - (void)refreshVolumesBox
 {
-	[self refreshNSPopUpButton:volumesBox withTitles:self.volumeNames.allObjects];
+	[self refreshNSPopUpButton:volumesBox withDict:lsofData.allVolumes sortByCount:NO];
 }
 
 - (void)refreshUserNames
@@ -119,6 +72,7 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 {
 	[button removeAllItems];
 	[button addItemWithTitle:@"All"];	// so that "All" always appears first
+	[button.lastItem setTag:-1];
 	if (dict.count > 0) {
 		NSArray<NSString*> *names;
 		if (sortByCount) {
@@ -138,18 +92,27 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 		}
 		for (NSString *name in names) {
 			[button addItemWithTitle:[NSString stringWithFormat:@"%@ (%@)", name, dict[name]]];
-			//[button.lastItem setTag:<#(NSInteger)#>]
+			[button.lastItem setTag:[dict.allKeys indexOfObject:name]];
 		}
 	}
 }
 
-- (void)refreshNSPopUpButton:(NSPopUpButton*)button withTitles:(NSArray<NSString*>*)titles
+- (NSString*)nameOfSelectedItemIn:(NSPopUpButton*)button
 {
-	[button removeAllItems];
-	[button addItemWithTitle:@"All"];	// so that "All" always appears first
-	if (titles.count > 0) {
-		[button addItemsWithTitles:[titles sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
+	NSDictionary *d;
+	if (button == volumesBox) {
+		d = lsofData.allVolumes;
+	} else if (button == usersButton) {
+		d = lsofData.allUserNames;
+	} else {
+		d = lsofData.allProcessNames;
 	}
+	NSInteger tag = button.selectedTag;
+	NSString *name = nil;
+	if (tag >= 0) {
+		name = d.allKeys[tag];
+	}
+	return name;
 }
 
 - (IBAction)listFiles:(id)sender
@@ -167,6 +130,7 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 		NSBeep();
 	}
 
+	[self refreshVolumesBox];
 	[self refreshUserNames];
 	[self refreshProcessNames];
 	[self filterFiles:self];
@@ -180,24 +144,10 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 - (IBAction)filterFiles:(id)sender
 {
 	NSString *filter = ([[filterField stringValue] length] > 0 ? [filterField stringValue] : nil);
-	NSString *vol = [[volumesBox titleOfSelectedItem] copy];
-	NSString *volPath = [NSString stringWithFormat:@"/Volumes/%@", vol];
-	NSString *user = [NSString stringWithString:[usersButton titleOfSelectedItem]];
-	NSString *process = [NSString stringWithString:[processesButton titleOfSelectedItem]];
+	NSString *vol = [self nameOfSelectedItemIn:volumesBox];
+	NSString *user = [self nameOfSelectedItemIn:usersButton];
+	NSString *process = [self nameOfSelectedItemIn:processesButton];
 	fileTypes fileType = (fileTypes) [fileTypesButton indexOfSelectedItem];
-	struct stat st;
-	char buf[32];
-
-	memset(&st, 0, sizeof(st));
-	if (lstat([volPath UTF8String], &st) == 0) {
-		if (st.st_mode & S_IFLNK) {
-			memset(buf, 0, 32);
-			readlink([volPath UTF8String], buf, 32);
-			if (strcmp(buf, "/") == 0) {
-				vol = @"All";
-			}
-		}
-	}
 
 	[lsofData filterDataWithString:filter forVolume:vol forUser:user forProcess:process forType:fileType];
 	[self reloadTable];
@@ -205,7 +155,6 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(int)code contextInfo:(void *)context
 {
-	//[alert release];
 }
 
 - (void)killAlertDidEnd:(NSAlert *)alert resultCode:(int)resultCode contextInfo:(void *)context
@@ -322,18 +271,7 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 	NSInteger rowIx = [outTable selectedRow];
 	if (rowIx >= 0) {
 		NSURL *fileUrl = [NSURL fileURLWithPath:[lsofData getFilePathForRow:rowIx]];
-		#if 1
-			[NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:@[fileUrl]];
-		#else
-			SBElementArray *items = [theFinder items];
-			FinderItem *theFile = [items objectAtLocation:fileUrl];
-			if (theFile) {
-				[theFile reveal];
-				[theFinder activate];
-			} else {
-				NSBeep();
-			}
-		#endif
+		[NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:@[fileUrl]];
 	}
 }
 

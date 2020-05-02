@@ -9,6 +9,13 @@
 #import "LSOF.h"
 
 @interface LSOF()
+	{
+		NSMutableArray		*data;
+		NSMutableArray		*displayData;
+		AuthorizationRef	authRef;
+		NSColor				*alternateColor;
+	}
+
 	@property(strong) NSString *LSOFTool;
 	@property(strong) NSSortDescriptor *processNameSortDesc;
 	@property(strong) NSSortDescriptor *fileSizeSortDesc;
@@ -16,6 +23,7 @@
 	@property(strong) NSSortDescriptor *usernameSortDesc;
 	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allUserNames;
 	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
+	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allVolumes;
 @end
 
 
@@ -48,6 +56,7 @@
 		
 		self.allUserNames = [NSMutableDictionary new];
 		self.allProcessNames = [NSMutableDictionary new];
+		self.allVolumes = [NSMutableDictionary new];
 		
 		[NSObject exposeBinding:@"alternateColor"];
 	}
@@ -85,6 +94,7 @@
 	
 	[self.allProcessNames removeAllObjects];
 	[self.allUserNames removeAllObjects];
+	[self.allVolumes removeAllObjects];
 }
 
 - (void)filterDataWithString:(NSString *)filter forVolume:(NSString *)vol forUser:(NSString *)user forProcess:(NSString *)process forType:(fileTypes)ftype
@@ -96,26 +106,26 @@
 	NSString *processString = nil;
 	NSString *typeString = nil;
 	
-	if (user && ([user compare:@"All"] != NSOrderedSame)) {
+	if (user) {
 		userString = [NSString stringWithFormat:@"(SELF.username == '%@')", user];
 	}
 	
-	if (process && ([process compare:@"All"] != NSOrderedSame)) {
+	if (process) {
 		processString = [NSString stringWithFormat:@"(SELF.appName == '%@')", process];
 	}
 	
-	if (vol && ([vol compare:@"All"] != NSOrderedSame)) {
-		volString = [NSString stringWithFormat:@"(SELF.filePath BEGINSWITH[c] '/Volumes/%@')", vol];
+	if (vol) {
+		volString = [NSString stringWithFormat:@"(SELF.volName == '%@')", vol];
 	}
 	
 	if (ftype > 0) {
 		typeString = [NSString stringWithFormat:@"(SELF.fileType == %ld)", (long)ftype];
 	}
 	
-	if (filter && [filter length]) {
+	if ([filter length] > 0) {
 		baseString = [NSMutableString
 					  stringWithFormat:
-					  @"((SELF.appName contains[c] '%@') OR (SELF.filePath contains[c] '%@') OR (SELF.username contains[c] '%@'))",
+					  @"((SELF.appName contains[cd] '%@') OR (SELF.filePath contains[cd] '%@') OR (SELF.username contains[cd] '%@'))",
 					  filter, filter, filter];
 	}
 	else {
@@ -358,6 +368,13 @@
 					{
 						// file path
 						currentFile.filePath = value;
+						NSURL *url = [NSURL fileURLWithPath:value];
+						NSString *volName = nil;
+						[url getResourceValue:&volName forKey:NSURLVolumeNameKey error:nil];
+						currentFile.volName = volName;
+						if (volName) { 
+							self.allVolumes[volName] = @([self.allVolumes[volName] integerValue] + 1);
+						}
 					}
 					break;
 				default:

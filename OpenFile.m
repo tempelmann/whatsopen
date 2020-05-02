@@ -8,16 +8,6 @@
 
 #import "OpenFile.h"
 
-
 @implementation OpenFile
-
-@synthesize appName;
-@synthesize filePath;
-@synthesize fileSize;
-@synthesize realSize;
-@synthesize pid;
-@synthesize username;
-//@synthesize cputime;
-@synthesize fileType;
 
 @end
