@@ -207,7 +207,7 @@
 {
 	//[progressText setValue:@"Getting File Listing"];
 	
-	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nw", /*@"-a -p 35347",*/ @"/"];
+	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nw", @"-a -p 35347", @"/"];
 	NSString *cmd = [args componentsJoinedByString:@" "];	// as shell command line, including args in the same string
 	char *cargs[16];
 	char **argp = cargs;
@@ -216,9 +216,10 @@
 	}
 	*(argp++) = NULL;
 	
+	BOOL was_popen = NO;
 	FILE *lsof = NULL;
 	Boolean isSet = NO;
-	if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet)) {
+	if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet) && isSet) {
 		if (![self getCredentials]) {
 			NSLog(@"Error obtaining credencials for lsof\n");
 			return NO;
@@ -237,6 +238,7 @@
 			NSLog(@"popen(lsof) failed");
 			return NO;
 		}
+		was_popen = YES;
 	}
 	
 	[self releaseData];
@@ -344,7 +346,11 @@
 		NSLog(@"Error: %d", error);
 	}
 	
-	fclose(lsof);
+	if (was_popen) {
+		pclose(lsof);
+	} else {
+		fclose(lsof);
+	}
 	
 	if (data.count == 0) {
 		NSLog(@"Strange: no results");
