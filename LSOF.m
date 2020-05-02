@@ -334,8 +334,12 @@
 		 	 			currentFile.pid = latestProcessID;
 		 	 			currentFile.username = latestUserName;
 		 				[data addObject:currentFile];
-						self.allProcessNames[latestProcessName] = @([self.allProcessNames[latestProcessName] integerValue] + 1);
-						self.allUserNames[latestUserName] = @([self.allUserNames[latestUserName] integerValue] + 1);
+		 				if (latestProcessName != nil && latestUserName != nil) {
+							self.allProcessNames[latestProcessName] = @([self.allProcessNames[latestProcessName] integerValue] + 1);
+							self.allUserNames[latestUserName] = @([self.allUserNames[latestUserName] integerValue] + 1);
+						} else {
+							NSLog(@"Error: new file but no process or uname");
+						}
 					}
 					break;
 				case 't':
