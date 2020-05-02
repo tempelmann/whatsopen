@@ -13,8 +13,8 @@
 	@property(strong) NSSortDescriptor *fileSizeSortDesc;
 	@property(strong) NSSortDescriptor *filePathSortDesc;
 	@property(strong) NSSortDescriptor *usernameSortDesc;
-	@property(strong) NSMutableSet *allUserNames;
-	@property(strong) NSMutableSet *allProcessNames;
+	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allUserNames;
+	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
 @end
 
 
@@ -44,8 +44,8 @@
 		//self.cpuSortDesc = [[NSSortDescriptor alloc] initWithKey:@"cputime" ascending:YES selector:@selector(compare:)];
 		
 		
-		self.allUserNames = [NSMutableSet new];
-		self.allProcessNames = [NSMutableSet new];
+		self.allUserNames = [NSMutableDictionary new];
+		self.allProcessNames = [NSMutableDictionary new];
 		
 		guidWrapperPath = [NSString stringWithFormat:@"%@/Contents/MacOS/uidWrapper", [[NSBundle mainBundle] bundlePath]];
 		guidWrapperPathUTF8 = (char *)[guidWrapperPath UTF8String];
@@ -207,7 +207,7 @@
 {
 	//[progressText setValue:@"Getting File Listing"];
 	
-	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nw", @"-a -p 35347", @"/"];
+	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nw", /*@"-a -p 35347",*/ @"/"];
 	NSString *cmd = [args componentsJoinedByString:@" "];	// as shell command line, including args in the same string
 	char *cargs[16];
 	char **argp = cargs;
@@ -278,7 +278,6 @@
 					{
 						// process Name
 						latestProcessName = value;
-		 				[self.allProcessNames addObject:value];
 					}
 					break;
 				case 'u':
@@ -290,7 +289,6 @@
 					{
 						// user Name
 						latestUserName = value;
-		 				[self.allUserNames addObject:value];
 					}
 					break;
 				case 'f':
@@ -301,6 +299,8 @@
 		 	 			currentFile.pid = latestProcessID;
 		 	 			currentFile.username = latestUserName;
 		 				[data addObject:currentFile];
+						self.allProcessNames[latestProcessName] = @([self.allProcessNames[latestProcessName] integerValue] + 1);
+						self.allUserNames[latestUserName] = @([self.allUserNames[latestUserName] integerValue] + 1);
 					}
 					break;
 				case 't':

@@ -25,8 +25,8 @@
 @property(readonly) NSSortDescriptor *fileSizeSortDesc;
 @property(readonly) NSSortDescriptor *filePathSortDesc;
 @property(readonly) NSSortDescriptor *usernameSortDesc;
-@property(readonly) NSMutableSet *allUserNames;
-@property(readonly) NSMutableSet *allProcessNames;
+@property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allUserNames;
+@property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
 @property(copy)     NSColor *ipv4Color;
 		  
 - (BOOL)getData:(NSTextField *)progressText;

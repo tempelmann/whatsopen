@@ -102,12 +102,12 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 
 - (void)refreshUserNames
 {
-	[self refreshNSPopUpButton:usersButton withTitles:lsofData.allUserNames.allObjects];
+	[self refreshNSPopUpButton:usersButton withDict:lsofData.allUserNames sortByCount:NO];
 }
 
 - (void)refreshProcessNames
 {
-	[self refreshNSPopUpButton:processesButton withTitles:lsofData.allProcessNames.allObjects];
+	[self refreshNSPopUpButton:processesButton withDict:lsofData.allProcessNames sortByCount:YES];
 }
 
 - (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -115,11 +115,39 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 	[sheet orderOut:self];
 }
 
+- (void)refreshNSPopUpButton:(NSPopUpButton*)button withDict:(NSDictionary<NSString*,NSNumber*>*)dict sortByCount:(BOOL)sortByCount
+{
+	[button removeAllItems];
+	[button addItemWithTitle:@"All"];	// so that "All" always appears first
+	if (dict.count > 0) {
+		NSArray<NSString*> *names;
+		if (sortByCount) {
+		 	names = [dict.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSString* _Nonnull name1, NSString* _Nonnull name2) {
+		 		NSInteger v1 = dict[name1].integerValue;
+		 		NSInteger v2 = dict[name2].integerValue;
+		 		if (v1 > v2) {
+		 			return NSOrderedAscending;
+				} else if (v1 < v2) {
+    				return NSOrderedDescending;
+    			}
+    			return NSOrderedSame;
+			}];
+		} else {
+			// sort by name
+		 	names = [dict.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+		}
+		for (NSString *name in names) {
+			[button addItemWithTitle:[NSString stringWithFormat:@"%@ (%@)", name, dict[name]]];
+			//[button.lastItem setTag:<#(NSInteger)#>]
+		}
+	}
+}
+
 - (void)refreshNSPopUpButton:(NSPopUpButton*)button withTitles:(NSArray<NSString*>*)titles
 {
 	[button removeAllItems];
-	[button addItemsWithTitles:@[@"All"]];	// so that "All" always appears first
-	if ([titles count] > 0) {
+	[button addItemWithTitle:@"All"];	// so that "All" always appears first
+	if (titles.count > 0) {
 		[button addItemsWithTitles:[titles sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
 	}
 }
