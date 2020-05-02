@@ -11,10 +11,11 @@
 #import <pwd.h>
 #import "LSOF.h"
 #import "Alerts.h"
-#import "Finder.h"
+#import "ScriptableFinder.h"
 
 #define kVolumesTag 100
 #define kUsersTag   200
+#define kProcessesTag   300
 
 @interface InterfaceController : NSObject {
 	IBOutlet NSTextField *filterField;
@@ -31,7 +32,8 @@
 	IBOutlet NSProgressIndicator *probar;
 	IBOutlet NSWindow *progSheet;
 	IBOutlet NSPopUpButton *volumesBox;
-	IBOutlet NSPopUpButton *userButton;
+	IBOutlet NSPopUpButton *usersButton;
+	IBOutlet NSPopUpButton *processesButton;
 	IBOutlet NSPanel *commentPanel;
 	IBOutlet NSPanel *documentPanel;
 	IBOutlet NSPopUpButton *commentType;
@@ -40,13 +42,14 @@
 	IBOutlet NSTextView *commentText;
 	IBOutlet NSTextField *commentFrom;
 	IBOutlet NSToolbarItem *killButtonItem;
-	IBOutlet NSToolbarItem *userButtonItem;
+	IBOutlet NSToolbarItem *usersButtonItem;
+	IBOutlet NSToolbarItem *processButtonItem;
 	IBOutlet NSTextView *documentTextView;
 	IBOutlet NSTextField *progressText;
 
 	Boolean listing;
 	LSOF *lsofData;
-	FinderApplication *theFinder;
+	//FinderApplication *theFinder;
 	int appColSort;
 	int fileSizeSortFlag;
 	int filePathSort;
@@ -66,7 +69,7 @@
 - (IBAction) googleAppName:(id)sender;
 
 // table delegates
-- (int)numberOfRowsInTableView:(NSTableView *)table;
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)table;
 - (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(int)rowIx;
 - (Boolean)tableView:(NSTableView *)table shouldEditTableColumn:(NSTableColumn *)col row:(int)row;
 - (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation;
@@ -86,6 +89,6 @@ void diskRemovedCallback( DADiskRef disk, void *context );
 - (void)addVolumeToUI:(NSString *)vol;
 - (void)removeVolumeFromUI:(NSString *)vol;
 - (void)setupDiskWatcher;
-- (NSString *)formatCpuTime:(int)secs;
+- (NSString *)formatCpuTime:(NSInteger)secs;
 
 @end

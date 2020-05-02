@@ -8,18 +8,21 @@
 
 #import <Cocoa/Cocoa.h>
 
-typedef int fileTypes;
-#define NormalFile 1
-#define IPv4File   2
+typedef enum {
+	Undefined,
+	RegularFile,
+	Directory,
+	Other
+}  fileTypes;
 
 @interface OpenFile : NSObject {
 	NSString *appName;
 	NSString *filePath;
 	NSString *fileSize;
-	NSInteger pid;
+	pid_t pid;
 	NSNumber *realSize; 
 	NSString *username;
-	NSInteger cputime;
+	//NSInteger cputime;
 	fileTypes fileType;
 }
 
@@ -28,8 +31,8 @@ typedef int fileTypes;
 @property(copy,readwrite) NSString *fileSize;
 @property(copy,readwrite) NSNumber *realSize;
 @property(copy,readwrite) NSString *username;
-@property NSInteger pid;
-@property NSInteger cputime;
+@property pid_t pid;
+//@property NSInteger cputime;
 @property fileTypes fileType;
 
 

@@ -14,44 +14,34 @@
 @interface LSOF : NSObject {
 	NSMutableArray *data;
 	NSMutableArray *displayData;
-	NSSortDescriptor *appNameSort;
-	NSSortDescriptor *fileSizeSort;
-	NSSortDescriptor *filePathSort;
-	NSSortDescriptor *usernameSort;
-	NSSortDescriptor *cpuSort;
-	
-	NSMutableArray   *UsernameArray;
 	
 	AuthorizationRef authRef;
 	NSString         *guidWrapperPath;
-	NSString         *cpuListerPath;
 	char             *guidWrapperPathUTF8;
-	NSColor *ipv4Color;
+	NSColor          *ipv4Color;
 }
 
-@property(readonly) NSSortDescriptor *appNameSort;
-@property(readonly) NSSortDescriptor *fileSizeSort;
-@property(readonly) NSSortDescriptor *filePathSort;
-@property(readonly) NSSortDescriptor *usernameSort;
-@property(readonly) NSMutableArray *UsernameArray;
-@property(readonly) NSSortDescriptor *cpuSort;
+@property(readonly) NSSortDescriptor *processNameSortDesc;
+@property(readonly) NSSortDescriptor *fileSizeSortDesc;
+@property(readonly) NSSortDescriptor *filePathSortDesc;
+@property(readonly) NSSortDescriptor *usernameSortDesc;
+@property(readonly) NSMutableSet *allUserNames;
+@property(readonly) NSMutableSet *allProcessNames;
 @property(copy)     NSColor *ipv4Color;
 		  
-- (void)getData:(NSTextField *)progressText;
+- (BOOL)getData:(NSTextField *)progressText;
 - (NSInteger)dataCount;
-- (NSString *)fileSize:(const char *)f;
 - (void)releaseData;
-- (pid_t)getPidForRow:(int)rowIx;
-- (NSString *)getFilePathForRow:(int)rowIx;
-- (NSString *)getAppNameForRow:(int)rowIx;
-- (NSString *)getFileSizeForRow:(int)rowIx;
-- (NSString *)getUserForRow:(int)rowIx;
-- (int)getCpuTimeForRow:(int)rowIx;
-- (fileTypes)getFileTypeForRow:(int)rowIx;
+- (pid_t)getPidForRow:(NSInteger)rowIx;
+- (NSString *)getFilePathForRow:(NSInteger)rowIx;
+- (NSString *)getAppNameForRow:(NSInteger)rowIx;
+- (NSString *)getFileSizeForRow:(NSInteger)rowIx;
+- (NSString *)getUserForRow:(NSInteger)rowIx;
+- (fileTypes)getFileTypeForRow:(NSInteger)rowIx;
 
-- (void)addUserName:(NSString *)username;
-
-- (void)filterDataWithString:(NSString *)filtr forVolume:(NSString *)vol forUser:(NSString *)user forType:(int)ftype;
+- (void)filterDataWithString:(NSString *)filtr forVolume:(NSString *)vol forUser:(NSString *)user forProcess:(NSString *)process forType:(fileTypes)ftype;
 - (void) sortDataWithDescriptors:(NSArray *)sortDescs;
+
++ (NSString *)displayFileSize:(size_t)size;
 
 @end

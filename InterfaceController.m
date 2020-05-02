@@ -3,29 +3,34 @@
 //  WhatsOpen
 //
 //  Created by Franklin Marmon on 6/24/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Franklin Marmon. All rights reserved.
 //
 
-#import "InterfaceController.h"
+#import <DiskArbitration/DiskArbitration.h>
 
+#import "InterfaceController.h"
 
 @implementation InterfaceController
 
 - (id)init
 {
-	theFinder = [SBApplication applicationWithBundleIdentifier: @"com.apple.finder"];
-	listing = YES;
-	lsofData = [[[LSOF alloc] init] retain];
-	[lsofData bind:@"ipv4Color" toObject:[NSUserDefaultsController sharedUserDefaultsController]
-	   withKeyPath:@"values.ipv4HilightColor"
-		   options:[NSDictionary dictionaryWithObject:NSUnarchiveFromDataTransformerName forKey:NSValueTransformerNameBindingOption]];
-	listing = NO;
-	appColSort = 0;
-	fileSizeSortFlag = 0;
-	usernameSort = 0;
-	
-	[self setupDiskWatcher];
-	
+	self = [super init];
+	if (self) {
+		//theFinder = [SBApplication applicationWithBundleIdentifier:@"com.apple.finder"];
+		listing = YES;
+		lsofData = [[LSOF alloc] init];
+		[lsofData bind:@"ipv4Color"
+			   toObject:[NSUserDefaultsController sharedUserDefaultsController]
+			withKeyPath:@"values.ipv4HilightColor"
+				options:[NSDictionary dictionaryWithObject:NSUnarchiveFromDataTransformerName
+													forKey:NSValueTransformerNameBindingOption]];
+		listing = NO;
+		appColSort = 0;
+		fileSizeSortFlag = 0;
+		usernameSort = 0;
+
+		[self setupDiskWatcher];
+	}
 	return self;
 }
 
@@ -38,35 +43,37 @@
 {
 	DASessionRef diskSession;
 	diskSession = DASessionCreate(kCFAllocatorDefault);
-	DARegisterDiskAppearedCallback( diskSession, NULL, diskAddCallback, self );
-	DARegisterDiskDisappearedCallback( diskSession, NULL, diskRemovedCallback, self );
-	DASessionScheduleWithRunLoop(diskSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode );
+	DARegisterDiskAppearedCallback(diskSession, NULL, diskAddCallback, (__bridge void *_Nullable)(self));
+	DARegisterDiskDisappearedCallback(diskSession, NULL, diskRemovedCallback, (__bridge void *_Nullable)(self));
+	DASessionScheduleWithRunLoop(diskSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 }
 
 - (void)awakeFromNib
 {
 	[volumesBox addItemWithTitle:@"All"];
 	[killButtonItem setEnabled:NO];
+	
+	#if DEBUG
+	//	[self performSelector:@selector(listFiles:) withObject:nil afterDelay:0];
+	#endif
 }
 
-void diskAddCallback( DADiskRef disk, void *context )
+void diskAddCallback(DADiskRef disk, void *context)
 {
-	CFDictionaryRef dic = DADiskCopyDescription( disk );
-	NSString *name = (NSString *)CFDictionaryGetValue( dic, @"DAVolumeName" );
-	if( name )
-	{
-		[(InterfaceController *)context addVolumeToUI:name];
+	CFDictionaryRef dic = DADiskCopyDescription(disk);
+	NSString *name = (NSString *)CFDictionaryGetValue(dic, @"DAVolumeName");
+	if (name) {
+		[(__bridge InterfaceController *)context addVolumeToUI:name];
 	}
 	CFRelease(dic);
 }
-	
-void diskRemovedCallback( DADiskRef disk, void *context )
+
+void diskRemovedCallback(DADiskRef disk, void *context)
 {
-	CFDictionaryRef dic = DADiskCopyDescription( disk );
-	NSString *name = (NSString *)CFDictionaryGetValue( dic, @"DAVolumeName" );
-	if( name )
-	{
-		[(InterfaceController *)context removeVolumeFromUI:name];
+	CFDictionaryRef dic = DADiskCopyDescription(disk);
+	NSString *name = (NSString *)CFDictionaryGetValue(dic, @"DAVolumeName");
+	if (name) {
+		[(__bridge InterfaceController *)context removeVolumeFromUI:name];
 	}
 	CFRelease(dic);
 }
@@ -81,164 +88,164 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[volumesBox removeItemWithTitle:vol];
 }
 
-- (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo 
-{ 
-	[sheet orderOut:self]; 
-} 
-
-- (void)resetUsernames
+- (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if( [[lsofData UsernameArray] count] > 0 )
-	{
-		[userButton removeAllItems];
-		[userButton addItemsWithTitles:[lsofData UsernameArray]];
+	[sheet orderOut:self];
+}
+
+- (void)resetUserNames
+{
+	if (lsofData.allUserNames.count > 0) {
+		[usersButton removeAllItems];
+		[usersButton addItemsWithTitles:lsofData.allUserNames.allObjects];
+	}
+}
+- (void)resetProcessNames
+{
+	if (lsofData.allProcessNames.count > 0) {
+		[processesButton removeAllItems];
+		[processesButton addItemsWithTitles:lsofData.allProcessNames.allObjects];
 	}
 }
 
-- (IBAction) listFiles:(id)sender
+- (IBAction)listFiles:(id)sender
 {
-	[probar setUsesThreadedAnimation:YES];	
+	[probar setUsesThreadedAnimation:YES];
 	[probar startAnimation:self];
-	
-	[NSApp beginSheet: progSheet
-	   modalForWindow: mainWindow
-		modalDelegate: self
-	   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
-		  contextInfo: nil];
-	
-	[lsofData getData:progressText];
 
-	[self resetUsernames];
+	[NSApp beginSheet:progSheet
+		modalForWindow:mainWindow
+		 modalDelegate:self
+		didEndSelector:@selector(progDidEndSheet:returnCode:contextInfo:)
+		   contextInfo:nil];
+
+	if (NOT [lsofData getData:progressText]) {
+		NSBeep();
+	}
+
+	[self resetUserNames];
+	[self resetProcessNames];
 	[self filterFiles:self];
-	
+
 	[probar stopAnimation:self];
-	
+
 	[NSApp endSheet:progSheet];
 	[self reloadTable];
 }
 
-- (IBAction) filterFiles:(id)sender
+- (IBAction)filterFiles:(id)sender
 {
 	NSString *filter = ([[filterField stringValue] length] > 0 ? [filterField stringValue] : nil);
 	NSString *vol = [[volumesBox titleOfSelectedItem] copy];
 	NSString *volPath = [NSString stringWithFormat:@"/Volumes/%@", vol];
-	NSString *user = [NSString stringWithString:[userButton titleOfSelectedItem]];
-	int fileType = [fileTypesButton indexOfSelectedItem];
+	NSString *user = [NSString stringWithString:[usersButton titleOfSelectedItem]];
+	NSString *process = [NSString stringWithString:[processesButton titleOfSelectedItem]];
+	fileTypes fileType = (fileTypes) [fileTypesButton indexOfSelectedItem];
 	struct stat st;
 	char buf[32];
-	
+
 	memset(&st, 0, sizeof(st));
-	if( lstat( [volPath UTF8String], &st ) == 0 )
-	{
-		if( st.st_mode & S_IFLNK )
-		{
+	if (lstat([volPath UTF8String], &st) == 0) {
+		if (st.st_mode & S_IFLNK) {
 			memset(buf, 0, 32);
-			readlink( [volPath UTF8String], buf, 32 );
-			if( strcmp( buf, "/" ) == 0 )
-			{
-				vol = [NSString stringWithString:@"All"];
+			readlink([volPath UTF8String], buf, 32);
+			if (strcmp(buf, "/") == 0) {
+				vol = @"All";
 			}
 		}
 	}
-		
-	
-	[lsofData filterDataWithString:filter forVolume:vol forUser:user forType:fileType ];
+
+	[lsofData filterDataWithString:filter forVolume:vol forUser:user forProcess:process forType:fileType];
 	[self reloadTable];
 }
 
--(void)alertDidEnd:(NSAlert *)alert returnCode:(int)code contextInfo:(void *)context
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)code contextInfo:(void *)context
 {
-	[alert release];
+	//[alert release];
 }
 
 - (void)killAlertDidEnd:(NSAlert *)alert resultCode:(int)resultCode contextInfo:(void *)context
 {
-	if( resultCode ==  NSAlertDefaultReturn )
-	{
-		int rowIx = [outTable selectedRow];
-		pid_t pid;
-		
-		if( rowIx >= 0 )
-			pid = [lsofData getPidForRow:rowIx];
-		if( pid >= 0 )
-		{
-			if( kill(pid, SIGQUIT) )
-			{
-				[[[Alerts alloc] retain] doInfoAlertWithTitle:[[NSString alloc] initWithFormat:@"Error killing process."] infoText:[[NSString alloc] initWithFormat:@"%s", strerror(errno)] forWindow:mainWindow withSelector:@selector(alertDidEnd:returnCode:contextInfo:) withDelegate:self runModal:NO];
+	if (resultCode == NSAlertDefaultReturn) {
+		NSInteger rowIx = [outTable selectedRow];
+		if (rowIx >= 0) {
+			pid_t pid = [lsofData getPidForRow:rowIx];
+			if (pid >= 0) {
+				if (kill(pid, SIGQUIT)) {
+					[[Alerts alloc] doInfoAlertWithTitle:[[NSString alloc] initWithFormat:@"Error killing process."]
+												infoText:[[NSString alloc] initWithFormat:@"%s", strerror(errno)]
+											   forWindow:mainWindow
+											withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+											withDelegate:self
+												runModal:NO];
+				}
 			}
 		}
 	}
-	else if( resultCode == NSAlertAlternateReturn )
-	{
+	else if (resultCode == NSAlertAlternateReturn) {
 		[[alert window] orderOut:self];
 		[self showDocPane:self];
 	}
 }
 
-- (IBAction) killApplication:(id)sender
+- (IBAction)killApplication:(id)sender
 {
-	int rowIx = [outTable selectedRow];
-	if( rowIx >= 0)
-	{
-		Alerts *killAlert = [[[Alerts alloc] init] retain];
-		NSString *title = [NSString stringWithFormat:@"Are you sure you want to kill '%@'?", [lsofData getAppNameForRow:rowIx]];
+	NSInteger rowIx = [outTable selectedRow];
+	if (rowIx >= 0) {
+		Alerts *killAlert = [[Alerts alloc] init];
+		NSString *title =
+			[NSString stringWithFormat:@"Are you sure you want to kill '%@'?", [lsofData getAppNameForRow:rowIx]];
 		[killAlert setAltButton:@"App Docs"];
 		[killAlert setOtherButton:@"Cancel"];
-		[killAlert doInfoAlertWithTitle:title  
-							   infoText:@"No data will be saved in the application." 
-							  forWindow:mainWindow withSelector:@selector(killAlertDidEnd:resultCode:contextInfo:)
-						   withDelegate:self 
+		[killAlert doInfoAlertWithTitle:title
+							   infoText:@"No data will be saved in the application."
+							  forWindow:mainWindow
+						   withSelector:@selector(killAlertDidEnd:resultCode:contextInfo:)
+						   withDelegate:self
 							   runModal:NO];
 	}
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)table
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)table
 {
 	return [lsofData dataCount];
 }
 
-- (NSString *)formatCpuTime:(int)secs
+- (NSString *)formatCpuTime:(NSInteger)secs
 {
-	int mins, hours, days;
+	NSInteger mins, hours, days;
 	mins = hours = days = 0;
-	if( secs > 86400 )
-	{
+	if (secs > 86400) {
 		days = (secs / 86400);
 		secs -= days * 86400;
 	}
-	if( secs > 3600 )
-	{
+	if (secs > 3600) {
 		hours = (secs / 3600);
 		secs -= (hours * 3600);
 	}
-	if( secs > 60 )
-	{
+	if (secs > 60) {
 		mins = (secs / 60);
 		secs -= (mins * 60);
 	}
-	return [NSString stringWithFormat:@"%d.%d:%d:%d", days, hours, mins, secs];
+	return [NSString stringWithFormat:@"%ld.%ld:%ld:%ld", (long)days, (long)hours, (long)mins, (long)secs];
 }
 
 - (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(int)rowIx
 {
 	NSString *retVal = nil;
 
-	
-	if( col == applicationColumn )
-	{
+	if (col == applicationColumn) {
 		retVal = [lsofData getAppNameForRow:rowIx];
-	}
-	else if( col == filePathColumn )
+	} else if (col == filePathColumn) {
 		retVal = [lsofData getFilePathForRow:rowIx];
-	else if( col == fileSizeColumn )
+	} else if (col == fileSizeColumn) {
 		retVal = [lsofData getFileSizeForRow:rowIx];
-	else if( col == usernameColumn )
+	} else if (col == usernameColumn) {
 		retVal = [lsofData getUserForRow:rowIx];
-	else if( col == cputimeColumn )
-	{
-		retVal = [self formatCpuTime:[lsofData getCpuTimeForRow:rowIx]];
+	//} else if (col == cputimeColumn) {
+	//	retVal = [self formatCpuTime:[lsofData getCpuTimeForRow:rowIx]];
 	}
-	
+
 	return retVal;
 }
 
@@ -247,30 +254,42 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	return NO;
 }
 
-- (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation
+- (NSString *)tableView:(NSTableView *)aTableView
+		 toolTipForCell:(NSCell *)aCell
+				   rect:(NSRectPointer)rect
+			tableColumn:(NSTableColumn *)aTableColumn
+					row:(NSInteger)row
+		  mouseLocation:(NSPoint)mouseLocation
 {
 	NSString *retVal = [NSString stringWithFormat:@"pid:%d", [lsofData getPidForRow:row]];
+/*
 	Boolean isSet;
-	
-	if( aTableColumn == cputimeColumn )
-	{
+	if (aTableColumn == cputimeColumn) {
 		retVal = [retVal stringByAppendingString:@"\nFormat: days.hours:minutes:seconds"];
-		if( CFPreferencesGetAppBooleanValue( CFSTR( "lsofFullList" ), kCFPreferencesCurrentApplication, &isSet ) == NO )
-			retVal = [retVal stringByAppendingString:@"\nCpu Time Disabled (turn on root to enable)"];
+		if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet) == NO)
+			retVal = [retVal stringByAppendingString:@"\nCPU Time Disabled (turn on root to enable)"];
 	}
-	
+*/
 	return retVal;
 }
 
-- (IBAction) openInFinder:(id)sender
+- (IBAction)openInFinder:(id)sender
 {
-	int rowIx = [outTable selectedRow];
-	if( rowIx >= 0 )
-	{
-		NSURL *fileUrl = [NSURL fileURLWithPath:[lsofData getFilePathForRow:rowIx]]; 
-		FinderItem *theFile = [[theFinder items] objectAtLocation:fileUrl];
-		[theFile reveal];
-		[theFinder activate];
+	NSInteger rowIx = [outTable selectedRow];
+	if (rowIx >= 0) {
+		NSURL *fileUrl = [NSURL fileURLWithPath:[lsofData getFilePathForRow:rowIx]];
+		#if 1
+			[NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:@[fileUrl]];
+		#else
+			SBElementArray *items = [theFinder items];
+			FinderItem *theFile = [items objectAtLocation:fileUrl];
+			if (theFile) {
+				[theFile reveal];
+				[theFinder activate];
+			} else {
+				NSBeep();
+			}
+		#endif
 	}
 }
 
@@ -285,21 +304,22 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
+	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
 	usernameSort = 0;
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
 	cpusort = 0;
-	switch( appColSort )
-	{
+	switch (appColSort) {
 		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:[lsofData appNameSort], nil ];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:applicationColumn];
+			descs = [NSArray arrayWithObjects:lsofData.processNameSortDesc, nil];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"]
+						  inTableColumn:applicationColumn];
 			appColSort = 1;
 			break;
 		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[[lsofData appNameSort] reversedSortDescriptor], nil ];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:applicationColumn];
+			descs = [NSArray arrayWithObjects:[lsofData.processNameSortDesc reversedSortDescriptor], nil];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"]
+						  inTableColumn:applicationColumn];
 			appColSort = 2;
 			break;
 		case 2: // descending -> unsorted
@@ -317,20 +337,19 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
+	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
 	usernameSort = 0;
 	filePathSort = 0;
 	appColSort = 0;
 	cpusort = 0;
-	switch( fileSizeSortFlag )
-	{
+	switch (fileSizeSortFlag) {
 		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:[lsofData fileSizeSort], nil];
+			descs = [NSArray arrayWithObjects:lsofData.fileSizeSortDesc, nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:fileSizeColumn];
 			fileSizeSortFlag = 1;
 			break;
 		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[[lsofData fileSizeSort] reversedSortDescriptor], nil];
+			descs = [NSArray arrayWithObjects:[lsofData.fileSizeSortDesc reversedSortDescriptor], nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:fileSizeColumn];
 			fileSizeSortFlag = 2;
 			break;
@@ -349,20 +368,19 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
+	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
 	usernameSort = 0;
 	appColSort = 0;
 	fileSizeSortFlag = 0;
 	cpusort = 0;
-	switch( filePathSort )
-	{
+	switch (filePathSort) {
 		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:[lsofData filePathSort], nil];
+			descs = [NSArray arrayWithObjects:lsofData.filePathSortDesc, nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:filePathColumn];
 			filePathSort = 1;
 			break;
 		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[[lsofData filePathSort] reversedSortDescriptor], nil];
+			descs = [NSArray arrayWithObjects:[lsofData.filePathSortDesc reversedSortDescriptor], nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:filePathColumn];
 			filePathSort = 2;
 			break;
@@ -375,26 +393,25 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	return descs;
 }
 
-- (NSArray *)sortByUsername
+- (NSArray *)sortByUserName
 {
 	NSArray *descs;
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
-	[outTable setIndicatorImage:nil	inTableColumn:cputimeColumn];
+	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
 	appColSort = 0;
 	cpusort = 0;
-	switch( usernameSort )
-	{
+	switch (usernameSort) {
 		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:[lsofData usernameSort], nil ];
+			descs = [NSArray arrayWithObjects:lsofData.usernameSortDesc, nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:usernameColumn];
 			usernameSort = 1;
 			break;
 		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[[lsofData usernameSort] reversedSortDescriptor], nil ];
+			descs = [NSArray arrayWithObjects:[lsofData.usernameSortDesc reversedSortDescriptor], nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:usernameColumn];
 			usernameSort = 2;
 			break;
@@ -407,6 +424,7 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	return descs;
 }
 
+/*
 - (NSArray *)sortByCPU
 {
 	NSArray *descs;
@@ -416,15 +434,14 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
 	appColSort = 0;
-	switch( cpusort )
-	{
+	switch (cpusort) {
 		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:[lsofData cpuSort], nil ];
+			descs = [NSArray arrayWithObjects:[lsofData cpuSort], nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:cputimeColumn];
 			cpusort = 1;
 			break;
 		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[[lsofData cpuSort] reversedSortDescriptor], nil ];
+			descs = [NSArray arrayWithObjects:[[lsofData cpuSort] reversedSortDescriptor], nil];
 			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:cputimeColumn];
 			cpusort = 2;
 			break;
@@ -436,153 +453,154 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	}
 	return descs;
 }
+*/
 
 - (void)tableView:(NSTableView *)tableView mouseDownInHeaderOfTableColumn:(NSTableColumn *)tableColumn
 {
 	NSArray *descs = nil;
-	if( tableColumn == applicationColumn )
-	{
-		descs = [[self sortByAppName] retain];
+	if (tableColumn == applicationColumn) {
+		descs = [self sortByAppName];
 	}
-	else if( tableColumn == fileSizeColumn )
-	{
-		descs = [[self sortByFileSize] retain];
+	else if (tableColumn == fileSizeColumn) {
+		descs = [self sortByFileSize];
 	}
-	else if( tableColumn == filePathColumn )
-	{
-		descs = [[self sortByFilePath] retain];
+	else if (tableColumn == filePathColumn) {
+		descs = [self sortByFilePath];
 	}
-	else if( tableColumn == usernameColumn )
-	{
-		descs = [[self sortByUsername] retain];
+	else if (tableColumn == usernameColumn) {
+		descs = [self sortByUserName];
 	}
-	else if (tableColumn == cputimeColumn )
-	{
-		descs = [[self sortByCPU] retain];
-	}
-	
+	//else if (tableColumn == cputimeColumn) {
+	//	descs = [self sortByCPU];
+	//}
+
 	[lsofData sortDataWithDescriptors:descs];
 	[self reloadTable];
-	if( descs )
-		[descs release];
 }
 
-- (IBAction) submitComment:(id)sender
+- (IBAction)submitComment:(id)sender
 {
 	NSLog(@"submit comment");
 	NSURL *url = [NSURL URLWithString:@"http://www.agasupport.com/programComment.php"];
 	NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
-	NSString *stringBoundary = [NSString stringWithString:@"0xKhTmLbOuNdArY"];
-	NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",stringBoundary];
-	[urlRequest addValue:contentType forHTTPHeaderField: @"Content-Type"];
-	Alerts *resAlert = [[[Alerts alloc] init] retain];
-	
+	NSString *stringBoundary = @"0xKhTmLbOuNdArY";
+	NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", stringBoundary];
+	[urlRequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
+	Alerts *resAlert = [[Alerts alloc] init];
+
 	[urlRequest setHTTPMethod:@"POST"];
 	NSMutableString *postData = [[NSMutableString alloc] init];
-	[postData appendString:[NSString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"programname", @"whatsopen"]];
-	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"subject", [commentSubject stringValue]]];
-	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"type", [commentType titleOfSelectedItem]]];
-	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"from", [commentFrom stringValue]]];
-	[postData appendString:[NSMutableString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@", stringBoundary, @"text", [[commentText textStorage] string]]];
+	[postData
+		appendString:[NSString stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@",
+												stringBoundary, @"programname", @"whatsopen"]];
+	[postData appendString:[NSMutableString
+							   stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@",
+												stringBoundary, @"subject", [commentSubject stringValue]]];
+	[postData appendString:[NSMutableString
+							   stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@",
+												stringBoundary, @"type", [commentType titleOfSelectedItem]]];
+	[postData appendString:[NSMutableString
+							   stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@",
+												stringBoundary, @"from", [commentFrom stringValue]]];
+	[postData appendString:[NSMutableString
+							   stringWithFormat:@"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@",
+												stringBoundary, @"text", [[commentText textStorage] string]]];
 	[postData appendString:[NSString stringWithFormat:@"\r\n--%@", stringBoundary]];
-	
+
 	[urlRequest setHTTPBody:[postData dataUsingEncoding:NSUTF8StringEncoding]];
 	NSURLConnection *connectionResponse = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self];
-	if( !connectionResponse )
-	{
+	if (!connectionResponse) {
 		NSLog(@"failed to submit request");
-		[resAlert doInfoAlertWithTitle:@"I'm sorry, your message couldn't be sent." 
-	                          infoText:@"http submission failed" 
-							 forWindow:mainWindow 
-						  withSelector:@selector(alertDidEnd:returnCode:contextInfo:) 
-						  withDelegate:self 
+		[resAlert doInfoAlertWithTitle:@"I'm sorry, your message couldn't be sent."
+							  infoText:@"http submission failed"
+							 forWindow:mainWindow
+						  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+						  withDelegate:self
 							  runModal:NO];
 	}
-	else
-	{
+	else {
 		[NSApp endSheet:commentPanel];
 		[commentFrom setStringValue:@"your@email.dom"];
 		[commentSubject setStringValue:@"Your Subject"];
 		[[commentText textStorage] setAttributedString:[[NSAttributedString alloc] initWithString:@""]];
-		[resAlert doInfoAlertWithTitle:@"Your message has been sent." 
-	                          infoText:@"Thank you for using WhatsOpen!" 
-							 forWindow:mainWindow 
-						  withSelector:@selector(alertDidEnd:returnCode:contextInfo:) 
-						  withDelegate:self 
+		[resAlert doInfoAlertWithTitle:@"Your message has been sent."
+							  infoText:@"Thank you for using WhatsOpen!"
+							 forWindow:mainWindow
+						  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+						  withDelegate:self
 							  runModal:NO];
 	}
 }
 
-- (IBAction) cancelComment:(id)sender
+- (IBAction)cancelComment:(id)sender
 {
 	[NSApp endSheet:commentPanel];
 }
 
-- (IBAction) dismissDoc:(id)sender
+- (IBAction)dismissDoc:(id)sender
 {
 	[NSApp endSheet:documentPanel];
 }
 
-
-- (IBAction) showCommentPane:(id)sender
+- (IBAction)showCommentPane:(id)sender
 {
-	[NSApp beginSheet: commentPanel
-	   modalForWindow: mainWindow
-		modalDelegate: self
-	   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
-		  contextInfo: nil];
+	[NSApp beginSheet:commentPanel
+		modalForWindow:mainWindow
+		 modalDelegate:self
+		didEndSelector:@selector(progDidEndSheet:returnCode:contextInfo:)
+		   contextInfo:nil];
 }
 
 - (void)loadDocText:(FILE *)man
 {
 	char buff[1024];
-	
-	if( man )
-	{
+
+	if (man) {
 		[documentTextView setEditable:YES];
 		[[documentTextView textStorage] beginEditing];
-		while( fgets( buff, 1024, man ) )
-		{
-			[[documentTextView textStorage] appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%s", buff]]];
+		while (fgets(buff, 1024, man)) {
+			[[documentTextView textStorage]
+				appendAttributedString:[[NSAttributedString alloc]
+										   initWithString:[NSString stringWithFormat:@"%s", buff]]];
 		}
 		[[documentTextView textStorage] endEditing];
 		[documentTextView setEditable:NO];
 	}
 }
-	
 
-- (IBAction) showDocPane:(id)sender
+- (IBAction)showDocPane:(id)sender
 {
-	int row = [outTable selectedRow];
+	NSInteger row = [outTable selectedRow];
 	NSString *an = [lsofData getAppNameForRow:row];
-	
+
 	[[documentTextView textStorage] setAttributedString:[[NSAttributedString alloc] init]];
-	
-	if( row >= 0 )
-	{
-		NSString *commandString = [NSString stringWithFormat:@"man %@ | col -b", an ];
-		
-		FILE *man = popen( [commandString UTF8String], "r" );
+
+	if (row >= 0) {
+		NSString *commandString = [NSString stringWithFormat:@"man %@ | col -b", an];
+
+		FILE *man = popen([commandString UTF8String], "r");
 		[self loadDocText:man];
 		fclose(man);
-		
-		if( [[documentTextView textStorage] length] == 0 )
-			[[documentTextView textStorage] setAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"There is no documentation available for %@.", an]]];
-		
-		[NSApp beginSheet: documentPanel
-		   modalForWindow: mainWindow
-			modalDelegate: self
-		   didEndSelector: @selector(progDidEndSheet:returnCode:contextInfo:)
-			  contextInfo: nil];
+
+		if ([[documentTextView textStorage] length] == 0)
+			[[documentTextView textStorage]
+				setAttributedString:
+					[[NSAttributedString alloc]
+						initWithString:[NSString stringWithFormat:@"There is no documentation available for %@.", an]]];
+
+		[NSApp beginSheet:documentPanel
+			modalForWindow:mainWindow
+			 modalDelegate:self
+			didEndSelector:@selector(progDidEndSheet:returnCode:contextInfo:)
+			   contextInfo:nil];
 	}
-	else
-	{
-		Alerts *oops = [[[Alerts alloc] init] retain];
-		[oops doInfoAlertWithTitle:@"Error obtaining documentation." 
-						  infoText:@"You must select a row." 
-						 forWindow:mainWindow 
+	else {
+		Alerts *oops = [[Alerts alloc] init];
+		[oops doInfoAlertWithTitle:@"Error obtaining documentation."
+						  infoText:@"You need to select a row."
+						 forWindow:mainWindow
 					  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-					  withDelegate:self 
+					  withDelegate:self
 						  runModal:NO];
 	}
 }
@@ -592,75 +610,69 @@ void diskRemovedCallback( DADiskRef disk, void *context )
 	NSString *rowUser = [lsofData getUserForRow:row];
 	struct passwd *pw = NULL;
 	uid_t uid = getuid();
-	
-	if( rowUser )
-	{
-		pw = getpwnam( [rowUser UTF8String] );
-		if( pw )
-		{
-			if( pw->pw_uid == uid )
-			{
+
+	if (rowUser) {
+		pw = getpwnam([rowUser UTF8String]);
+		if (pw) {
+			if (pw->pw_uid == uid) {
 				[killButtonItem setEnabled:YES];
 			}
-			else
-			{
+			else {
 				[killButtonItem setEnabled:NO];
 			}
 		}
 	}
-	
+
 	return YES;
 }
 
-- (void) toolbarWillAddItem:(NSNotification *)note 
+- (void)toolbarWillAddItem:(NSNotification *)note
 {
-    NSToolbarItem *addedItem = [[note userInfo] objectForKey: @"item"];
-    if( [addedItem tag] == kVolumesTag ) 
-	{
+	NSToolbarItem *addedItem = [[note userInfo] objectForKey:@"item"];
+	if ([addedItem tag] == kVolumesTag) {
 		volumesBox = (NSPopUpButton *)[addedItem view];
-    }
-	else if( [addedItem tag] == kUsersTag )
-	{
-		userButton = (NSPopUpButton *)[addedItem view];
+	}
+	else if ([addedItem tag] == kUsersTag) {
+		usersButton = (NSPopUpButton *)[addedItem view];
+	}
+	else if ([addedItem tag] == kProcessesTag) {
+		processesButton = (NSPopUpButton *)[addedItem view];
 	}
 }
 
 - (IBAction)googleAppName:(id)sender
 {
-	int row = [outTable selectedRow];
-	if( row >= 0 )
-	{
+	NSInteger row = [outTable selectedRow];
+	if (row >= 0) {
 		NSString *an = [lsofData getAppNameForRow:row];
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/search?q=macosx+%@", an];
+		NSString *url = [NSString stringWithFormat:@"http://www.google.com/search?q=macos+%@", an];
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 		[self dismissDoc:self];
 	}
-	else
-	{
-		Alerts *oops = [[[Alerts alloc] init] retain];
-		[oops doInfoAlertWithTitle:@"Error Googling application." 
-						  infoText:@"You must select a row." 
-						 forWindow:mainWindow 
+	else {
+		Alerts *oops = [[Alerts alloc] init];
+		[oops doInfoAlertWithTitle:@"Error Googling the application."
+						  infoText:@"You need to select a row."
+						 forWindow:mainWindow
 					  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-					  withDelegate:self 
+					  withDelegate:self
 						  runModal:NO];
 	}
 }
 
-- (void)tableView: (NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(int)row
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(int)row
 {
 	fileTypes type = [lsofData getFileTypeForRow:row];
 	NSColor *color = [lsofData ipv4Color];
 
-	switch(type)
-	{
-		case IPv4File:
-			[aCell setDrawsBackground: YES];
-			[aCell setBackgroundColor:color];
+	switch (type) {
+		case RegularFile:
+			[aCell setDrawsBackground:NO];
+			[aCell setBackgroundColor:[NSColor whiteColor]];
 			break;
 		default:
-			[aCell setDrawsBackground: NO];
-			[aCell setBackgroundColor:[NSColor whiteColor]];
+			[aCell setDrawsBackground:YES];
+			[aCell setBackgroundColor:color];
 			break;
 	}
 }

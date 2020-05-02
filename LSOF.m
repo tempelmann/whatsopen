@@ -8,52 +8,63 @@
 
 #import "LSOF.h"
 
+@interface LSOF()
+	@property(strong) NSSortDescriptor *processNameSortDesc;
+	@property(strong) NSSortDescriptor *fileSizeSortDesc;
+	@property(strong) NSSortDescriptor *filePathSortDesc;
+	@property(strong) NSSortDescriptor *usernameSortDesc;
+	@property(strong) NSMutableSet *allUserNames;
+	@property(strong) NSMutableSet *allProcessNames;
+@end
+
 
 @implementation LSOF
 
-@synthesize appNameSort;
-@synthesize filePathSort;
-@synthesize fileSizeSort;
-@synthesize usernameSort;
-@synthesize UsernameArray;
-@synthesize cpuSort;
 @synthesize ipv4Color;
+
+
+#define Use1024 0
 
 - (id)init
 {
-	displayData = nil;
-	data = [[[NSMutableArray alloc] init] retain];
-	appNameSort = [[[NSSortDescriptor alloc] initWithKey:@"appName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
-	filePathSort = [[[NSSortDescriptor alloc] initWithKey:@"filePath" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
-	fileSizeSort = [[[NSSortDescriptor alloc] initWithKey:@"realSize" ascending:YES selector:@selector(compare:)] retain];
-	usernameSort = [[[NSSortDescriptor alloc] initWithKey:@"username" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] retain];
-	cpuSort = [[[NSSortDescriptor alloc] initWithKey:@"cputime" ascending:YES selector:@selector(compare:)] retain];
-	
-	UsernameArray = [[NSMutableArray alloc] init];
-	guidWrapperPath = [[NSString stringWithFormat:@"%@/Contents/MacOS/uidWrapper", [[NSBundle mainBundle] bundlePath]] retain];
-	guidWrapperPathUTF8 = (char *)[guidWrapperPath UTF8String];
-	cpuListerPath = [[NSString stringWithFormat:@"%@/Contents/MacOS/cpuLoader", [[NSBundle mainBundle] bundlePath]] retain];
-	[NSObject exposeBinding:@"ipv4Color"];
-	
+	self = [super init];
+	if (self) {
+		displayData = nil;
+		data = [[NSMutableArray alloc] init];
+		self.processNameSortDesc = [[NSSortDescriptor alloc] initWithKey:@"appName"
+												  ascending:YES
+												   selector:@selector(localizedCaseInsensitiveCompare:)];
+		self.filePathSortDesc = [[NSSortDescriptor alloc] initWithKey:@"filePath"
+												   ascending:YES
+													selector:@selector(localizedCaseInsensitiveCompare:)];
+		self.fileSizeSortDesc = [[NSSortDescriptor alloc] initWithKey:@"realSize" ascending:YES selector:@selector(compare:)];
+		self.usernameSortDesc = [[NSSortDescriptor alloc] initWithKey:@"username"
+												   ascending:YES
+													selector:@selector(localizedCaseInsensitiveCompare:)];
+		//self.cpuSortDesc = [[NSSortDescriptor alloc] initWithKey:@"cputime" ascending:YES selector:@selector(compare:)];
+		
+		
+		self.allUserNames = [NSMutableSet new];
+		self.allProcessNames = [NSMutableSet new];
+		
+		guidWrapperPath = [NSString stringWithFormat:@"%@/Contents/MacOS/uidWrapper", [[NSBundle mainBundle] bundlePath]];
+		guidWrapperPathUTF8 = (char *)[guidWrapperPath UTF8String];
+		//cpuListerPath = [NSString stringWithFormat:@"%@/Contents/MacOS/cpuLoader", [[NSBundle mainBundle] bundlePath]];
+		
+		[NSObject exposeBinding:@"ipv4Color"];
+	}
 	return self;
 }
 
-- (void) sortDataWithDescriptors:(NSArray *)sortDescs
+- (void)sortDataWithDescriptors:(NSArray *)sortDescs
 {
-	if( displayData )
-	{
-		if( sortDescs )
-		{
+	if (displayData) {
+		if (sortDescs) {
 			NSMutableArray *tmpArray = [NSMutableArray arrayWithArray:[displayData sortedArrayUsingDescriptors:sortDescs]];
-			[displayData removeAllObjects];
-			[displayData release];
-			displayData = [[NSMutableArray arrayWithArray:tmpArray] retain];
+			displayData = [NSMutableArray arrayWithArray:tmpArray];
 		}
-		else
-		{
-			[displayData removeAllObjects];
-			[displayData release];
-			displayData = [[NSMutableArray arrayWithArray:data] retain];
+		else {
+			displayData = [NSMutableArray arrayWithArray:data];
 		}
 	}
 }
@@ -61,162 +72,125 @@
 - (NSInteger)dataCount
 {
 	NSInteger count = 0;
-	if( displayData && ([displayData count] > 0) )
+	if (displayData && ([displayData count] > 0))
 		count = [displayData count];
 	return count;
 }
 
 - (void)releaseData
 {
-	if( data )
-	{
-		if( [data count] )
-		{
-			[data removeAllObjects];
-		}
-	}
-	if( displayData )
-	{
-		[displayData release];
-		displayData = nil;
+	if ([data count]) {
+		[data removeAllObjects];
 	}
 	
-	if( UsernameArray )
-	{
-		[UsernameArray removeAllObjects];
-		[UsernameArray addObject:[NSString stringWithFormat:@"All"]];
-	}
+	displayData = nil;
+	
+	[self.allProcessNames removeAllObjects];
+	[self.allProcessNames addObject:[NSString stringWithFormat:@"All"]];
+
+	[self.allUserNames removeAllObjects];
+	[self.allUserNames addObject:[NSString stringWithFormat:@"All"]];
 }
 
-size_t getSize( const char *f )
-{
-	size_t retVal = 0;
-	struct stat st;
-	memset(&st, 0, sizeof(st));
-	if( stat( f, &st ) == 0 )
-	{
-		retVal = st.st_size;
-	}
-	return retVal;
-}
-
-- (NSString *) fileSize:(const char *)f
-{
-	NSString *retVal = nil;
-	char *units[4] = { "B", "KB", "MB", "GB" };
-	int i;
-	size_t sz = 0;
-
-	sz = getSize(f);
-	for( i = 0; i < 4 && sz > 1024; i++ ) sz = sz / 1024;
-	retVal = [[[NSString alloc] initWithFormat:@"%d%s", sz, units[i]] autorelease];
-
-	return retVal;
-}
-
-- (void)filterDataWithString:(NSString *)filter forVolume:(NSString *)vol forUser:(NSString *)user forType:(int)ftype
+- (void)filterDataWithString:(NSString *)filter forVolume:(NSString *)vol forUser:(NSString *)user forProcess:(NSString *)process forType:(fileTypes)ftype
 {
 	NSPredicate *pred = nil;
 	NSMutableString *baseString = nil;
 	NSString *volString = nil;
 	NSString *userString = nil;
+	NSString *processString = nil;
 	NSString *typeString = nil;
 	
-	if( user && ([user compare:@"All"] != NSOrderedSame) )
-	{
+	if (user && ([user compare:@"All"] != NSOrderedSame)) {
 		userString = [NSString stringWithFormat:@"(SELF.username == '%@')", user];
 	}
 	
-	if( vol && ([vol compare:@"All"] != NSOrderedSame) )
-	{
+	if (process && ([process compare:@"All"] != NSOrderedSame)) {
+		processString = [NSString stringWithFormat:@"(SELF.appName == '%@')", process];
+	}
+	
+	if (vol && ([vol compare:@"All"] != NSOrderedSame)) {
 		volString = [NSString stringWithFormat:@"(SELF.filePath BEGINSWITH[c] '/Volumes/%@')", vol];
 	}
 	
-	if( ftype > 0 )
-	{
-		typeString = [NSString stringWithFormat:@"(SELF.fileType == %d)", ftype];
+	if (ftype > 0) {
+		typeString = [NSString stringWithFormat:@"(SELF.fileType == %ld)", (long)ftype];
 	}
 	
-	if( filter && [filter length] )
-	{
-		baseString = [NSMutableString stringWithFormat:@"((SELF.appName contains[c] '%@') OR (SELF.filePath contains[c] '%@') OR (SELF.username contains[c] '%@'))", filter, filter, filter];
+	if (filter && [filter length]) {
+		baseString = [NSMutableString
+					  stringWithFormat:
+					  @"((SELF.appName contains[c] '%@') OR (SELF.filePath contains[c] '%@') OR (SELF.username contains[c] '%@'))",
+					  filter, filter, filter];
 	}
-	else
-	{
+	else {
 		baseString = [[NSMutableString alloc] init];
 	}
 	
-	if( userString )
-	{
-		if( [baseString length] )
+	if (userString) {
+		if ([baseString length])
 			[baseString appendString:@" AND "];
 		[baseString appendString:userString];
 	}
 	
-	if( volString )
-	{
-		if( [baseString length] )
+	if (processString) {
+		if ([baseString length])
+			[baseString appendString:@" AND "];
+		[baseString appendString:processString];
+	}
+	
+	if (volString) {
+		if ([baseString length])
 			[baseString appendString:@" AND "];
 		[baseString appendString:volString];
 	}
 	
-	if( typeString )
-	{
-		if( [baseString length] )
+	if (typeString) {
+		if ([baseString length])
 			[baseString appendString:@" AND "];
 		[baseString appendString:typeString];
 	}
-		
 	
-	if( baseString && [baseString length] )
+	if (baseString && [baseString length])
 		pred = [NSPredicate predicateWithFormat:baseString];
 	
-	if( pred )
-	{
-		if( displayData && ([displayData count] > 0))
-		{
-			[displayData removeAllObjects];
-			[displayData release];
+	if (pred) {
+		if (displayData && ([displayData count] > 0)) {
 			displayData = nil;
 		}
-		if( data && ([data count] > 0) )
-			displayData = [[NSMutableArray arrayWithArray:[data filteredArrayUsingPredicate:pred]] retain];
+		if (data && ([data count] > 0))
+			displayData = [NSMutableArray arrayWithArray:[data filteredArrayUsingPredicate:pred]];
 	}
-	else
-	{
-		if( displayData && ([displayData count] > 0 ))
-		{
-			[displayData removeAllObjects];
-			[displayData release];
+	else {
+		if (displayData && ([displayData count] > 0)) {
 			displayData = nil;
 		}
-		if( data && ([data count] > 0) )
-			displayData = [[NSMutableArray arrayWithArray:data] retain];
+		if (data && ([data count] > 0))
+			displayData = [NSMutableArray arrayWithArray:data];
 	}
 }
 
 - (Boolean)getCredentials
 {
 	Boolean retVal = YES;
-	AuthorizationFlags flags =  kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
-	AuthorizationItem progs[] = { {kAuthorizationRightExecute, strlen(guidWrapperPathUTF8), guidWrapperPathUTF8, 0} };
+	AuthorizationFlags flags =
+	kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
+	AuthorizationItem progs[] = {{kAuthorizationRightExecute, strlen(guidWrapperPathUTF8), guidWrapperPathUTF8, 0}};
 	
-	AuthorizationRights rights = { sizeof(progs)/sizeof(AuthorizationItem), progs };
+	AuthorizationRights rights = {sizeof(progs) / sizeof(AuthorizationItem), progs};
 	
-	if( authRef == nil )
-	{
-		if( AuthorizationCreate( NULL, kAuthorizationEmptyEnvironment, flags, &authRef ) != errAuthorizationSuccess )
-		{
+	if (authRef == nil) {
+		if (AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, flags, &authRef) != errAuthorizationSuccess) {
 			retVal = NO;
-			if( authRef )
+			if (authRef) {
 				AuthorizationFree(authRef, kAuthorizationFlagDefaults);
+			}
 			authRef = nil;
-		}
-		else if( AuthorizationCopyRights( authRef, &rights, NULL, flags, NULL ) != errAuthorizationSuccess )
-		{
+		} else if (AuthorizationCopyRights(authRef, &rights, NULL, flags, NULL) != errAuthorizationSuccess) {
 			retVal = NO;
-			if( authRef )
+			if (authRef) {
 				AuthorizationFree(authRef, kAuthorizationFlagDefaults);
+			}
 			authRef = nil;
 		}
 	}
@@ -226,158 +200,180 @@ size_t getSize( const char *f )
 
 - (void)releaseCredentials
 {
-	if( authRef )
+	if (authRef) {
 		AuthorizationFree(authRef, kAuthorizationFlagDefaults);
+	}
 	authRef = nil;
 }
 
-- (void)getData:(NSTextField *)progressText
+- (BOOL)getData:(NSTextField *)progressText
 {
-	FILE *lsof = NULL;
-	char *args[] = { "/usr/sbin/lsof", NULL };
-	char *cpuargs[2] = { NULL, NULL };
-	char line[4096];
-	char *p, *p2, *lim;
-	Boolean one = NO;
-	NSMutableArray *lineArray;
-	NSString *tst;
-	int i;
-	Boolean isSet = NO;
-	pid_t pid;
-	int secs;
-	id de;
-	
 	//[progressText setValue:@"Getting File Listing"];
 	
-	if( CFPreferencesGetAppBooleanValue( CFSTR( "lsofFullList" ), kCFPreferencesCurrentApplication, &isSet ) )
-	{
-		if( ![self getCredentials] )
-		{
+	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nbw", /*@"-a -p 35347",*/ @"/"];
+	NSString *cmd = [args componentsJoinedByString:@" "];	// as shell command line, including args in the same string
+	char *cargs[16];
+	char **argp = cargs;
+	for (NSInteger i = 0; i < args.count; ++i) {
+		*(argp++) = (char*) args[i].UTF8String;
+	}
+	*(argp++) = NULL;
+	
+	FILE *lsof = NULL;
+	Boolean isSet = NO;
+	if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet)) {
+		if (![self getCredentials]) {
+			NSLog(@"Error obtaining credencials for lsof\n");
+			return NO;
+		}
+		else {
+			NSLog(@"invoking (root): %@", cmd);
+			OSStatus res = AuthorizationExecuteWithPrivileges (authRef, guidWrapperPath.UTF8String, kAuthorizationFlagDefaults, cargs, &lsof);
+			if (res != errAuthorizationSuccess) {
+				NSLog(@"Running lsof as root failed\n");
+				return NO;
+			}
+		}
+	} else {
+		NSLog(@"invoking: %@", cmd);
+		if ((lsof = popen(cmd.UTF8String, "r")) == NULL) {
+			NSLog(@"popen(lsof) failed");
+			return NO;
+		}
+	}
+	
+	[self releaseData];
+	
+	pid_t latestProcessID = 0;
+	NSString *latestProcessName = nil;
+	NSString *latestUserName = nil;
+ 	OpenFile *currentFile = nil;
+	
+	while (NOT feof(lsof)) {
+		size_t lineLen;
+		char *lineStart = fgetln (lsof, &lineLen);
+		if (lineLen == 0) {
+			// we're finished
+			break;
+		}
+		if (lineLen <= 2) {
+			// empty?!
+			NSLog(@"lsof returned empty line");
+			continue;
+		}
+		
+		NSString *line = [[NSString alloc] initWithBytes:lineStart length:lineLen-2 encoding:NSUTF8StringEncoding];
+		NSArray<NSString*> *fields = [line componentsSeparatedByString:@"\000"];
+		
+		for (NSString *field in fields) {
+			unichar tag = [field characterAtIndex:0];
+			NSString *value = [field substringFromIndex:1];
+			switch (tag) {
+				case 'p':
+					{
+						// process ID
+						latestProcessID = (int) [value integerValue];
+					}
+					break;
+				case 'c':
+					{
+						// process Name
+						latestProcessName = value;
+		 				[self.allProcessNames addObject:value];
+					}
+					break;
+				case 'u':
+					{
+						// user ID - ignore
+					}
+					break;
+				case 'L':
+					{
+						// user Name
+						latestUserName = value;
+		 				[self.allUserNames addObject:value];
+					}
+					break;
+				case 'f':
+					{
+						// new file
+		 	 			currentFile = [OpenFile new];
+		 	 			currentFile.appName = latestProcessName;
+		 	 			currentFile.pid = latestProcessID;
+		 	 			currentFile.username = latestUserName;
+		 				[data addObject:currentFile];
+					}
+					break;
+				case 't':
+					{
+						// type
+						fileTypes t = Undefined;
+						if ([value isEqualToString:@"REG"]) {
+							t = RegularFile;
+						} else if ([value isEqualToString:@"DIR"]) {
+							t = Directory;
+						} else {
+							t = Other;
+						}
+		 	 			currentFile.fileType = t;
+					}
+					break;
+				case 's':
+					{
+						// file size
+						NSInteger size = [value integerValue];
+						if (currentFile.fileType == RegularFile) {
+							currentFile.fileSize = [self.class displayFileSize:size];
+						} else if (currentFile.fileType == Directory) {
+							currentFile.fileSize = @"–";
+						}
+		 	 			currentFile.realSize = [NSNumber numberWithInteger:size];
+					}
+					break;
+				case 'n':
+					{
+						// file path
+						currentFile.filePath = value;
+					}
+					break;
+				default:
+					assert(false);
+			}
+		}
+		/*
+		 if ([[lineArray objectAtIndex:4] isEqualToString:[NSString stringWithFormat:@"REG"]]) {
+		 [f setFilePath:[lineArray objectAtIndex:8]];
+		 [f setFileType:];
+		 }
+		 */
+	}
+	
+/*
+	if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet)) {
+		char *cpuargs[2] = {NULL, NULL};
+		if (![self getCredentials]) {
 			NSLog(@"Error obtaining credencials for lsof\n");
 			lsof = NULL;
 		}
-		else
-		{
-			if( AuthorizationExecuteWithPrivileges( authRef, [guidWrapperPath UTF8String], kAuthorizationFlagDefaults, args, &lsof) != errAuthorizationSuccess )
-			{
-				NSLog( @"error running lsof as root\n" );
-				lsof = NULL;
-			}
-		}
-	}
-	else if( (lsof = popen(args[0], "r")) == NULL )
-	{
-		NSLog(@"Unable to open lsof command");
-		lsof = NULL;
-	}
-	
-	if( lsof )
-	{
-		[self releaseData];
-		while( fgets( line, 4096, lsof ) )
-		{
-			if( one )
-			{
-				/* passed first line */
-				lineArray = [[NSMutableArray alloc] init];
-				
-				for( p = line, p2 = line, lim = &line[strlen(line)], i = 0; p < lim; p++ )
-				{
-					if( *p <= ' ' && i < 8 )
-					{
-						while( (p < lim) && (*p <= ' ') ) 
-						{	
-							*p = 0;
-							p++;
-						}
-						[lineArray addObject:[[NSString alloc] initWithFormat:@"%s", p2]];
-						p2 = p;
-						i++;
-					}
-					else if( (*p <= ' ') && (i >= 8) )
-					{
-						while( p < lim )
-						{
-							if( *p == '\n' )
-								*p = 0;
-							p++;
-						}
-						[lineArray addObject:[[NSString alloc] initWithFormat:@"%s", p2]];
-						i++;
-					}
-				}
-				if( [[lineArray objectAtIndex:4] isEqualToString:[NSString stringWithFormat:@"REG"]] )
-				{
-					OpenFile *f = [[OpenFile alloc] init];
-					tst = [[self fileSize:[[lineArray objectAtIndex:8] UTF8String]] retain];
-					if( tst )
-					{
-						[f setFileSize:tst];
-						[tst release];
-					}
-					[f setAppName:[lineArray objectAtIndex:0]];
-					[f setFilePath:[lineArray objectAtIndex:8]];
-					[f setPid:[[lineArray objectAtIndex:1] integerValue]];
-					[f setRealSize:[NSNumber numberWithLongLong:getSize([[lineArray objectAtIndex:8] UTF8String])]];
-					[f setUsername:[lineArray objectAtIndex:2]];
-					[f setFileType:NormalFile];
-					[self addUserName:[lineArray objectAtIndex:2]];
-					[data addObject:f];
-					[lineArray release];
-				}
-				else if( [[lineArray objectAtIndex:4] isEqualToString:@"IPv4"] )
-				{
-					OpenFile *f = [[OpenFile alloc] init];
-					[f setAppName:[lineArray objectAtIndex:0]];
-					[f setFilePath:[lineArray objectAtIndex:8]];
-					[f setPid:[[lineArray objectAtIndex:1] integerValue]];
-					[f setUsername:[lineArray objectAtIndex:2]];
-					[f setFileType:IPv4File];
-					[self addUserName:[lineArray objectAtIndex:2]];
-					[data addObject:f];
-					[lineArray release];
-				}
-				else
-					[lineArray release];
-			}
-			else
-			{
-				one = YES;
-			}
-		}
-		fclose(lsof);
-		lsof = NULL;
-	}
-	
-	if( CFPreferencesGetAppBooleanValue( CFSTR( "lsofFullList" ), kCFPreferencesCurrentApplication, &isSet ) )
-	{
-		if( ![self getCredentials] )
-		{
-			NSLog(@"Error obtaining credencials for lsof\n");
-			lsof = NULL;
-		}
-		else
-		{
+		else {
 			//[progressText setValue:@"Obtaining CPU Usage Statistics"];
-			cpuargs[0] = malloc( [cpuListerPath length]+1 );
-			sprintf( cpuargs[0], "%s", [cpuListerPath UTF8String] );
-			if( AuthorizationExecuteWithPrivileges( authRef, [guidWrapperPath UTF8String], kAuthorizationFlagDefaults, cpuargs, &lsof) != errAuthorizationSuccess )
-			{
-				NSLog( @"error running cpuLister as root\n" );
+			cpuargs[0] = malloc([cpuListerPath length] + 1);
+			sprintf(cpuargs[0], "%s", [cpuListerPath UTF8String]);
+			if (AuthorizationExecuteWithPrivileges(authRef, [guidWrapperPath UTF8String], kAuthorizationFlagDefaults,
+												   cpuargs, &lsof) != errAuthorizationSuccess) {
+				NSLog(@"error running cpuLister as root\n");
 				lsof = NULL;
 			}
 			free(cpuargs[0]);
 		}
 		
-		if( lsof )
-		{
-			while( fgets(line, 4096, lsof) )
-			{
-				if( sscanf( line, "%d,%d", &pid, &secs ) == 2 )
-				{
-					for( de in data )
-					{
-						if( [de pid] == pid )
+		if (lsof) {
+			while (fgets(line, sizeof(line), lsof)) {
+				pid_t pid;
+				int secs;
+				if (sscanf(line, "%d,%d", &pid, &secs) == 2) {
+					for (id de in data) {
+						if ([de pid] == pid)
 							[de setCputime:secs];
 					}
 				}
@@ -385,95 +381,110 @@ size_t getSize( const char *f )
 			fclose(lsof);
 		}
 	}
-	
-	if( displayData && ([displayData count] > 0))
-	{
-		[displayData removeAllObjects];
-		[displayData release];
-		displayData = nil;
-	}
-	displayData = [[NSMutableArray arrayWithArray:data] retain];
-}
+*/
 
-- (void)addUserName:(NSString *)username
-{
-	int found = 0;
-	id x;
-	for( x in UsernameArray )
-	{
-		if( [(NSString *)x compare:username] == NSOrderedSame )
-		{
-			found = 1;
-			break;
-		}
-	}
-	if( !found )
-	{
-		[UsernameArray addObject:[username copy]];
-	}
+	fclose(lsof);
+	displayData = [NSMutableArray arrayWithArray:data];
+	return YES;
 }
 
 
-- (pid_t)getPidForRow:(int)rowIx
+- (pid_t)getPidForRow:(NSInteger)rowIx
 {
 	pid_t retVal = -1;
 	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if( f )
+	if (f)
 		retVal = [f pid];
 	return retVal;
 }
 
-- (NSString *)getFilePathForRow:(int)rowIx
+- (NSString *)getFilePathForRow:(NSInteger)rowIx
 {
-	NSString * retVal = nil;
+	NSString *retVal = nil;
 	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if( f )
+	if (f)
 		retVal = [f filePath];
 	return retVal;
 }
 
-- (NSString *)getAppNameForRow:(int)rowIx
+- (NSString *)getAppNameForRow:(NSInteger)rowIx
 {
-	NSString * retVal = nil;
+	NSString *retVal = nil;
 	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if( f )
+	if (f)
 		retVal = [f appName];
 	return retVal;
 }
 
-- (NSString *)getFileSizeForRow:(int)rowIx
+- (NSString *)getFileSizeForRow:(NSInteger)rowIx
 {
-	NSString * retVal = nil;
+	NSString *retVal = nil;
 	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if( f )
+	if (f) {
 		retVal = [f fileSize];
+	}
 	return retVal;
 }
 
-- (NSString *)getUserForRow:(int)rowIx
+- (NSString *)getUserForRow:(NSInteger)rowIx
 {
-	NSString * retVal = nil;
+	NSString *retVal = nil;
 	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if( f )
+	if (f)
 		retVal = [f username];
 	return retVal;
 }
-	
-- (int)getCpuTimeForRow:(int)rowIx
+
+/*
+- (NSInteger)getCpuTimeForRow:(NSInteger)rowIx
 {
-	int retVal = 0;
+	NSInteger retVal = 0;
 	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if( f )
+	if (f)
 		retVal = [f cputime];
 	return retVal;
 }
+*/
 
--(fileTypes)getFileTypeForRow:(int)rowIx
+- (fileTypes)getFileTypeForRow:(NSInteger)rowIx
 {
-	fileTypes retVal = NormalFile;
+	fileTypes retVal = Undefined;
 	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if( f )
+	if (f) {
 		retVal = [f fileType];
+	}
+	return retVal;
+}
+
+/*
+static size_t getSize(const char *f)
+{
+	size_t retVal = 0;
+	struct stat st;
+	memset(&st, 0, sizeof(st));
+	if (stat(f, &st) == 0) {
+		retVal = st.st_size;
+	}
+	return retVal;
+}
+*/
+
++ (NSString *)displayFileSize:(size_t)size
+{
+	NSString *retVal = nil;
+	#if Use1024
+		char *units[4] = {"B", "KiB", "MiB", "GiB"};
+		const int k = 1024;
+	#else
+		char *units[4] = {"B", "KB", "MB", "GB"};
+		const int k = 1000;
+	#endif
+	size_t sz = size;
+	int i = 0;
+	for (; i < 4 && sz > k; i++) {
+		sz = sz / k;
+	}
+	retVal = [[NSString alloc] initWithFormat:@"%zu %s", sz, units[i]];
 	return retVal;
 }
 
