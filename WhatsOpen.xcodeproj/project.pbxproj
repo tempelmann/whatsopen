@@ -21,8 +21,6 @@
 		B406D9EA0E11E7C70098E862 /* LSOF.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9E90E11E7C70098E862 /* LSOF.m */; };
 		B4348EAF0E7F174A0093F24E /* googleG.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4348EAE0E7F174A0093F24E /* googleG.icns */; };
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
-		B45AC4820E7A28CD009CE932 /* uidWrapper in CopyFiles */ = {isa = PBXBuildFile; fileRef = B45AC47B0E7A28B8009CE932 /* uidWrapper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		B45AC4850E7A28DC009CE932 /* uidWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = B45AC4840E7A28DC009CE932 /* uidWrapper.c */; };
 		B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */; };
 		B497DA6B0E80010E003F0EFE /* listFiles.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6A0E80010E003F0EFE /* listFiles.icns */; };
 		B497DA6D0E8001D0003F0EFE /* StopImg.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6C0E8001D0003F0EFE /* StopImg.icns */; };
@@ -30,16 +28,6 @@
 		B4C1550A0E48F7AC0019E734 /* OpenFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B4C155090E48F7AC0019E734 /* OpenFile.m */; };
 		B4C15AD30E4BAEAA0019E734 /* whatsopen.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		B45AC4800E7A28C6009CE932 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B45AC47A0E7A28B8009CE932;
-			remoteInfo = uidWrapper;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		A4FDF8F0245CEA9E008D1BD2 /* Embed Frameworks */ = {
@@ -59,7 +47,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				B45AC4820E7A28CD009CE932 /* uidWrapper in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,7 +222,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B45AC4810E7A28C6009CE932 /* PBXTargetDependency */,
 			);
 			name = WhatsOpen;
 			productInstallPath = "$(HOME)/Applications";
@@ -319,19 +305,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B45AC4850E7A28DC009CE932 /* uidWrapper.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		B45AC4810E7A28C6009CE932 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B45AC47A0E7A28B8009CE932 /* uidWrapper */;
-			targetProxy = B45AC4800E7A28C6009CE932 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
@@ -373,8 +350,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 25856V4B4X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -393,6 +373,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AgaSupport.WhatsOpen;
 				PRODUCT_NAME = WhatsOpen;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -402,8 +383,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 25856V4B4X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -420,6 +404,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AgaSupport.WhatsOpen;
 				PRODUCT_NAME = WhatsOpen;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

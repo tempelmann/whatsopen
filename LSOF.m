@@ -9,6 +9,7 @@
 #import "LSOF.h"
 
 @interface LSOF()
+	@property(strong) NSString *LSOFTool;
 	@property(strong) NSSortDescriptor *processNameSortDesc;
 	@property(strong) NSSortDescriptor *fileSizeSortDesc;
 	@property(strong) NSSortDescriptor *filePathSortDesc;
@@ -43,13 +44,10 @@
 													selector:@selector(localizedCaseInsensitiveCompare:)];
 		//self.cpuSortDesc = [[NSSortDescriptor alloc] initWithKey:@"cputime" ascending:YES selector:@selector(compare:)];
 		
+		self.LSOFTool = @"/usr/sbin/lsof";
 		
 		self.allUserNames = [NSMutableDictionary new];
 		self.allProcessNames = [NSMutableDictionary new];
-		
-		guidWrapperPath = [NSString stringWithFormat:@"%@/Contents/MacOS/uidWrapper", [[NSBundle mainBundle] bundlePath]];
-		guidWrapperPathUTF8 = (char *)[guidWrapperPath UTF8String];
-		//cpuListerPath = [NSString stringWithFormat:@"%@/Contents/MacOS/cpuLoader", [[NSBundle mainBundle] bundlePath]];
 		
 		[NSObject exposeBinding:@"alternateColor"];
 	}
@@ -170,28 +168,50 @@
 - (Boolean)getCredentials
 {
 	Boolean retVal = YES;
-	AuthorizationFlags flags =
-	kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
-	AuthorizationItem progs[] = {{kAuthorizationRightExecute, strlen(guidWrapperPathUTF8), guidWrapperPathUTF8, 0}};
-	
-	AuthorizationRights rights = {sizeof(progs) / sizeof(AuthorizationItem), progs};
-	
+
 	if (authRef == nil) {
-		if (AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, flags, &authRef) != errAuthorizationSuccess) {
+		const char *username = NULL, *password = NULL;
+		NSUInteger pwlength = 0;
+		
+		// Look up username and password in the Keychain
+		const void* qkeys[] = {kSecClass, kSecAttrLabel, kSecMatchLimit, kSecReturnAttributes, kSecReturnData};
+		const void* qvals[] = {kSecClassGenericPassword, CFSTR("WhatsOpen"), kSecMatchLimitOne, kCFBooleanTrue, kCFBooleanTrue};
+		CFDictionaryRef query = CFDictionaryCreate(NULL, qkeys, qvals, 5, NULL, NULL);
+		CFTypeRef keychainResult = nil;
+		OSStatus res = SecItemCopyMatching (query, &keychainResult);
+		if (res == 0 && keychainResult) {
+			NSDictionary *d = (__bridge NSDictionary *)(keychainResult);
+			username = [(NSString*)d[(NSString*)kSecAttrAccount] UTF8String];
+			NSData *data = d[(NSString*)kSecValueData]; 
+			password = [data bytes];
+			pwlength = [data length];
+		}
+		CFRelease (query);
+		
+		AuthorizationItem username_password[2];
+		username_password[0].name = "username";
+		username_password[0].value = (void*) username;
+		username_password[0].valueLength = (username == nil) ? 0 : strlen(username);
+		username_password[1].name = "password";
+		username_password[1].value = (void*) password;
+		username_password[1].valueLength = pwlength;
+		AuthorizationItemSet auths = {username != nil ? 2 : 0, username_password};
+		
+		const char *tool = self.LSOFTool.UTF8String;
+		AuthorizationItem progs[] = {{kAuthorizationRightExecute, strlen(tool), (void*)tool, 0}};
+		AuthorizationRights rights = {sizeof(progs) / sizeof(AuthorizationItem), progs};
+
+		AuthorizationFlags flags = kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
+		
+		if (AuthorizationCreate (&rights, &auths, flags, &authRef) != errAuthorizationSuccess) {
 			retVal = NO;
-			if (authRef) {
-				AuthorizationFree(authRef, kAuthorizationFlagDefaults);
-			}
-			authRef = nil;
-		} else if (AuthorizationCopyRights(authRef, &rights, NULL, flags, NULL) != errAuthorizationSuccess) {
-			retVal = NO;
-			if (authRef) {
-				AuthorizationFree(authRef, kAuthorizationFlagDefaults);
-			}
-			authRef = nil;
+		}
+
+		if (keychainResult) {
+			CFRelease (keychainResult);	// call this only after AuthorizationCreate() in order to keep username and pw alive for that call
 		}
 	}
-	
+
 	return retVal;
 }
 
@@ -207,26 +227,31 @@
 {
 	//[progressText setValue:@"Getting File Listing"];
 	
-	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nw", /*@"-a -p 35347",*/ @"/"];
+	NSArray<NSString*> *args = @[
+		self.LSOFTool,
+		@"-FpcLustn0",
+		@"-nw",
+		@"-a", @"-p", @"124",
+		@"/"
+	];
 	NSString *cmd = [args componentsJoinedByString:@" "];	// as shell command line, including args in the same string
 	char *cargs[16];
 	char **argp = cargs;
-	for (NSInteger i = 0; i < args.count; ++i) {
+	for (NSInteger i = 1; i < args.count; ++i) {
 		*(argp++) = (char*) args[i].UTF8String;
 	}
 	*(argp++) = NULL;
 	
 	BOOL was_popen = NO;
 	FILE *lsof = NULL;
-	Boolean isSet = NO;
-	if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet) && isSet) {
+	if ([NSUserDefaults.standardUserDefaults boolForKey:@"lsofFullList"]) {
 		if (![self getCredentials]) {
 			NSLog(@"Error obtaining credencials for lsof\n");
 			return NO;
 		}
 		else {
 			NSLog(@"invoking (root): %@", cmd);
-			OSStatus res = AuthorizationExecuteWithPrivileges (authRef, guidWrapperPath.UTF8String, kAuthorizationFlagDefaults, cargs, &lsof);
+			OSStatus res = AuthorizationExecuteWithPrivileges (authRef, self.LSOFTool.UTF8String, kAuthorizationFlagDefaults, cargs, &lsof);
 			if (res != errAuthorizationSuccess) {
 				NSLog(@"Running lsof as root failed\n");
 				return NO;

@@ -16,8 +16,6 @@
 	NSMutableArray *displayData;
 	
 	AuthorizationRef authRef;
-	NSString         *guidWrapperPath;
-	char             *guidWrapperPathUTF8;
 	NSColor          *alternateColor;
 }
 
