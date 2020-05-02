@@ -20,7 +20,7 @@
 
 @implementation LSOF
 
-@synthesize ipv4Color;
+@synthesize alternateColor;
 
 
 #define Use1024 0
@@ -51,7 +51,7 @@
 		guidWrapperPathUTF8 = (char *)[guidWrapperPath UTF8String];
 		//cpuListerPath = [NSString stringWithFormat:@"%@/Contents/MacOS/cpuLoader", [[NSBundle mainBundle] bundlePath]];
 		
-		[NSObject exposeBinding:@"ipv4Color"];
+		[NSObject exposeBinding:@"alternateColor"];
 	}
 	return self;
 }

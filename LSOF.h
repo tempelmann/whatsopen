@@ -18,7 +18,7 @@
 	AuthorizationRef authRef;
 	NSString         *guidWrapperPath;
 	char             *guidWrapperPathUTF8;
-	NSColor          *ipv4Color;
+	NSColor          *alternateColor;
 }
 
 @property(readonly) NSSortDescriptor *processNameSortDesc;
@@ -27,7 +27,7 @@
 @property(readonly) NSSortDescriptor *usernameSortDesc;
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allUserNames;
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
-@property(copy)     NSColor *ipv4Color;
+@property(copy)     NSColor *alternateColor;
 		  
 - (BOOL)getData:(NSTextField *)progressText;
 - (NSInteger)dataCount;

@@ -23,9 +23,9 @@
 		//theFinder = [SBApplication applicationWithBundleIdentifier:@"com.apple.finder"];
 		listing = YES;
 		lsofData = [[LSOF alloc] init];
-		[lsofData bind:@"ipv4Color"
+		[lsofData bind:@"alternateColor"
 			   toObject:[NSUserDefaultsController sharedUserDefaultsController]
-			withKeyPath:@"values.ipv4HilightColor"
+			withKeyPath:@"values.alternateHilightColor"
 				options:[NSDictionary dictionaryWithObject:NSUnarchiveFromDataTransformerName
 													forKey:NSValueTransformerNameBindingOption]];
 		listing = NO;
@@ -707,7 +707,7 @@ static void diskRemovedCallback(DADiskRef disk, void *context)
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(int)row
 {
 	fileTypes type = [lsofData getFileTypeForRow:row];
-	NSColor *color = [lsofData ipv4Color];
+	NSColor *color = [lsofData alternateColor];
 
 	switch (type) {
 		case RegularFile:
