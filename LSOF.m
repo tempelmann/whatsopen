@@ -86,10 +86,7 @@
 	displayData = nil;
 	
 	[self.allProcessNames removeAllObjects];
-	[self.allProcessNames addObject:[NSString stringWithFormat:@"All"]];
-
 	[self.allUserNames removeAllObjects];
-	[self.allUserNames addObject:[NSString stringWithFormat:@"All"]];
 }
 
 - (void)filterDataWithString:(NSString *)filter forVolume:(NSString *)vol forUser:(NSString *)user forProcess:(NSString *)process forType:(fileTypes)ftype
@@ -210,7 +207,7 @@
 {
 	//[progressText setValue:@"Getting File Listing"];
 	
-	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nbw", /*@"-a -p 35347",*/ @"/"];
+	NSArray<NSString*> *args = @[@"/usr/sbin/lsof", @"-FpcLustn0", @"-nw", /*@"-a -p 35347",*/ @"/"];
 	NSString *cmd = [args componentsJoinedByString:@" "];	// as shell command line, including args in the same string
 	char *cargs[16];
 	char **argp = cargs;
@@ -253,8 +250,8 @@
 		size_t lineLen;
 		char *lineStart = fgetln (lsof, &lineLen);
 		if (lineLen == 0) {
-			// we're finished
-			break;
+			// keep waiting for more
+			continue;
 		}
 		if (lineLen <= 2) {
 			// empty?!
@@ -340,50 +337,19 @@
 					assert(false);
 			}
 		}
-		/*
-		 if ([[lineArray objectAtIndex:4] isEqualToString:[NSString stringWithFormat:@"REG"]]) {
-		 [f setFilePath:[lineArray objectAtIndex:8]];
-		 [f setFileType:];
-		 }
-		 */
 	}
 	
-/*
-	if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet)) {
-		char *cpuargs[2] = {NULL, NULL};
-		if (![self getCredentials]) {
-			NSLog(@"Error obtaining credencials for lsof\n");
-			lsof = NULL;
-		}
-		else {
-			//[progressText setValue:@"Obtaining CPU Usage Statistics"];
-			cpuargs[0] = malloc([cpuListerPath length] + 1);
-			sprintf(cpuargs[0], "%s", [cpuListerPath UTF8String]);
-			if (AuthorizationExecuteWithPrivileges(authRef, [guidWrapperPath UTF8String], kAuthorizationFlagDefaults,
-												   cpuargs, &lsof) != errAuthorizationSuccess) {
-				NSLog(@"error running cpuLister as root\n");
-				lsof = NULL;
-			}
-			free(cpuargs[0]);
-		}
-		
-		if (lsof) {
-			while (fgets(line, sizeof(line), lsof)) {
-				pid_t pid;
-				int secs;
-				if (sscanf(line, "%d,%d", &pid, &secs) == 2) {
-					for (id de in data) {
-						if ([de pid] == pid)
-							[de setCputime:secs];
-					}
-				}
-			}
-			fclose(lsof);
-		}
+	int error = ferror(lsof);
+	if (error) {
+		NSLog(@"Error: %d", error);
 	}
-*/
-
+	
 	fclose(lsof);
+	
+	if (data.count == 0) {
+		NSLog(@"Strange: no results");
+	}
+	
 	displayData = [NSMutableArray arrayWithArray:data];
 	return YES;
 }

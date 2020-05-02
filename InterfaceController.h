@@ -19,8 +19,6 @@
 
 @interface InterfaceController : NSObject {
 	IBOutlet NSTextField *filterField;
-	IBOutlet NSButton *listButton;
-	IBOutlet NSButton *killButton;
 	IBOutlet NSWindow *mainWindow;
 	IBOutlet NSTableView *outTable;
 	IBOutlet NSTableColumn *applicationColumn;
@@ -67,28 +65,5 @@
 - (IBAction) showDocPane:(id)sender;
 - (IBAction) dismissDoc:(id)sender;
 - (IBAction) googleAppName:(id)sender;
-
-// table delegates
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)table;
-- (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(int)rowIx;
-- (Boolean)tableView:(NSTableView *)table shouldEditTableColumn:(NSTableColumn *)col row:(int)row;
-- (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation;
-- (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-- (Boolean)tableView:(NSTableView *)table shouldSelectRow:(NSInteger)row;
-- (void) toolbarWillAddItem:(NSNotification *)note;
-- (void)tableView: (NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(int)row;
-
-- (void)reloadTable;
-
-// column sorting
-- (void)tableView:(NSTableView *)tableView mouseDownInHeaderOfTableColumn:(NSTableColumn *)tableColumn;
-- (NSArray *)sortByAppName;
-
-void diskAddCallback( DADiskRef disk, void *context );
-void diskRemovedCallback( DADiskRef disk, void *context );
-- (void)addVolumeToUI:(NSString *)vol;
-- (void)removeVolumeFromUI:(NSString *)vol;
-- (void)setupDiskWatcher;
-- (NSString *)formatCpuTime:(NSInteger)secs;
 
 @end

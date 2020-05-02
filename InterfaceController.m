@@ -10,6 +10,10 @@
 
 #import "InterfaceController.h"
 
+@interface InterfaceController()
+	@property NSMutableSet<NSString*> *volumeNames;
+@end
+
 @implementation InterfaceController
 
 - (id)init
@@ -34,6 +38,16 @@
 	return self;
 }
 
+- (void)awakeFromNib
+{
+	[killButtonItem setEnabled:NO];
+	
+	#if 1
+		// Always list at start
+		[self performSelector:@selector(listFiles:) withObject:nil afterDelay:0];
+	#endif
+}
+
 - (void)reloadTable
 {
 	[outTable reloadData];
@@ -41,6 +55,7 @@
 
 - (void)setupDiskWatcher
 {
+	self.volumeNames = [NSMutableSet set];
 	DASessionRef diskSession;
 	diskSession = DASessionCreate(kCFAllocatorDefault);
 	DARegisterDiskAppearedCallback(diskSession, NULL, diskAddCallback, (__bridge void *_Nullable)(self));
@@ -48,44 +63,51 @@
 	DASessionScheduleWithRunLoop(diskSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 }
 
-- (void)awakeFromNib
-{
-	[volumesBox addItemWithTitle:@"All"];
-	[killButtonItem setEnabled:NO];
-	
-	#if DEBUG
-	//	[self performSelector:@selector(listFiles:) withObject:nil afterDelay:0];
-	#endif
-}
-
-void diskAddCallback(DADiskRef disk, void *context)
+static void diskAddCallback(DADiskRef disk, void *context)
 {
 	CFDictionaryRef dic = DADiskCopyDescription(disk);
 	NSString *name = (NSString *)CFDictionaryGetValue(dic, @"DAVolumeName");
 	if (name) {
-		[(__bridge InterfaceController *)context addVolumeToUI:name];
+		[(__bridge InterfaceController *)context addVolume:name];
 	}
 	CFRelease(dic);
 }
 
-void diskRemovedCallback(DADiskRef disk, void *context)
+static void diskRemovedCallback(DADiskRef disk, void *context)
 {
 	CFDictionaryRef dic = DADiskCopyDescription(disk);
 	NSString *name = (NSString *)CFDictionaryGetValue(dic, @"DAVolumeName");
 	if (name) {
-		[(__bridge InterfaceController *)context removeVolumeFromUI:name];
+		[(__bridge InterfaceController *)context removeVolume:name];
 	}
 	CFRelease(dic);
 }
 
-- (void)addVolumeToUI:(NSString *)vol
+- (void)addVolume:(NSString *)vol
 {
-	[volumesBox addItemWithTitle:vol];
+	[self.volumeNames addObject:vol];
+	[self refreshVolumesBox];
 }
 
-- (void)removeVolumeFromUI:(NSString *)vol
+- (void)removeVolume:(NSString *)vol
 {
-	[volumesBox removeItemWithTitle:vol];
+	[self.volumeNames removeObject:vol];
+	[self refreshVolumesBox];
+}
+
+- (void)refreshVolumesBox
+{
+	[self refreshNSPopUpButton:volumesBox withTitles:self.volumeNames.allObjects];
+}
+
+- (void)refreshUserNames
+{
+	[self refreshNSPopUpButton:usersButton withTitles:lsofData.allUserNames.allObjects];
+}
+
+- (void)refreshProcessNames
+{
+	[self refreshNSPopUpButton:processesButton withTitles:lsofData.allProcessNames.allObjects];
 }
 
 - (void)progDidEndSheet:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -93,18 +115,12 @@ void diskRemovedCallback(DADiskRef disk, void *context)
 	[sheet orderOut:self];
 }
 
-- (void)resetUserNames
+- (void)refreshNSPopUpButton:(NSPopUpButton*)button withTitles:(NSArray<NSString*>*)titles
 {
-	if (lsofData.allUserNames.count > 0) {
-		[usersButton removeAllItems];
-		[usersButton addItemsWithTitles:lsofData.allUserNames.allObjects];
-	}
-}
-- (void)resetProcessNames
-{
-	if (lsofData.allProcessNames.count > 0) {
-		[processesButton removeAllItems];
-		[processesButton addItemsWithTitles:lsofData.allProcessNames.allObjects];
+	[button removeAllItems];
+	[button addItemsWithTitles:@[@"All"]];	// so that "All" always appears first
+	if ([titles count] > 0) {
+		[button addItemsWithTitles:[titles sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]];
 	}
 }
 
@@ -123,8 +139,8 @@ void diskRemovedCallback(DADiskRef disk, void *context)
 		NSBeep();
 	}
 
-	[self resetUserNames];
-	[self resetProcessNames];
+	[self refreshUserNames];
+	[self refreshProcessNames];
 	[self filterFiles:self];
 
 	[probar stopAnimation:self];
