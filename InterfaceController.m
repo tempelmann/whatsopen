@@ -40,6 +40,8 @@
 	
 	[self moveSuperuserEnabledTextToWindowTitle];
 	
+	bottomInfoLabel.stringValue = @"";
+	
 	if ([NSUserDefaults.standardUserDefaults boolForKey:@"listAtLaunch"]) {
 		[self performSelector:@selector(listFiles:) withObject:nil afterDelay:0];
 	}
@@ -158,6 +160,9 @@
 	fileTypes fileType = (fileTypes) [fileTypesButton indexOfSelectedItem];
 
 	[lsofData filterDataWithString:filter forVolume:vol forUser:user forProcess:process forType:fileType];
+	
+	bottomInfoLabel.stringValue = [NSString stringWithFormat:@"Total: %ld, Shown: %ld", lsofData.totalCount, lsofData.dataCount];
+	
 	[self reloadTable];
 }
 

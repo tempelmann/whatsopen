@@ -21,9 +21,10 @@
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allVolumes;	// key is volume name
 @property(copy)     NSColor *alternateColor;
-		  
+
 - (BOOL)getData:(NSTextField *)progressText;
 - (NSInteger)dataCount;
+- (NSInteger)totalCount;
 - (void)releaseData;
 - (pid_t)getPidForRow:(NSInteger)rowIx;
 - (NSString *)getFilePathForRow:(NSInteger)rowIx;

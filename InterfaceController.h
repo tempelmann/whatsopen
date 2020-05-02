@@ -45,6 +45,7 @@
 	IBOutlet NSTextView *documentTextView;
 	IBOutlet NSTextField *progressText;
 	IBOutlet NSTitlebarAccessoryViewController *superuserEnabledVC;
+	IBOutlet NSTextField *bottomInfoLabel;
 
 	Boolean listing;
 	LSOF *lsofData;

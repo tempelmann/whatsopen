@@ -532,10 +532,21 @@
                             <outlet property="menu" destination="525" id="530"/>
                         </connections>
                     </scrollView>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nOf-Ib-lRp">
+                        <rect key="frame" x="2" y="4" width="56" height="14"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" allowsUndo="NO" title="Info Label" usesSingleLineMode="YES" id="s2J-cu-hRs">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="387" secondAttribute="trailing" constant="-1" id="A2Z-Zc-75P"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nOf-Ib-lRp" secondAttribute="trailing" constant="4" id="PFy-Q0-XYf"/>
                     <constraint firstItem="387" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="-1" id="VVH-k9-3TT"/>
+                    <constraint firstAttribute="bottom" secondItem="nOf-Ib-lRp" secondAttribute="bottom" constant="4" id="d03-AQ-Zlg"/>
+                    <constraint firstItem="nOf-Ib-lRp" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="4" id="gff-02-tdV"/>
                     <constraint firstItem="387" firstAttribute="top" secondItem="372" secondAttribute="top" id="mT7-x1-9JK"/>
                     <constraint firstAttribute="bottom" secondItem="387" secondAttribute="bottom" constant="20" id="xCl-lO-vfU"/>
                 </constraints>
@@ -1067,6 +1078,7 @@ DQ
         <customObject id="396" customClass="InterfaceController">
             <connections>
                 <outlet property="applicationColumn" destination="392" id="397"/>
+                <outlet property="bottomInfoLabel" destination="nOf-Ib-lRp" id="9HI-Sd-GPZ"/>
                 <outlet property="commentFrom" destination="681" id="686"/>
                 <outlet property="commentPanel" destination="576" id="664"/>
                 <outlet property="commentSubject" destination="580" id="666"/>

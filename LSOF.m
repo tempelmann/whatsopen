@@ -78,10 +78,12 @@
 
 - (NSInteger)dataCount
 {
-	NSInteger count = 0;
-	if (displayData && ([displayData count] > 0))
-		count = [displayData count];
-	return count;
+	return [displayData count];
+}
+
+- (NSInteger)totalCount
+{
+	return [data count];
 }
 
 - (void)releaseData
