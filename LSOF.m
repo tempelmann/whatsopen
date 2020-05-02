@@ -385,38 +385,50 @@
 	return YES;
 }
 
+- (OpenFile*)fileAtIndex:(NSInteger)index
+{
+	@try {
+		OpenFile *f = [displayData objectAtIndex:index];
+		return f;
+	} @catch (NSException *exception) {
+		return nil;
+	}
+}
 
 - (pid_t)getPidForRow:(NSInteger)rowIx
 {
 	pid_t retVal = -1;
-	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if (f)
+	OpenFile *f = [self fileAtIndex:rowIx];
+	if (f) {
 		retVal = [f pid];
+	}
 	return retVal;
 }
 
 - (NSString *)getFilePathForRow:(NSInteger)rowIx
 {
 	NSString *retVal = nil;
-	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if (f)
+	OpenFile *f = [self fileAtIndex:rowIx];
+	if (f) {
 		retVal = [f filePath];
+	}
 	return retVal;
 }
 
 - (NSString *)getAppNameForRow:(NSInteger)rowIx
 {
 	NSString *retVal = nil;
-	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if (f)
+	OpenFile *f = [self fileAtIndex:rowIx];
+	if (f) {
 		retVal = [f appName];
+	}
 	return retVal;
 }
 
 - (NSString *)getFileSizeForRow:(NSInteger)rowIx
 {
 	NSString *retVal = nil;
-	OpenFile *f = [displayData objectAtIndex:rowIx];
+	OpenFile *f = [self fileAtIndex:rowIx];
 	if (f) {
 		retVal = [f fileSize];
 	}
@@ -426,9 +438,10 @@
 - (NSString *)getUserForRow:(NSInteger)rowIx
 {
 	NSString *retVal = nil;
-	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if (f)
+	OpenFile *f = [self fileAtIndex:rowIx];
+	if (f) {
 		retVal = [f username];
+	}
 	return retVal;
 }
 
@@ -436,9 +449,10 @@
 - (NSInteger)getCpuTimeForRow:(NSInteger)rowIx
 {
 	NSInteger retVal = 0;
-	OpenFile *f = [displayData objectAtIndex:rowIx];
-	if (f)
+	OpenFile *f = [self fileAtIndex:rowIx];
+	if (f) {
 		retVal = [f cputime];
+	}
 	return retVal;
 }
 */
@@ -446,7 +460,7 @@
 - (fileTypes)getFileTypeForRow:(NSInteger)rowIx
 {
 	fileTypes retVal = Undefined;
-	OpenFile *f = [displayData objectAtIndex:rowIx];
+	OpenFile *f = [self fileAtIndex:rowIx];
 	if (f) {
 		retVal = [f fileType];
 	}
