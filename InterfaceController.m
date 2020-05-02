@@ -38,9 +38,17 @@
 {
 	[killButtonItem setEnabled:NO];
 	
+	[self moveSuperuserEnabledTextToWindowTitle];
+	
 	if ([NSUserDefaults.standardUserDefaults boolForKey:@"listAtLaunch"]) {
 		[self performSelector:@selector(listFiles:) withObject:nil afterDelay:0];
 	}
+}
+
+- (void)moveSuperuserEnabledTextToWindowTitle
+{
+	superuserEnabledVC.layoutAttribute = NSLayoutAttributeRight;
+	[mainWindow addTitlebarAccessoryViewController:superuserEnabledVC];
 }
 
 - (void)reloadTable

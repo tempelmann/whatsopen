@@ -19,4 +19,9 @@
 	}];
 }
 
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+	//NSLog (@"%s", __func__);
+	return;
+}
+
 @end

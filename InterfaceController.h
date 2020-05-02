@@ -44,6 +44,7 @@
 	IBOutlet NSToolbarItem *processButtonItem;
 	IBOutlet NSTextView *documentTextView;
 	IBOutlet NSTextField *progressText;
+	IBOutlet NSTitlebarAccessoryViewController *superuserEnabledVC;
 
 	Boolean listing;
 	LSOF *lsofData;
