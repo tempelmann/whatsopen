@@ -621,6 +621,9 @@
                                     <items>
                                         <menuItem title="All" state="on" id="537"/>
                                     </items>
+                                    <connections>
+                                        <outlet property="delegate" destination="396" id="ClL-F7-tld"/>
+                                    </connections>
                                 </menu>
                             </popUpButtonCell>
                         </popUpButton>
@@ -644,6 +647,9 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
+                                    <connections>
+                                        <outlet property="delegate" destination="396" id="yMr-Cs-5rM"/>
+                                    </connections>
                                 </menu>
                             </popUpButtonCell>
                         </popUpButton>
@@ -667,6 +673,9 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
+                                    <connections>
+                                        <outlet property="delegate" destination="396" id="k4U-fE-fVF"/>
+                                    </connections>
                                 </menu>
                             </popUpButtonCell>
                         </popUpButton>
@@ -688,6 +697,9 @@
                                         <menuItem title="Regular Files" tag="1" id="759"/>
                                         <menuItem title="Directories" tag="2" id="760"/>
                                     </items>
+                                    <connections>
+                                        <outlet property="delegate" destination="396" id="bAy-f9-5D0"/>
+                                    </connections>
                                 </menu>
                             </popUpButtonCell>
                         </popUpButton>
@@ -753,7 +765,7 @@
             </view>
             <point key="canvasLocation" x="140" y="150.5"/>
         </window>
-        <menu id="525">
+        <menu id="525" userLabel="Context Menu">
             <items>
                 <menuItem title="Show In Finder" id="526">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -761,10 +773,24 @@
                         <action selector="openInFinder:" target="396" id="531"/>
                     </connections>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="IqU-za-A2K"/>
                 <menuItem title="Kill Program…" id="527">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="killApplication:" target="396" id="532"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="abV-oL-NSQ"/>
+                <menuItem title="Google App" id="8If-uS-9iv">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="googleAppName:" target="396" id="pxA-Sh-8UT"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="App Docs" id="C35-oV-yZI">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showDocPane:" target="396" id="NHa-eF-rux"/>
                     </connections>
                 </menuItem>
             </items>
@@ -927,7 +953,7 @@ DQ
                         <rect key="frame" x="20" y="53" width="489" height="157"/>
                         <clipView key="contentView" id="fle-wV-exb">
                             <rect key="frame" x="1" y="1" width="472" height="155"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" usesRuler="YES" smartInsertDelete="YES" id="677">
                                     <rect key="frame" x="0.0" y="0.0" width="478" height="155"/>
@@ -1023,7 +1049,7 @@ DQ
                         <rect key="frame" x="8" y="45" width="484" height="447"/>
                         <clipView key="contentView" id="RV0-EF-FLL">
                             <rect key="frame" x="1" y="1" width="467" height="445"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" findStyle="panel" continuousSpellChecking="YES" smartInsertDelete="YES" id="730">
                                     <rect key="frame" x="0.0" y="0.0" width="467" height="445"/>
@@ -1094,6 +1120,11 @@ DQ
                 <outlet property="commentSubject" destination="580" id="666"/>
                 <outlet property="commentText" destination="677" id="685"/>
                 <outlet property="commentType" destination="586" id="665"/>
+                <outlet property="contextDocs" destination="C35-oV-yZI" id="gNM-jt-fvW"/>
+                <outlet property="contextGoogle" destination="8If-uS-9iv" id="UNU-jt-mte"/>
+                <outlet property="contextKill" destination="527" id="gBB-FF-4p8"/>
+                <outlet property="contextMenu" destination="525" id="VhG-a8-JPK"/>
+                <outlet property="contextShowInFinder" destination="526" id="QXT-HW-99m"/>
                 <outlet property="documentPanel" destination="725" id="733"/>
                 <outlet property="documentTextView" destination="730" id="734"/>
                 <outlet property="filePathColumn" destination="393" id="398"/>

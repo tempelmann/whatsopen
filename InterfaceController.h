@@ -50,6 +50,11 @@
 	IBOutlet NSTextField *progressText;
 	IBOutlet NSTitlebarAccessoryViewController *superuserEnabledVC;
 	IBOutlet NSTextField *bottomInfoLabel;
+	IBOutlet NSMenu *contextMenu;
+	IBOutlet NSMenuItem *contextShowInFinder;
+	IBOutlet NSMenuItem *contextKill;
+	IBOutlet NSMenuItem *contextGoogle;
+	IBOutlet NSMenuItem *contextDocs;
 
 	Boolean listing;
 	LSOF *lsofData;

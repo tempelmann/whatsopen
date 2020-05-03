@@ -403,7 +403,7 @@
 - (IBAction)googleAppName:(id)sender
 {
 	NSInteger row = [outTable selectedRow];
-	if (row >= 0) {
+	if (row >= 0 && outTable.selectedRowIndexes.count == 1) {
 		NSString *an = [lsofData getAppNameForRow:row];
 		NSString *url = [NSString stringWithFormat:@"http://www.google.com/search?q=macos+%@", an];
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
@@ -411,7 +411,7 @@
 	} else {
 		Alerts *oops = [[Alerts alloc] init];
 		[oops doInfoAlertWithTitle:@"Error Googling the application."
-						  infoText:@"You need to select a row."
+						  infoText:@"You need to select single a row."
 						 forWindow:mainWindow
 					  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
 					  withDelegate:self
@@ -519,9 +519,28 @@
 {
 	// Here we can re-sort the popup menus as needed (ticket #3)
 	
-	//	if (menu == self.listModeTableView.menu) {
-	//	} else if (menu == self.openWithMenuItem.submenu || [menu.identifier isEqualToString:@"appMenuOpenWithMenu"]) {
-	//	}
+	if (menu == contextMenu) {
+		#if DEBUG
+			NSLog(@"context menu");
+		#endif
+	} else {
+		#if DEBUG
+			NSLog(@"other menu");
+		#endif
+	}
+}
+
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	BOOL ret = YES;
+
+	// disable context items when not applicable
+	NSInteger selCount = outTable.selectedRowIndexes.count;
+	if (selCount == 0 || (menuItem != contextShowInFinder && selCount > 1)) {
+		ret = NO;
+	}
+	
+	return ret;
 }
 
 @end
