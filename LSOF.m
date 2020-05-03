@@ -243,8 +243,8 @@
 		self.LSOFTool,
 		@"-FpcLustn0",
 		@"-nw",
-		@"-a", @"-p", @"124",
-		@"/"
+		//@"-p", @"124",
+		// Note: Do not limit the results with e.g. "+f -- /", because we'll miss some important items such as mounted disk images
 	];
 	NSString *cmd = [args componentsJoinedByString:@" "];	// as shell command line, including args in the same string
 	char *cargs[16];
@@ -280,10 +280,16 @@
 	
 	[self releaseData];
 	
+	NSString *rootRolName = @"Root";
+	[[NSURL fileURLWithPath:@"/"] getResourceValue:&rootRolName forKey:NSURLVolumeNameKey error:nil];
+
 	pid_t latestProcessID = 0;
 	NSString *latestProcessName = nil;
 	NSString *latestUserName = nil;
  	OpenFile *currentFile = nil;
+	
+	BOOL skipThese = YES;
+	NSInteger lineCount = 0;
 	
 	while (NOT feof(lsof)) {
 		size_t lineLen;
@@ -298,6 +304,8 @@
 			continue;
 		}
 		
+		lineCount += 1;
+		
 		NSString *line = [[NSString alloc] initWithBytes:lineStart length:lineLen-2 encoding:NSUTF8StringEncoding];
 		NSArray<NSString*> *fields = [line componentsSeparatedByString:@"\000"];
 		
@@ -305,48 +313,37 @@
 			unichar tag = [field characterAtIndex:0];
 			NSString *value = [field substringFromIndex:1];
 			switch (tag) {
-				case 'p':
+				case 'p': // process ID
 					{
-						// process ID
 						latestProcessID = (int) [value integerValue];
 					}
 					break;
-				case 'c':
+				case 'c': // process Name
 					{
-						// process Name
 						latestProcessName = value;
+						// But we don't want files opened by the "lsof" tool listed as they'll be closed soon again anyway
+						skipThese = [latestProcessName isEqualToString:@"lsof"];
 					}
 					break;
-				case 'u':
+				case 'u': // user ID - ignore
 					{
-						// user ID - ignore
 					}
 					break;
-				case 'L':
+				case 'L': // user Name
 					{
-						// user Name
 						latestUserName = value;
 					}
 					break;
-				case 'f':
-					{
-						// new file
+				case 'f': // new file
+					if (NOT skipThese) {
 		 	 			currentFile = [OpenFile new];
 		 	 			currentFile.appName = latestProcessName;
 		 	 			currentFile.pid = latestProcessID;
 		 	 			currentFile.username = latestUserName;
-		 				[data addObject:currentFile];
-		 				if (latestProcessName != nil && latestUserName != nil) {
-							self.allProcessNames[latestProcessName] = @([self.allProcessNames[latestProcessName] integerValue] + 1);
-							self.allUserNames[latestUserName] = @([self.allUserNames[latestUserName] integerValue] + 1);
-						} else {
-							NSLog(@"Error: new file but no process or uname");
-						}
 					}
 					break;
-				case 't':
-					{
-						// type
+				case 't': // type
+					if (NOT skipThese) {
 						fileTypes t = Undefined;
 						if ([value isEqualToString:@"REG"]) {
 							t = RegularFile;
@@ -358,9 +355,8 @@
 		 	 			currentFile.fileType = t;
 					}
 					break;
-				case 's':
-					{
-						// file size
+				case 's': // file size
+					if (NOT skipThese) {
 						NSInteger size = [value integerValue];
 						if (currentFile.fileType == RegularFile) {
 							currentFile.fileSize = [self.class displayFileSize:size];
@@ -370,16 +366,50 @@
 		 	 			currentFile.realSize = [NSNumber numberWithInteger:size];
 					}
 					break;
-				case 'n':
-					{
-						// file path
-						currentFile.filePath = value;
-						NSURL *url = [NSURL fileURLWithPath:value];
-						NSString *volName = nil;
-						[url getResourceValue:&volName forKey:NSURLVolumeNameKey error:nil];
-						currentFile.volName = volName;
-						if (volName) { 
-							self.allVolumes[volName] = @([self.allVolumes[volName] integerValue] + 1);
+				case 'n': // file path
+					if (NOT skipThese) {
+						if (NOT [value hasPrefix:@"/"]) {
+							// skip anything that doesn't have a path on the file system (e.g. KQUEUEs, IPv4/6, sockets)
+						} else if (currentFile.fileType == Other) {
+							// skip character devices
+						} else {
+							currentFile.filePath = value;
+							NSURL *url = [NSURL fileURLWithPath:value];
+							NSString *volName = nil;
+							NSError *error;
+							[url getResourceValue:&volName forKey:NSURLVolumeNameKey error:&error];
+							if (error) {
+								if (error.code == 260) {
+									// File doesn't exist (any more)
+								} else if (error.code == 257) {
+									// Permission denied -> but since we got the path, let's list it regardless.
+									// We just have to determine the volume without help from the OS.
+									NSArray<NSString*> *dirs = [value componentsSeparatedByString:@"/"];
+									@try {
+										if ([dirs[1] isEqualToString:@"Volumes"]) {
+											volName = dirs[2];
+										} else if ([dirs[1] isEqualToString:@"dev"]) {
+											// ignore
+										} else {
+											volName = rootRolName;
+										}
+									} @catch (NSException *exception) {
+										NSLog (@"Can't determine volume for `%@`: %@", value, exception);
+									}
+								} else {
+									NSLog (@"Can't determine volume for `%@`: %@", value, error);
+								}
+							}
+							if (volName) {
+								currentFile.volName = volName;
+								self.allVolumes[volName] = @([self.allVolumes[volName] integerValue] + 1);
+								self.allProcessNames[latestProcessName] = @([self.allProcessNames[latestProcessName] integerValue] + 1);
+								self.allUserNames[latestUserName] = @([self.allUserNames[latestUserName] integerValue] + 1);
+								[data addObject:currentFile];
+							} else if (NOT error) {
+								// huh?
+								NSLog(@"No volume for: %@", value);
+							}
 						}
 					}
 					break;
@@ -401,7 +431,7 @@
 	}
 	
 	if (data.count == 0) {
-		NSLog(@"Strange: no results");
+		NSLog(@"Strange: no results (line count: %ld)", lineCount);
 	}
 	
 	displayData = [NSMutableArray arrayWithArray:data];
