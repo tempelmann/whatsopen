@@ -11,6 +11,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A4498880245E265800DA190F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A449887E245E265800DA190F /* MainMenu.xib */; };
 		A449888B245E4DEC00DA190F /* SmarterTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A449888A245E4DEC00DA190F /* SmarterTableView.m */; };
+		A4498893245F4F6200DA190F /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = A4498892245F4F6200DA190F /* dsa_pub.pem */; };
 		A47404D9245B66C200D96098 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A47404D8245B66C200D96098 /* Security.framework */; };
 		A47404DB245B66CE00D96098 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A47404DA245B66CE00D96098 /* DiskArbitration.framework */; };
 		A4E619F7245CA6A6008B93F4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4E619F6245CA6A6008B93F4 /* AppDelegate.m */; };
@@ -63,6 +64,7 @@
 		8D1107320486CEB800E47090 /* WhatsOpen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsOpen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4498889245E4DEC00DA190F /* SmarterTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmarterTableView.h; sourceTree = "<group>"; };
 		A449888A245E4DEC00DA190F /* SmarterTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmarterTableView.m; sourceTree = "<group>"; };
+		A4498892245F4F6200DA190F /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Sparke_signing_private/dsa_pub.pem; sourceTree = "<group>"; };
 		A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WhatsOpen.xcconfig; sourceTree = "<group>"; };
 		A47404D8245B66C200D96098 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A47404DA245B66CE00D96098 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
@@ -180,6 +182,7 @@
 				B497DA6C0E8001D0003F0EFE /* StopImg.icns */,
 				B497DA6A0E80010E003F0EFE /* listFiles.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				A4498892245F4F6200DA190F /* dsa_pub.pem */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4C15AD30E4BAEAA0019E734 /* whatsopen.icns in Resources */,
+				A4498893245F4F6200DA190F /* dsa_pub.pem in Resources */,
 				B4348EAF0E7F174A0093F24E /* googleG.icns in Resources */,
 				B497DA6B0E80010E003F0EFE /* listFiles.icns in Resources */,
 				B497DA6D0E8001D0003F0EFE /* StopImg.icns in Resources */,
@@ -278,6 +282,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This updates the help index inside the currently building app\ncd ${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Resources\n/Development/WhatsOpen/rebuild_helpindex.sh\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
