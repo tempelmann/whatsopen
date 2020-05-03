@@ -59,14 +59,13 @@
 	return self;
 }
 
-- (void)sortDataWithDescriptors:(NSArray *)sortDescs
+- (void)sortDataWithDescriptors:(NSArray<NSSortDescriptor*> *)sortDescs
 {
 	if (displayData) {
 		if (sortDescs) {
 			NSMutableArray *tmpArray = [NSMutableArray arrayWithArray:[displayData sortedArrayUsingDescriptors:sortDescs]];
 			displayData = [NSMutableArray arrayWithArray:tmpArray];
-		}
-		else {
+		} else {
 			displayData = [NSMutableArray arrayWithArray:data];
 		}
 	}

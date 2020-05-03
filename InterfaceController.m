@@ -146,11 +146,16 @@
 	[self refreshVolumesBox];
 	[self refreshUserNames];
 	[self refreshProcessNames];
+
 	[self filterFiles:self];
+
+	NSArray<NSSortDescriptor*> *descs = outTable.sortDescriptors;
+	[lsofData sortDataWithDescriptors:descs];
 
 	[probar stopAnimation:self];
 
 	[NSApp endSheet:progSheet];
+
 	[self reloadTable];
 }
 
@@ -256,161 +261,6 @@
 - (void)windowWillClose:(NSNotification *)notification
 {
 	[NSApp terminate:mainWindow];
-}
-
-- (NSArray *)sortByAppName
-{
-	NSArray *descs;
-	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
-	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
-	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
-	usernameSort = 0;
-	fileSizeSortFlag = 0;
-	filePathSort = 0;
-	volumeSort = 0;
-	switch (appColSort) {
-		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:lsofData.processNameSortDesc, nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"]
-						  inTableColumn:applicationColumn];
-			appColSort = 1;
-			break;
-		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[lsofData.processNameSortDesc reversedSortDescriptor], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"]
-						  inTableColumn:applicationColumn];
-			appColSort = 2;
-			break;
-		case 2: // descending -> unsorted
-			descs = nil;
-			appColSort = 0;
-			[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
-			break;
-	}
-	return descs;
-}
-
-- (NSArray *)sortByFileSize
-{
-	NSArray *descs;
-	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
-	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
-	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
-	usernameSort = 0;
-	filePathSort = 0;
-	appColSort = 0;
-	volumeSort = 0;
-	switch (fileSizeSortFlag) {
-		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:lsofData.fileSizeSortDesc, nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:fileSizeColumn];
-			fileSizeSortFlag = 1;
-			break;
-		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[lsofData.fileSizeSortDesc reversedSortDescriptor], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:fileSizeColumn];
-			fileSizeSortFlag = 2;
-			break;
-		case 2: // descending -> unsorted
-			descs = nil;
-			fileSizeSortFlag = 0;
-			[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
-			break;
-	}
-	return descs;
-}
-
-- (NSArray *)sortByFilePath
-{
-	NSArray *descs;
-	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
-	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
-	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
-	usernameSort = 0;
-	appColSort = 0;
-	fileSizeSortFlag = 0;
-	volumeSort = 0;
-	switch (filePathSort) {
-		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:lsofData.filePathSortDesc, nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:filePathColumn];
-			filePathSort = 1;
-			break;
-		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[lsofData.filePathSortDesc reversedSortDescriptor], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:filePathColumn];
-			filePathSort = 2;
-			break;
-		case 2: // descending -> unsorted
-			descs = nil;
-			filePathSort = 0;
-			[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
-			break;
-	}
-	return descs;
-}
-
-- (NSArray *)sortByUserName
-{
-	NSArray *descs;
-	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
-	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
-	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
-	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
-	fileSizeSortFlag = 0;
-	filePathSort = 0;
-	appColSort = 0;
-	volumeSort = 0;
-	switch (usernameSort) {
-		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:lsofData.usernameSortDesc, nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:usernameColumn];
-			usernameSort = 1;
-			break;
-		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[lsofData.usernameSortDesc reversedSortDescriptor], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:usernameColumn];
-			usernameSort = 2;
-			break;
-		case 2: // descending -> unsorted
-			descs = nil;
-			usernameSort = 0;
-			[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-			break;
-	}
-	return descs;
-}
-
-- (NSArray *)sortByVolume
-{
-	NSArray *descs;
-	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
-	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
-	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
-	fileSizeSortFlag = 0;
-	filePathSort = 0;
-	appColSort = 0;
-	switch (volumeSort) {
-		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:[lsofData volumeSortDesc], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:volumeColumn];
-			volumeSort = 1;
-			break;
-		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[[lsofData volumeSortDesc] reversedSortDescriptor], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:volumeColumn];
-			volumeSort = 2;
-			break;
-		case 2: // descending -> unsorted
-			descs = nil;
-			volumeSort = 0;
-			[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
-			break;
-	}
-	return descs;
 }
 
 - (IBAction)submitComment:(id)sender
@@ -634,28 +484,6 @@
 	return retVal;
 }
 
-- (void)tableView:(NSTableView *)tableView mouseDownInHeaderOfTableColumn:(NSTableColumn *)tableColumn
-{
-	#if DEBUG
-		NSLog(@"%s",__func__);
-	#endif
-	NSArray *descs = nil;
-	if (tableColumn == applicationColumn) {
-		descs = [self sortByAppName];
-	} else if (tableColumn == fileSizeColumn) {
-		descs = [self sortByFileSize];
-	} else if (tableColumn == filePathColumn) {
-		descs = [self sortByFilePath];
-	} else if (tableColumn == usernameColumn) {
-		descs = [self sortByUserName];
-	} else if (tableColumn == volumeColumn) {
-		descs = [self sortByVolume];
-	}
-
-	[lsofData sortDataWithDescriptors:descs];
-	[self reloadTable];
-}
-
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
 	[self updateToolbarButtons];
@@ -678,6 +506,12 @@
 	}
 }
 
+- (void)tableView:(NSTableView *)tableView sortDescriptorsDidChange:(NSArray<NSSortDescriptor *> *)oldDescriptors
+{
+	NSArray<NSSortDescriptor*> *descs = tableView.sortDescriptors;
+	[lsofData sortDataWithDescriptors:descs];
+	[self reloadTable];
+}
 
 #pragma mark - NSMenuDelegate
 

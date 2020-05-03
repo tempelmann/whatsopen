@@ -37,8 +37,8 @@
 - (NSString *)getVolumeForRow:(NSInteger)rowIx;
 - (fileTypes)getFileTypeForRow:(NSInteger)rowIx;
 
-- (void)filterDataWithString:(NSString *)filtr forVolume:(NSString *)vol forUser:(NSString *)user forProcess:(NSString *)process forType:(fileTypes)ftype;
-- (void) sortDataWithDescriptors:(NSArray *)sortDescs;
+- (void) filterDataWithString:(NSString *)filtr forVolume:(NSString *)vol forUser:(NSString *)user forProcess:(NSString *)process forType:(fileTypes)ftype;
+- (void) sortDataWithDescriptors:(NSArray<NSSortDescriptor*> *)sortDescs;
 
 + (NSString *)displayFileSize:(size_t)size;
 
