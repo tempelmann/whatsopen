@@ -17,9 +17,12 @@
 @property(readonly) NSSortDescriptor *fileSizeSortDesc;
 @property(readonly) NSSortDescriptor *filePathSortDesc;
 @property(readonly) NSSortDescriptor *usernameSortDesc;
+@property(readonly) NSSortDescriptor *volumeSortDesc;
+
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allUserNames;
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
 @property(readonly) NSMutableDictionary<NSString*,NSNumber*> *allVolumes;	// key is volume name
+
 @property(copy)     NSColor *alternateColor;
 
 - (BOOL)getData:(NSTextField *)progressText;
@@ -31,6 +34,7 @@
 - (NSString *)getAppNameForRow:(NSInteger)rowIx;
 - (NSString *)getFileSizeForRow:(NSInteger)rowIx;
 - (NSString *)getUserForRow:(NSInteger)rowIx;
+- (NSString *)getVolumeForRow:(NSInteger)rowIx;
 - (fileTypes)getFileTypeForRow:(NSInteger)rowIx;
 
 - (void)filterDataWithString:(NSString *)filtr forVolume:(NSString *)vol forUser:(NSString *)user forProcess:(NSString *)process forType:(fileTypes)ftype;

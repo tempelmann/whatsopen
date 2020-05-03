@@ -10,8 +10,8 @@
 
 @interface LSOF()
 	{
-		NSMutableArray		*data;
-		NSMutableArray		*displayData;
+		NSMutableArray		*data;			// all found items
+		NSMutableArray		*displayData;	// currently displayed items
 		AuthorizationRef	authRef;
 		NSColor				*alternateColor;
 	}
@@ -21,6 +21,7 @@
 	@property(strong) NSSortDescriptor *fileSizeSortDesc;
 	@property(strong) NSSortDescriptor *filePathSortDesc;
 	@property(strong) NSSortDescriptor *usernameSortDesc;
+	@property(strong) NSSortDescriptor *volumeSortDesc;
 	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allUserNames;
 	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allProcessNames;
 	@property(strong) NSMutableDictionary<NSString*,NSNumber*> *allVolumes;
@@ -40,17 +41,12 @@
 	if (self) {
 		displayData = nil;
 		data = [[NSMutableArray alloc] init];
-		self.processNameSortDesc = [[NSSortDescriptor alloc] initWithKey:@"appName"
-												  ascending:YES
-												   selector:@selector(localizedCaseInsensitiveCompare:)];
-		self.filePathSortDesc = [[NSSortDescriptor alloc] initWithKey:@"filePath"
-												   ascending:YES
-													selector:@selector(localizedCaseInsensitiveCompare:)];
+		
+		self.processNameSortDesc = [[NSSortDescriptor alloc] initWithKey:@"appName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+		self.filePathSortDesc = [[NSSortDescriptor alloc] initWithKey:@"filePath" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
 		self.fileSizeSortDesc = [[NSSortDescriptor alloc] initWithKey:@"realSize" ascending:YES selector:@selector(compare:)];
-		self.usernameSortDesc = [[NSSortDescriptor alloc] initWithKey:@"username"
-												   ascending:YES
-													selector:@selector(localizedCaseInsensitiveCompare:)];
-		//self.cpuSortDesc = [[NSSortDescriptor alloc] initWithKey:@"cputime" ascending:YES selector:@selector(compare:)];
+		self.usernameSortDesc = [[NSSortDescriptor alloc] initWithKey:@"username" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+		self.volumeSortDesc = [[NSSortDescriptor alloc] initWithKey:@"volName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
 		
 		self.LSOFTool = @"/usr/sbin/lsof";
 		
@@ -243,7 +239,9 @@
 		self.LSOFTool,
 		@"-FpcLustn0",
 		@"-nw",
-		//@"-p", @"124",
+		#if DEBUG
+			@"-p", @"1,61,66,67,124",
+		#endif
 		// Note: Do not limit the results with e.g. "+f -- /", because we'll miss some important items such as mounted disk images
 	];
 	NSString *cmd = [args componentsJoinedByString:@" "];	// as shell command line, including args in the same string
@@ -498,17 +496,15 @@
 	return retVal;
 }
 
-/*
-- (NSInteger)getCpuTimeForRow:(NSInteger)rowIx
+- (NSString *)getVolumeForRow:(NSInteger)rowIx
 {
-	NSInteger retVal = 0;
+	NSString *retVal = 0;
 	OpenFile *f = [self fileAtIndex:rowIx];
 	if (f) {
-		retVal = [f cputime];
+		retVal = [f volName];
 	}
 	return retVal;
 }
-*/
 
 - (fileTypes)getFileTypeForRow:(NSInteger)rowIx
 {

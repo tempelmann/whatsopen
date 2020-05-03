@@ -219,6 +219,7 @@
 	}
 }
 
+/*
 - (NSString *)formatCpuTime:(NSInteger)secs
 {
 	NSInteger mins, hours, days;
@@ -237,6 +238,7 @@
 	}
 	return [NSString stringWithFormat:@"%ld.%ld:%ld:%ld", (long)days, (long)hours, (long)mins, (long)secs];
 }
+*/
 
 - (IBAction)openInFinder:(id)sender
 {
@@ -262,11 +264,11 @@
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
+	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
 	usernameSort = 0;
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
-	cpusort = 0;
+	volumeSort = 0;
 	switch (appColSort) {
 		case 0: // unsorted -> ascending
 			descs = [NSArray arrayWithObjects:lsofData.processNameSortDesc, nil];
@@ -295,11 +297,11 @@
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
+	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
 	usernameSort = 0;
 	filePathSort = 0;
 	appColSort = 0;
-	cpusort = 0;
+	volumeSort = 0;
 	switch (fileSizeSortFlag) {
 		case 0: // unsorted -> ascending
 			descs = [NSArray arrayWithObjects:lsofData.fileSizeSortDesc, nil];
@@ -326,11 +328,11 @@
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:usernameColumn];
-	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
+	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
 	usernameSort = 0;
 	appColSort = 0;
 	fileSizeSortFlag = 0;
-	cpusort = 0;
+	volumeSort = 0;
 	switch (filePathSort) {
 		case 0: // unsorted -> ascending
 			descs = [NSArray arrayWithObjects:lsofData.filePathSortDesc, nil];
@@ -357,11 +359,11 @@
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
 	[outTable setIndicatorImage:nil inTableColumn:fileSizeColumn];
 	[outTable setIndicatorImage:nil inTableColumn:filePathColumn];
-	//[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
+	[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
 	appColSort = 0;
-	cpusort = 0;
+	volumeSort = 0;
 	switch (usernameSort) {
 		case 0: // unsorted -> ascending
 			descs = [NSArray arrayWithObjects:lsofData.usernameSortDesc, nil];
@@ -382,8 +384,7 @@
 	return descs;
 }
 
-/*
-- (NSArray *)sortByCPU
+- (NSArray *)sortByVolume
 {
 	NSArray *descs;
 	[outTable setIndicatorImage:nil inTableColumn:applicationColumn];
@@ -392,26 +393,26 @@
 	fileSizeSortFlag = 0;
 	filePathSort = 0;
 	appColSort = 0;
-	switch (cpusort) {
+	switch (volumeSort) {
 		case 0: // unsorted -> ascending
-			descs = [NSArray arrayWithObjects:[lsofData cpuSort], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:cputimeColumn];
-			cpusort = 1;
+			descs = [NSArray arrayWithObjects:[lsofData volumeSortDesc], nil];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:volumeColumn];
+			volumeSort = 1;
 			break;
 		case 1: // ascending -> descending
-			descs = [NSArray arrayWithObjects:[[lsofData cpuSort] reversedSortDescriptor], nil];
-			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:cputimeColumn];
-			cpusort = 2;
+			descs = [NSArray arrayWithObjects:[[lsofData volumeSortDesc] reversedSortDescriptor], nil];
+			[outTable setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:volumeColumn];
+			volumeSort = 2;
 			break;
 		case 2: // descending -> unsorted
 			descs = nil;
-			cpusort = 0;
-			[outTable setIndicatorImage:nil inTableColumn:cputimeColumn];
+			volumeSort = 0;
+			[outTable setIndicatorImage:nil inTableColumn:volumeColumn];
 			break;
 	}
 	return descs;
 }
-*/
+
 - (IBAction)submitComment:(id)sender
 {
 	NSLog(@"submit comment");
@@ -615,8 +616,8 @@
 		retVal = [lsofData getFileSizeForRow:rowIx];
 	} else if (col == usernameColumn) {
 		retVal = [lsofData getUserForRow:rowIx];
-	} else if (col == cputimeColumn) {
-		//	retVal = [self formatCpuTime:[lsofData getCpuTimeForRow:rowIx]];
+	} else if (col == volumeColumn) {
+		retVal = [lsofData getVolumeForRow:rowIx];
 	}
 
 	return retVal;
@@ -630,13 +631,6 @@
 		  mouseLocation:(NSPoint)mouseLocation
 {
 	NSString *retVal = [NSString stringWithFormat:@"pid: %d", [lsofData getPidForRow:row]];
-/*
-	if (aTableColumn == cputimeColumn) {
-		retVal = [retVal stringByAppendingString:@"\nFormat: days.hours:minutes:seconds"];
-		if (NOT [NSUserDefaults.standardUserDefaults boolForKey:@"lsofFullList"]) {
-			retVal = [retVal stringByAppendingString:@"\nCPU Time Disabled (turn on root to enable)"];
-	}
-*/
 	return retVal;
 }
 
@@ -654,8 +648,8 @@
 		descs = [self sortByFilePath];
 	} else if (tableColumn == usernameColumn) {
 		descs = [self sortByUserName];
-	} else if (tableColumn == cputimeColumn) {
-		//	descs = [self sortByCPU];
+	} else if (tableColumn == volumeColumn) {
+		descs = [self sortByVolume];
 	}
 
 	[lsofData sortDataWithDescriptors:descs];

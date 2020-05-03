@@ -25,7 +25,7 @@
 	IBOutlet NSTableColumn *filePathColumn;
 	IBOutlet NSTableColumn *fileSizeColumn;
 	IBOutlet NSTableColumn *usernameColumn;
-	IBOutlet NSTableColumn *cputimeColumn;
+	IBOutlet NSTableColumn *volumeColumn;
 	IBOutlet NSToolbar *toobar;
 	IBOutlet NSProgressIndicator *probar;
 	IBOutlet NSWindow *progSheet;
@@ -57,7 +57,7 @@
 	int fileSizeSortFlag;
 	int filePathSort;
 	int usernameSort;
-	int cpusort;
+	int volumeSort;
 }
 
 - (IBAction) listFiles:(id)sender;
