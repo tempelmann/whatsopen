@@ -37,8 +37,11 @@
 
 - (void)awakeFromNib
 {
-	[killButtonItem setEnabled:NO];
-	
+	// Disable Tab mode
+	if ([mainWindow respondsToSelector:@selector(setTabbingMode:)]) {
+		[mainWindow setTabbingMode:NSWindowTabbingModeDisallowed];
+	}
+
 	[self moveSuperuserEnabledTextToWindowTitle];
 	
 	bottomInfoLabel.stringValue = @"";
@@ -533,11 +536,13 @@
 -(BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	BOOL ret = YES;
-
-	// disable context items when not applicable
-	NSInteger selCount = outTable.selectedRowIndexes.count;
-	if (selCount == 0 || (menuItem != contextShowInFinder && selCount > 1)) {
-		ret = NO;
+	
+	if (menuItem.menu == contextMenu) {
+		// disable context items when not applicable
+		NSInteger selCount = outTable.selectedRowIndexes.count;
+		if (selCount == 0 || (menuItem != contextShowInFinder && selCount > 1)) {
+			ret = NO;
+		}
 	}
 	
 	return ret;

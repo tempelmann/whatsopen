@@ -172,9 +172,9 @@
 	}
 }
 
-- (Boolean)getCredentials
+- (BOOL)getCredentials
 {
-	Boolean retVal = YES;
+	BOOL retVal = YES;
 
 	if (authRef == nil) {
 		const char *username = NULL, *password = NULL;
@@ -238,7 +238,7 @@
 		self.LSOFTool,
 		@"-FpcLustn0",
 		@"-nw",
-		#if DEBUG
+		#if DEBUG && 0
 			@"-p", @"1,61,66,67,124",
 		#endif
 		// Note: Do not limit the results with e.g. "+f -- /", because we'll miss some important items such as mounted disk images
@@ -253,18 +253,12 @@
 	
 	BOOL was_popen = NO;
 	FILE *lsof = NULL;
-	if ([NSUserDefaults.standardUserDefaults boolForKey:@"lsofFullList"]) {
-		if (![self getCredentials]) {
-			NSLog(@"Error obtaining credencials for lsof\n");
+	if ([NSUserDefaults.standardUserDefaults boolForKey:@"lsofFullList"] && [self getCredentials]) {
+		NSLog(@"invoking (root): %@", cmd);
+		OSStatus res = AuthorizationExecuteWithPrivileges (authRef, self.LSOFTool.UTF8String, kAuthorizationFlagDefaults, cargs, &lsof);
+		if (res != errAuthorizationSuccess) {
+			NSLog(@"Running lsof as root failed\n");
 			return NO;
-		}
-		else {
-			NSLog(@"invoking (root): %@", cmd);
-			OSStatus res = AuthorizationExecuteWithPrivileges (authRef, self.LSOFTool.UTF8String, kAuthorizationFlagDefaults, cargs, &lsof);
-			if (res != errAuthorizationSuccess) {
-				NSLog(@"Running lsof as root failed\n");
-				return NO;
-			}
 		}
 	} else {
 		NSLog(@"invoking: %@", cmd);
