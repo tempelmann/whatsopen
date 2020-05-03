@@ -87,7 +87,7 @@
 - (void)refreshNSPopUpButton:(NSPopUpButton*)button withDict:(NSDictionary<NSString*,NSNumber*>*)dict sortByCount:(BOOL)sortByCount
 {
 	[button removeAllItems];
-	[button addItemWithTitle:@"All"];	// so that "All" always appears first
+	[button addItemWithTitle:NSLocalizedString(@"All", "")];	// so that "All" always appears first
 	[button.lastItem setTag:-1];
 	if (dict.count > 0) {
 		NSArray<NSString*> *names;
@@ -307,8 +307,8 @@
 	}
 	else {
 		[NSApp endSheet:commentPanel];
-		[commentFrom setStringValue:@"your@email.dom"];
-		[commentSubject setStringValue:@"Your Subject"];
+		[commentFrom setStringValue:NSLocalizedString(@"your@email.dom", "")];
+		[commentSubject setStringValue:NSLocalizedString(@"Your Subject", "")];
 		[[commentText textStorage] setAttributedString:[[NSAttributedString alloc] initWithString:@""]];
 		[resAlert doInfoAlertWithTitle:@"Your message has been sent."
 							  infoText:@"Thank you for using WhatsOpen!"

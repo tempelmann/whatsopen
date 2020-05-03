@@ -87,7 +87,7 @@
 		B4C155090E48F7AC0019E734 /* OpenFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenFile.m; path = Source/OpenFile.m; sourceTree = SOURCE_ROOT; };
 		B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = whatsopen.icns; path = Source/whatsopen.icns; sourceTree = SOURCE_ROOT; };
 		B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = lightBulbIcon.icns; path = Source/lightBulbIcon.icns; sourceTree = SOURCE_ROOT; };
-		CEB9218B245F050200F51AC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Source/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		CE234DF0245F65B500B6E629 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Source/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +225,7 @@
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* WhatsOpen */;
 			projectDirPath = "";
@@ -295,7 +296,7 @@
 		A449887E245E265800DA190F /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				CEB9218B245F050200F51AC8 /* en */,
+				CE234DF0245F65B500B6E629 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
