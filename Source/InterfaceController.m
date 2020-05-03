@@ -126,7 +126,10 @@
 	NSInteger tag = button.selectedTag;
 	NSString *name = nil;
 	if (tag >= 0) {
-		name = d.allKeys[tag];
+		@try {
+			name = d.allKeys[tag];
+		} @catch (NSException *exception) {
+		}
 	}
 	return name;
 }
