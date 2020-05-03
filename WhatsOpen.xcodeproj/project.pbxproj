@@ -15,7 +15,6 @@
 		A47404DB245B66CE00D96098 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A47404DA245B66CE00D96098 /* DiskArbitration.framework */; };
 		A4E619F7245CA6A6008B93F4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4E619F6245CA6A6008B93F4 /* AppDelegate.m */; };
 		A4FDF8EC245CE33D008D1BD2 /* WhatsOpen.help in Resources */ = {isa = PBXBuildFile; fileRef = A4FDF8EB245CE33D008D1BD2 /* WhatsOpen.help */; };
-		A4FDF8ED245CEA53008D1BD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		A4FDF8EE245CEA9E008D1BD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
 		A4FDF8EF245CEA9E008D1BD2 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B406D9C20E11E4910098E862 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9C10E11E4910098E862 /* InterfaceController.m */; };
@@ -62,7 +61,6 @@
 		32CA4F630368D1EE00C91783 /* WhatsOpen_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhatsOpen_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* WhatsOpen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsOpen.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A449887F245E265800DA190F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		A4498889245E4DEC00DA190F /* SmarterTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmarterTableView.h; sourceTree = "<group>"; };
 		A449888A245E4DEC00DA190F /* SmarterTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmarterTableView.m; sourceTree = "<group>"; };
 		A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WhatsOpen.xcconfig; sourceTree = "<group>"; };
@@ -89,6 +87,7 @@
 		B4C155090E48F7AC0019E734 /* OpenFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFile.m; sourceTree = "<group>"; };
 		B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = whatsopen.icns; path = ../../whatsopen.icns; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = lightBulbIcon.icns; sourceTree = "<group>"; };
+		CEB9218B245F050200F51AC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +98,6 @@
 				A47404DB245B66CE00D96098 /* DiskArbitration.framework in Frameworks */,
 				A4FDF8EE245CEA9E008D1BD2 /* Sparkle.framework in Frameworks */,
 				A47404D9245B66C200D96098 /* Security.framework in Frameworks */,
-				A4FDF8ED245CEA53008D1BD2 /* Sparkle.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */,
 			);
@@ -227,15 +225,14 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1140;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "WhatsOpen" */;
 			compatibilityVersion = "Xcode 9.3";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
-				English,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* WhatsOpen */;
 			projectDirPath = "";
@@ -284,7 +281,7 @@
 		A449887E245E265800DA190F /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				A449887F245E265800DA190F /* English */,
+				CEB9218B245F050200F51AC8 /* en */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -301,6 +298,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 25856V4B4X;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -333,6 +331,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 25856V4B4X;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -358,6 +357,7 @@
 			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -398,6 +398,7 @@
 			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
