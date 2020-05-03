@@ -8,21 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
-		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		A4498880245E265800DA190F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A449887E245E265800DA190F /* MainMenu.xib */; };
 		A449888B245E4DEC00DA190F /* SmarterTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A449888A245E4DEC00DA190F /* SmarterTableView.m */; };
 		A4498893245F4F6200DA190F /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = A4498892245F4F6200DA190F /* dsa_pub.pem */; };
-		A47404D9245B66C200D96098 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A47404D8245B66C200D96098 /* Security.framework */; };
-		A47404DB245B66CE00D96098 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A47404DA245B66CE00D96098 /* DiskArbitration.framework */; };
+		A449889A245F636B00DA190F /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4498897245F631B00DA190F /* DiskArbitration.framework */; };
+		A449889B245F636E00DA190F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4498896245F631800DA190F /* Security.framework */; };
+		A449889C245F637800DA190F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4498895245F631600DA190F /* Cocoa.framework */; };
+		A449889D245F637E00DA190F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		A449889E245F638600DA190F /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
+		A449889F245F63B600DA190F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4498898245F632C00DA190F /* Sparkle.framework */; };
+		A44988A0245F63B600DA190F /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A4498898245F632C00DA190F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A4E619F7245CA6A6008B93F4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4E619F6245CA6A6008B93F4 /* AppDelegate.m */; };
 		A4FDF8EC245CE33D008D1BD2 /* WhatsOpen.help in Resources */ = {isa = PBXBuildFile; fileRef = A4FDF8EB245CE33D008D1BD2 /* WhatsOpen.help */; };
-		A4FDF8EE245CEA9E008D1BD2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; };
-		A4FDF8EF245CEA9E008D1BD2 /* Sparkle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B42F9F990E411F1100016D64 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B406D9C20E11E4910098E862 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9C10E11E4910098E862 /* InterfaceController.m */; };
 		B406D9EA0E11E7C70098E862 /* LSOF.m in Sources */ = {isa = PBXBuildFile; fileRef = B406D9E90E11E7C70098E862 /* LSOF.m */; };
 		B4348EAF0E7F174A0093F24E /* googleG.icns in Resources */ = {isa = PBXBuildFile; fileRef = B4348EAE0E7F174A0093F24E /* googleG.icns */; };
 		B4496A060E14080F00CE6B42 /* Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = B4496A050E14080F00CE6B42 /* Alerts.m */; };
-		B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */; };
 		B497DA6B0E80010E003F0EFE /* listFiles.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6A0E80010E003F0EFE /* listFiles.icns */; };
 		B497DA6D0E8001D0003F0EFE /* StopImg.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6C0E8001D0003F0EFE /* StopImg.icns */; };
 		B497DA6F0E8002CD003F0EFE /* Eye.icns in Resources */ = {isa = PBXBuildFile; fileRef = B497DA6E0E8002CD003F0EFE /* Eye.icns */; };
@@ -37,7 +38,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A4FDF8EF245CEA9E008D1BD2 /* Sparkle.framework in Embed Frameworks */,
+				A44988A0245F63B600DA190F /* Sparkle.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,42 +55,39 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
-		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = SOURCE_ROOT; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		32CA4F630368D1EE00C91783 /* WhatsOpen_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhatsOpen_Prefix.pch; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* WhatsOpen_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WhatsOpen_Prefix.pch; path = Source/WhatsOpen_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
 		8D1107320486CEB800E47090 /* WhatsOpen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsOpen.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A4498889245E4DEC00DA190F /* SmarterTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmarterTableView.h; sourceTree = "<group>"; };
-		A449888A245E4DEC00DA190F /* SmarterTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmarterTableView.m; sourceTree = "<group>"; };
+		A4498889245E4DEC00DA190F /* SmarterTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SmarterTableView.h; path = Source/SmarterTableView.h; sourceTree = SOURCE_ROOT; };
+		A449888A245E4DEC00DA190F /* SmarterTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SmarterTableView.m; path = Source/SmarterTableView.m; sourceTree = SOURCE_ROOT; };
 		A4498892245F4F6200DA190F /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Sparke_signing_private/dsa_pub.pem; sourceTree = "<group>"; };
-		A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = WhatsOpen.xcconfig; sourceTree = "<group>"; };
-		A47404D8245B66C200D96098 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		A47404DA245B66CE00D96098 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
-		A4DA39FB245B61E20015E14F /* VersionNotes.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = VersionNotes.txt; sourceTree = "<group>"; };
-		A4E619F5245CA6A6008B93F4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		A4E619F6245CA6A6008B93F4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		A4FDF8EB245CE33D008D1BD2 /* WhatsOpen.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WhatsOpen.help; sourceTree = "<group>"; };
-		B406D9C00E11E4910098E862 /* InterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
-		B406D9C10E11E4910098E862 /* InterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
-		B406D9E80E11E7C70098E862 /* LSOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSOF.h; sourceTree = "<group>"; };
-		B406D9E90E11E7C70098E862 /* LSOF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSOF.m; sourceTree = "<group>"; };
-		B42F9F990E411F1100016D64 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
-		B4348EAE0E7F174A0093F24E /* googleG.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = googleG.icns; sourceTree = "<group>"; };
-		B4496A040E14080F00CE6B42 /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alerts.h; sourceTree = "<group>"; };
-		B4496A050E14080F00CE6B42 /* Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Alerts.m; sourceTree = "<group>"; };
-		B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
-		B469A6970E2EAAE9008F1CBB /* ScriptableFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptableFinder.h; sourceTree = "<group>"; };
-		B497DA6A0E80010E003F0EFE /* listFiles.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = listFiles.icns; sourceTree = "<group>"; };
-		B497DA6C0E8001D0003F0EFE /* StopImg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = StopImg.icns; sourceTree = "<group>"; };
-		B497DA6E0E8002CD003F0EFE /* Eye.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Eye.icns; sourceTree = "<group>"; };
-		B4C155080E48F7AC0019E734 /* OpenFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFile.h; sourceTree = "<group>"; };
-		B4C155090E48F7AC0019E734 /* OpenFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFile.m; sourceTree = "<group>"; };
-		B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = whatsopen.icns; path = ../../whatsopen.icns; sourceTree = BUILT_PRODUCTS_DIR; };
-		B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = lightBulbIcon.icns; sourceTree = "<group>"; };
-		CEB9218B245F050200F51AC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		A4498894245F618D00DA190F /* WhatsOpen.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = WhatsOpen.xcconfig; path = Source/WhatsOpen.xcconfig; sourceTree = "<group>"; };
+		A4498895245F631600DA190F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
+		A4498896245F631800DA190F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A4498897245F631B00DA190F /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
+		A4498898245F632C00DA190F /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		A4E619F5245CA6A6008B93F4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Source/AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		A4E619F6245CA6A6008B93F4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Source/AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		A4FDF8EB245CE33D008D1BD2 /* WhatsOpen.help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WhatsOpen.help; path = Source/WhatsOpen.help; sourceTree = SOURCE_ROOT; };
+		B406D9C00E11E4910098E862 /* InterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterfaceController.h; path = Source/InterfaceController.h; sourceTree = SOURCE_ROOT; };
+		B406D9C10E11E4910098E862 /* InterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InterfaceController.m; path = Source/InterfaceController.m; sourceTree = SOURCE_ROOT; };
+		B406D9E80E11E7C70098E862 /* LSOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSOF.h; path = Source/LSOF.h; sourceTree = SOURCE_ROOT; };
+		B406D9E90E11E7C70098E862 /* LSOF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LSOF.m; path = Source/LSOF.m; sourceTree = SOURCE_ROOT; };
+		B4348EAE0E7F174A0093F24E /* googleG.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = googleG.icns; path = Source/googleG.icns; sourceTree = SOURCE_ROOT; };
+		B4496A040E14080F00CE6B42 /* Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alerts.h; path = Source/Alerts.h; sourceTree = SOURCE_ROOT; };
+		B4496A050E14080F00CE6B42 /* Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Alerts.m; path = Source/Alerts.m; sourceTree = SOURCE_ROOT; };
+		B469A6970E2EAAE9008F1CBB /* ScriptableFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScriptableFinder.h; path = Source/ScriptableFinder.h; sourceTree = SOURCE_ROOT; };
+		B497DA6A0E80010E003F0EFE /* listFiles.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = listFiles.icns; path = Source/listFiles.icns; sourceTree = SOURCE_ROOT; };
+		B497DA6C0E8001D0003F0EFE /* StopImg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = StopImg.icns; path = Source/StopImg.icns; sourceTree = SOURCE_ROOT; };
+		B497DA6E0E8002CD003F0EFE /* Eye.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Eye.icns; path = Source/Eye.icns; sourceTree = SOURCE_ROOT; };
+		B4C155080E48F7AC0019E734 /* OpenFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenFile.h; path = Source/OpenFile.h; sourceTree = SOURCE_ROOT; };
+		B4C155090E48F7AC0019E734 /* OpenFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenFile.m; path = Source/OpenFile.m; sourceTree = SOURCE_ROOT; };
+		B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = whatsopen.icns; path = Source/whatsopen.icns; sourceTree = SOURCE_ROOT; };
+		B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = lightBulbIcon.icns; path = Source/lightBulbIcon.icns; sourceTree = SOURCE_ROOT; };
+		CEB9218B245F050200F51AC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Source/en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,31 +95,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A47404DB245B66CE00D96098 /* DiskArbitration.framework in Frameworks */,
-				A4FDF8EE245CEA9E008D1BD2 /* Sparkle.framework in Frameworks */,
-				A47404D9245B66C200D96098 /* Security.framework in Frameworks */,
-				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				B469A67E0E2EA924008F1CBB /* ScriptingBridge.framework in Frameworks */,
+				A449889E245F638600DA190F /* AppKit.framework in Frameworks */,
+				A449889A245F636B00DA190F /* DiskArbitration.framework in Frameworks */,
+				A449889D245F637E00DA190F /* Foundation.framework in Frameworks */,
+				A449889F245F63B600DA190F /* Sparkle.framework in Frameworks */,
+				A449889C245F637800DA190F /* Cocoa.framework in Frameworks */,
+				A449889B245F636E00DA190F /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
-			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B469A67D0E2EA924008F1CBB /* ScriptingBridge.framework */,
+				A4498897245F631B00DA190F /* DiskArbitration.framework */,
+				A4498896245F631800DA190F /* Security.framework */,
+				A4498895245F631600DA190F /* Cocoa.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
-				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
@@ -155,7 +147,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				A4DA39FB245B61E20015E14F /* VersionNotes.txt */,
 			);
 			name = WhatsOpen;
 			sourceTree = "<group>";
@@ -177,11 +168,11 @@
 				B4348EAE0E7F174A0093F24E /* googleG.icns */,
 				B4F9733A0E6EEBA70091D4A2 /* lightBulbIcon.icns */,
 				B4C15AD20E4BAEAA0019E734 /* whatsopen.icns */,
-				A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */,
 				B497DA6E0E8002CD003F0EFE /* Eye.icns */,
 				B497DA6C0E8001D0003F0EFE /* StopImg.icns */,
 				B497DA6A0E80010E003F0EFE /* listFiles.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				A4498894245F618D00DA190F /* WhatsOpen.xcconfig */,
 				A4498892245F4F6200DA190F /* dsa_pub.pem */,
 			);
 			name = Resources;
@@ -190,10 +181,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A47404DA245B66CE00D96098 /* DiskArbitration.framework */,
-				A47404D8245B66C200D96098 /* Security.framework */,
-				B42F9F990E411F1100016D64 /* Sparkle.framework */,
-				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				A4498898245F632C00DA190F /* Sparkle.framework */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -281,7 +269,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This updates the help index inside the currently building app\ncd ${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Resources\n/Development/WhatsOpen/rebuild_helpindex.sh\n";
+			shellScript = "# This updates the help index inside the currently building app\ncd ${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Resources\n/Development/WhatsOpen/Source/rebuild_helpindex.sh\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -317,7 +305,6 @@
 /* Begin XCBuildConfiguration section */
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -329,13 +316,13 @@
 					"$(inherited)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = WhatsOpen_Prefix.pch;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				GCC_PREFIX_HEADER = Source/WhatsOpen_Prefix.pch;
+				INFOPLIST_FILE = Source/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -350,7 +337,6 @@
 		};
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -362,11 +348,11 @@
 					"$(inherited)",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = WhatsOpen_Prefix.pch;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
+				GCC_PREFIX_HEADER = Source/WhatsOpen_Prefix.pch;
+				INFOPLIST_FILE = Source/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -380,7 +366,6 @@
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -421,7 +406,6 @@
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A47404D7245B665E00D96098 /* WhatsOpen.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
