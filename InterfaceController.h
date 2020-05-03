@@ -39,6 +39,10 @@
 	IBOutlet NSTextField *commentSubject;
 	IBOutlet NSTextView *commentText;
 	IBOutlet NSTextField *commentFrom;
+	IBOutlet NSToolbarItem *listFilesButtonItem;
+	IBOutlet NSToolbarItem *googleLookupButtonItem;
+	IBOutlet NSToolbarItem *manLookupButtonItem;
+	IBOutlet NSToolbarItem *showInFinderButtonItem;
 	IBOutlet NSToolbarItem *killButtonItem;
 	IBOutlet NSToolbarItem *usersButtonItem;
 	IBOutlet NSToolbarItem *processButtonItem;

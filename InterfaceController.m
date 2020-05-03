@@ -10,7 +10,8 @@
 
 #import "InterfaceController.h"
 
-@interface InterfaceController()
+@interface InterfaceController() <NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate>
+
 @end
 
 @implementation InterfaceController
@@ -41,6 +42,8 @@
 	[self moveSuperuserEnabledTextToWindowTitle];
 	
 	bottomInfoLabel.stringValue = @"";
+	
+	[self updateToolbarButtons];	// this disables the buttons initially
 	
 	if ([NSUserDefaults.standardUserDefaults boolForKey:@"listAtLaunch"]) {
 		[self performSelector:@selector(listFiles:) withObject:nil afterDelay:0];
@@ -212,11 +215,6 @@
 	}
 }
 
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)table
-{
-	return [lsofData dataCount];
-}
-
 - (NSString *)formatCpuTime:(NSInteger)secs
 {
 	NSInteger mins, hours, days;
@@ -236,56 +234,17 @@
 	return [NSString stringWithFormat:@"%ld.%ld:%ld:%ld", (long)days, (long)hours, (long)mins, (long)secs];
 }
 
-- (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(int)rowIx
-{
-	NSString *retVal = nil;
-
-	if (col == applicationColumn) {
-		retVal = [lsofData getAppNameForRow:rowIx];
-	} else if (col == filePathColumn) {
-		retVal = [lsofData getFilePathForRow:rowIx];
-	} else if (col == fileSizeColumn) {
-		retVal = [lsofData getFileSizeForRow:rowIx];
-	} else if (col == usernameColumn) {
-		retVal = [lsofData getUserForRow:rowIx];
-	//} else if (col == cputimeColumn) {
-	//	retVal = [self formatCpuTime:[lsofData getCpuTimeForRow:rowIx]];
-	}
-
-	return retVal;
-}
-
-- (Boolean)tableView:(NSTableView *)table shouldEditTableColumn:(NSTableColumn *)col row:(int)row
-{
-	return NO;
-}
-
-- (NSString *)tableView:(NSTableView *)aTableView
-		 toolTipForCell:(NSCell *)aCell
-				   rect:(NSRectPointer)rect
-			tableColumn:(NSTableColumn *)aTableColumn
-					row:(NSInteger)row
-		  mouseLocation:(NSPoint)mouseLocation
-{
-	NSString *retVal = [NSString stringWithFormat:@"pid:%d", [lsofData getPidForRow:row]];
-/*
-	Boolean isSet;
-	if (aTableColumn == cputimeColumn) {
-		retVal = [retVal stringByAppendingString:@"\nFormat: days.hours:minutes:seconds"];
-		if (CFPreferencesGetAppBooleanValue(CFSTR("lsofFullList"), kCFPreferencesCurrentApplication, &isSet) == NO)
-			retVal = [retVal stringByAppendingString:@"\nCPU Time Disabled (turn on root to enable)"];
-	}
-*/
-	return retVal;
-}
-
 - (IBAction)openInFinder:(id)sender
 {
-	NSInteger rowIx = [outTable selectedRow];
-	if (rowIx >= 0) {
-		NSURL *fileUrl = [NSURL fileURLWithPath:[lsofData getFilePathForRow:rowIx]];
-		[NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:@[fileUrl]];
-	}
+	NSMutableArray<NSURL*> *urls = [NSMutableArray array];
+	
+	NSIndexSet *selectedRowIndexes = outTable.selectedRowIndexes;
+	[selectedRowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+		NSURL *fileUrl = [NSURL fileURLWithPath:[self->lsofData getFilePathForRow:idx]];
+		[urls addObject:fileUrl];
+	}];
+
+	[NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:urls];
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -449,30 +408,6 @@
 	return descs;
 }
 */
-
-- (void)tableView:(NSTableView *)tableView mouseDownInHeaderOfTableColumn:(NSTableColumn *)tableColumn
-{
-	NSArray *descs = nil;
-	if (tableColumn == applicationColumn) {
-		descs = [self sortByAppName];
-	}
-	else if (tableColumn == fileSizeColumn) {
-		descs = [self sortByFileSize];
-	}
-	else if (tableColumn == filePathColumn) {
-		descs = [self sortByFilePath];
-	}
-	else if (tableColumn == usernameColumn) {
-		descs = [self sortByUserName];
-	}
-	//else if (tableColumn == cputimeColumn) {
-	//	descs = [self sortByCPU];
-	//}
-
-	[lsofData sortDataWithDescriptors:descs];
-	[self reloadTable];
-}
-
 - (IBAction)submitComment:(id)sender
 {
 	NSLog(@"submit comment");
@@ -546,21 +481,22 @@
 		   contextInfo:nil];
 }
 
-- (void)loadDocText:(FILE *)man
+- (BOOL)loadDocText:(FILE *)man
 {
-	char buff[1024];
-
 	if (man) {
 		[documentTextView setEditable:YES];
-		[[documentTextView textStorage] beginEditing];
-		while (fgets(buff, 1024, man)) {
-			[[documentTextView textStorage]
-				appendAttributedString:[[NSAttributedString alloc]
-										   initWithString:[NSString stringWithFormat:@"%s", buff]]];
+		[documentTextView.textStorage beginEditing];
+		char buff[1024];
+		while (fgets(buff, sizeof(buff), man)) {
+			NSString *s = [NSString stringWithCString:buff encoding:NSUTF8StringEncoding];
+			NSAttributedString *as = [[NSAttributedString alloc] initWithString:s];
+			[documentTextView.textStorage appendAttributedString:as];
 		}
-		[[documentTextView textStorage] endEditing];
+		[documentTextView.textStorage endEditing];
 		[documentTextView setEditable:NO];
+		return YES;
 	}
+	return NO;
 }
 
 - (IBAction)showDocPane:(id)sender
@@ -568,28 +504,25 @@
 	NSInteger row = [outTable selectedRow];
 	NSString *an = [lsofData getAppNameForRow:row];
 
-	[[documentTextView textStorage] setAttributedString:[[NSAttributedString alloc] init]];
+	[documentTextView.textStorage setAttributedString:[[NSAttributedString alloc] init]];
 
 	if (row >= 0) {
 		NSString *commandString = [NSString stringWithFormat:@"man %@ | col -b", an];
 
-		FILE *man = popen([commandString UTF8String], "r");
+		FILE *man = popen(commandString.UTF8String, "r");
 		[self loadDocText:man];
 		fclose(man);
 
-		if ([[documentTextView textStorage] length] == 0)
-			[[documentTextView textStorage]
-				setAttributedString:
-					[[NSAttributedString alloc]
-						initWithString:[NSString stringWithFormat:@"There is no documentation available for %@.", an]]];
-
+		if (documentTextView.textStorage.length == 0) {
+			NSString *s = [NSString stringWithFormat:@"There is no documentation available for %@.", an];
+			[documentTextView.textStorage setAttributedString:[[NSAttributedString alloc] initWithString:s]];
+		}
 		[NSApp beginSheet:documentPanel
 			modalForWindow:mainWindow
 			 modalDelegate:self
 			didEndSelector:@selector(progDidEndSheet:returnCode:contextInfo:)
 			   contextInfo:nil];
-	}
-	else {
+	} else {
 		Alerts *oops = [[Alerts alloc] init];
 		[oops doInfoAlertWithTitle:@"Error obtaining documentation."
 						  infoText:@"You need to select a row."
@@ -600,37 +533,14 @@
 	}
 }
 
-- (Boolean)tableView:(NSTableView *)table shouldSelectRow:(NSInteger)row
-{
-	NSString *rowUser = [lsofData getUserForRow:row];
-	struct passwd *pw = NULL;
-	uid_t uid = getuid();
-
-	if (rowUser) {
-		pw = getpwnam([rowUser UTF8String]);
-		if (pw) {
-			if (pw->pw_uid == uid) {
-				[killButtonItem setEnabled:YES];
-			}
-			else {
-				[killButtonItem setEnabled:NO];
-			}
-		}
-	}
-
-	return YES;
-}
-
 - (void)toolbarWillAddItem:(NSNotification *)note
 {
 	NSToolbarItem *addedItem = [[note userInfo] objectForKey:@"item"];
 	if ([addedItem tag] == kVolumesTag) {
 		volumesBox = (NSPopUpButton *)[addedItem view];
-	}
-	else if ([addedItem tag] == kUsersTag) {
+	} else if ([addedItem tag] == kUsersTag) {
 		usersButton = (NSPopUpButton *)[addedItem view];
-	}
-	else if ([addedItem tag] == kProcessesTag) {
+	} else if ([addedItem tag] == kProcessesTag) {
 		processesButton = (NSPopUpButton *)[addedItem view];
 	}
 }
@@ -643,8 +553,7 @@
 		NSString *url = [NSString stringWithFormat:@"http://www.google.com/search?q=macos+%@", an];
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 		[self dismissDoc:self];
-	}
-	else {
+	} else {
 		Alerts *oops = [[Alerts alloc] init];
 		[oops doInfoAlertWithTitle:@"Error Googling the application."
 						  infoText:@"You need to select a row."
@@ -655,7 +564,106 @@
 	}
 }
 
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(int)row
+- (void)updateToolbarButtons
+{
+	NSIndexSet *selectedRowIndexes = outTable.selectedRowIndexes;
+
+	BOOL hasOne = selectedRowIndexes.count == 1;
+	BOOL hasAny = selectedRowIndexes.count > 0;
+	NSInteger row = hasOne ? selectedRowIndexes.firstIndex : -1;
+
+	googleLookupButtonItem.enabled = hasOne;
+	manLookupButtonItem.enabled = hasOne;
+	showInFinderButtonItem.enabled = hasAny;
+
+	BOOL canKill = NO;
+	if (hasOne) {
+		// Enable Kill button only if process is from current user
+		NSString *rowUser = [lsofData getUserForRow:row];
+		if (rowUser) {
+			struct passwd *pw = getpwnam([rowUser UTF8String]);
+			if (pw) {
+				uid_t uid = getuid();
+				canKill = pw->pw_uid == uid;
+			}
+		}
+	}
+	killButtonItem.enabled = canKill;
+}
+
+
+#pragma mark - NSTableViewDelegate, NSTableViewDataSource
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)table
+{
+	return [lsofData dataCount];
+}
+
+- (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)col row:(NSInteger)rowIx
+{
+	NSString *retVal = nil;
+
+	if (col == applicationColumn) {
+		retVal = [lsofData getAppNameForRow:rowIx];
+	} else if (col == filePathColumn) {
+		retVal = [lsofData getFilePathForRow:rowIx];
+	} else if (col == fileSizeColumn) {
+		retVal = [lsofData getFileSizeForRow:rowIx];
+	} else if (col == usernameColumn) {
+		retVal = [lsofData getUserForRow:rowIx];
+	} else if (col == cputimeColumn) {
+		//	retVal = [self formatCpuTime:[lsofData getCpuTimeForRow:rowIx]];
+	}
+
+	return retVal;
+}
+
+- (NSString *)tableView:(NSTableView *)aTableView
+		 toolTipForCell:(NSCell *)aCell
+				   rect:(NSRectPointer)rect
+			tableColumn:(NSTableColumn *)aTableColumn
+					row:(NSInteger)row
+		  mouseLocation:(NSPoint)mouseLocation
+{
+	NSString *retVal = [NSString stringWithFormat:@"pid: %d", [lsofData getPidForRow:row]];
+/*
+	if (aTableColumn == cputimeColumn) {
+		retVal = [retVal stringByAppendingString:@"\nFormat: days.hours:minutes:seconds"];
+		if (NOT [NSUserDefaults.standardUserDefaults boolForKey:@"lsofFullList"]) {
+			retVal = [retVal stringByAppendingString:@"\nCPU Time Disabled (turn on root to enable)"];
+	}
+*/
+	return retVal;
+}
+
+- (void)tableView:(NSTableView *)tableView mouseDownInHeaderOfTableColumn:(NSTableColumn *)tableColumn
+{
+	#if DEBUG
+		NSLog(@"%s",__func__);
+	#endif
+	NSArray *descs = nil;
+	if (tableColumn == applicationColumn) {
+		descs = [self sortByAppName];
+	} else if (tableColumn == fileSizeColumn) {
+		descs = [self sortByFileSize];
+	} else if (tableColumn == filePathColumn) {
+		descs = [self sortByFilePath];
+	} else if (tableColumn == usernameColumn) {
+		descs = [self sortByUserName];
+	} else if (tableColumn == cputimeColumn) {
+		//	descs = [self sortByCPU];
+	}
+
+	[lsofData sortDataWithDescriptors:descs];
+	[self reloadTable];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	[self updateToolbarButtons];
+}
+
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)TC row:(NSInteger)row
 {
 	fileTypes type = [lsofData getFileTypeForRow:row];
 	NSColor *color = [lsofData alternateColor];
@@ -670,6 +678,18 @@
 			[aCell setBackgroundColor:color];
 			break;
 	}
+}
+
+
+#pragma mark - NSMenuDelegate
+
+- (void)menuWillOpen:(NSMenu*)menu
+{
+	// Here we can re-sort the popup menus as needed (ticket #3)
+	
+	//	if (menu == self.listModeTableView.menu) {
+	//	} else if (menu == self.openWithMenuItem.submenu || [menu.identifier isEqualToString:@"appMenuOpenWithMenu"]) {
+	//	}
 }
 
 @end
