@@ -361,12 +361,12 @@
 
 	[documentTextView.textStorage setAttributedString:[[NSAttributedString alloc] init]];
 
-	if (row >= 0) {
+	if (row >= 0 && outTable.selectedRowIndexes.count == 1) {
 		NSString *commandString = [NSString stringWithFormat:@"man %@ | col -b", an];
 
 		FILE *man = popen(commandString.UTF8String, "r");
 		[self loadDocText:man];
-		fclose(man);
+		pclose(man);
 
 		if (documentTextView.textStorage.length == 0) {
 			NSString *s = [NSString stringWithFormat:@"There is no documentation available for %@.", an];
@@ -380,7 +380,7 @@
 	} else {
 		Alerts *oops = [[Alerts alloc] init];
 		[oops doInfoAlertWithTitle:@"Error obtaining documentation."
-						  infoText:@"You need to select a row."
+						  infoText:@"You need to select a single row."
 						 forWindow:mainWindow
 					  withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
 					  withDelegate:self
