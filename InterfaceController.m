@@ -164,7 +164,11 @@
 
 	[lsofData filterDataWithString:filter forVolume:vol forUser:user forProcess:process forType:fileType];
 	
-	bottomInfoLabel.stringValue = [NSString stringWithFormat:@"Total: %ld, Shown: %ld", lsofData.totalCount, lsofData.dataCount];
+	NSString *info = [NSString stringWithFormat:@"Total: %ld", lsofData.totalCount];
+	if (lsofData.totalCount != lsofData.dataCount) {
+		info = [info stringByAppendingFormat:@", Shown: %ld", lsofData.dataCount];
+	}
+	bottomInfoLabel.stringValue = info;
 	
 	[self reloadTable];
 }
