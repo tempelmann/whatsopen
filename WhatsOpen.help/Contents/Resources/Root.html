@@ -30,9 +30,13 @@
 		<div id="content">
 
 			<div class="topic">How do I get a file listing as an administrator?</div>
-			<div class="help">If you need to you can enable administrative access in the preferences. This will cause WhatsOpen to prompt you for a username/password for administrative access when you list files.</div>
+			<div class="help">You can enable administrative access in the Preferences window: Check the option <b>List all users</b>. This will cause WhatsOpen to prompt you for a username &amp; password for administrative access when you list files.</div>
+
 			<div class="topic">How does it work?</div>
-			<div class="help">This administrative access runs lsof as root to give you a file listing for all users instead of only the user logged in. It has potential security repercussions and is disabled by default both for convenience and practical security guidelines.</div>
+			<div class="help">This administrative access runs the command <i>lsof</i> as the root user to give you a file listing for all users instead of only the logged-in user. It has potential security repercussions and is disabled by default both for convenience and practical security guidelines.</div>
+
+			<div class="topic">Can I save the login information?</div>
+			<div class="help">Yes. Open the Keychain Access app and create a new <b>Password Item</b> with cmd+N. Enter "WhatsOpen" as the name, along with your username and password, then click Add. Next time you use What's Open, you'll be asked to allow the app to read the data from Keychain. Enter your password and then click on <b>Always Allow</b>.</div>
 
 		</div>
 	</body>

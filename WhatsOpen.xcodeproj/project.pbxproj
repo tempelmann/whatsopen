@@ -208,6 +208,7 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				B45AC4450E79DA0C009CE932 /* CopyFiles */,
 				A4FDF8F0245CEA9E008D1BD2 /* Embed Frameworks */,
+				A4498891245F48EC00DA190F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -259,6 +260,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A4498891245F48EC00DA190F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This updates the help index inside the currently building app\ncd ${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Resources\n/Development/WhatsOpen/rebuild_helpindex.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {
