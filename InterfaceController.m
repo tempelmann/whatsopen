@@ -193,7 +193,7 @@
 			pid_t pid = [lsofData getPidForRow:rowIx];
 			if (pid >= 0) {
 				if (kill(pid, SIGQUIT)) {
-					[[Alerts alloc] doInfoAlertWithTitle:[[NSString alloc] initWithFormat:@"Error killing process."]
+					[[Alerts alloc] doInfoAlertWithTitle:[[NSString alloc] initWithFormat:@"Failed to kill process"]
 												infoText:[[NSString alloc] initWithFormat:@"%s", strerror(errno)]
 											   forWindow:mainWindow
 											withSelector:@selector(alertDidEnd:returnCode:contextInfo:)
@@ -214,8 +214,7 @@
 	NSInteger rowIx = [outTable selectedRow];
 	if (rowIx >= 0) {
 		Alerts *killAlert = [[Alerts alloc] init];
-		NSString *title =
-			[NSString stringWithFormat:@"Are you sure you want to kill '%@'?", [lsofData getAppNameForRow:rowIx]];
+		NSString *title = [NSString stringWithFormat:@"Are you sure you want to kill (force quit) '%@'?", [lsofData getAppNameForRow:rowIx]];
 		[killAlert setAltButton:@"App Docs"];
 		[killAlert setOtherButton:@"Cancel"];
 		[killAlert doInfoAlertWithTitle:title
