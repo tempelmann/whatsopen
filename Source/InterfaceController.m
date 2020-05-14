@@ -257,7 +257,9 @@
 	NSIndexSet *selectedRowIndexes = outTable.selectedRowIndexes;
 	[selectedRowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
 		NSURL *fileUrl = [NSURL fileURLWithPath:[self->lsofData getFilePathForRow:idx]];
-		[urls addObject:fileUrl];
+		if (fileUrl) {
+			[urls addObject:fileUrl];
+		}
 	}];
 
 	[NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:urls];
