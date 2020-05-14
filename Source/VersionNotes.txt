@@ -1,6 +1,38 @@
-TT 2 May 2020: The notes below are a bit outdated. Please see the svn or git report for the change long instead.
 
---------
+2.6
+	Added drag and drop files.
+
+2.5
+	Changed superuser glyph to an open padlock to keep it uniform with icons.
+	Enabled killing processes as the super user.
+    Reworked authentication system so that it is a single authenticator to prevent repeated
+    auth requests.
+
+2.4
+	Added a force eject option.
+	Added pause/unpause process buttons.
+	Added an "Actions" menu to make accessing the features simpler and to
+	aid in keeping the toolbar clean.
+
+2.3
+	Preferences are now a sheet instead of a new window.
+	Added paypal donation menu item.
+	Added a toolbar button to enable/disable super user.
+	Cleaned up root/administrative/super user terminology in help files.
+	Help file redesign by BraynB (Thanks!).
+	Finished icon update.
+	Sort code cleanup to allow adding columns more smoothly.
+	Added the ability to hide/show columns one by one.
+	Added some error checking to the bug/idea submission window.
+
+2.2
+	Fixed a bug in the ideas submission window where it wasn't prefilling values.
+	Re-labled some buttons
+	Updated some of the icons with more polished LGPL ones
+
+2.1
+	Added IPv4 sockets
+	Added file type filtering
 
 1.10
 	Added CPU Time field.
