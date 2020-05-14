@@ -325,16 +325,14 @@
 						latestUserName = value;
 					}
 					break;
-				case 'f': // new file
+				case 'f': // -- this only comes on macOS 10.12 or later, not on 10.11, so we ignore this fully
+					break;
+				case 't': // type -- this is the first (after 't')
 					if (NOT skipThese) {
 		 	 			currentFile = [OpenFile new];
 		 	 			currentFile.appName = latestProcessName;
 		 	 			currentFile.pid = latestProcessID;
 		 	 			currentFile.username = latestUserName;
-					}
-					break;
-				case 't': // type
-					if (NOT skipThese) {
 						fileTypes t = Undefined;
 						if ([value isEqualToString:@"REG"]) {
 							t = RegularFile;
@@ -358,7 +356,7 @@
 					}
 					break;
 				case 'n': // file path
-					if (NOT skipThese) {
+					if (NOT skipThese && (currentFile != nil)) {
 						if (NOT [value hasPrefix:@"/"]) {
 							// skip anything that doesn't have a path on the file system (e.g. KQUEUEs, IPv4/6, sockets)
 						} else if (currentFile.fileType == Other) {
